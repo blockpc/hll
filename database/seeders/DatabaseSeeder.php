@@ -19,22 +19,24 @@ class DatabaseSeeder extends Seeder
             ['email' => 'sudo@mail.com'],
             [
                 'name' => 'Super Administrador',
-                'email' => 'sudo@mail.com',
                 'password' => 'password',
-                'email_verified_at' => now(),
             ]
         );
+        if ($sudo->wasRecentlyCreated) {
+            $sudo->markEmailAsVerified();
+        }
         $sudo->syncRoles(['sudo']);
 
         $testUser = User::firstOrCreate(
             ['email' => 'test@mail.com'],
             [
                 'name' => 'Test User',
-                'email' => 'test@mail.com',
                 'password' => 'password',
-                'email_verified_at' => now(),
             ]
         );
+        if ($testUser->wasRecentlyCreated) {
+            $testUser->markEmailAsVerified();
+        }
         $testUser->syncRoles(['user']);
     }
 }
