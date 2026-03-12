@@ -42,7 +42,6 @@
                                 @endforeach
                             </div>
                         </td>
-                        </td>
                         <td class="td">
                             <flux:badge size="sm" class="w-auto!">{{ $user->permissions_count }}</flux:badge>
                         </td>

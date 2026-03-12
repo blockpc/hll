@@ -1,6 +1,6 @@
 <div>
     <flux:modal.trigger name="create-note">
-        <flux:button variant="primary" class="w-full">{{ __('New Note') }}</flux:button>
+        <flux:button variant="primary" size="sm">{{ __('New Note') }}</flux:button>
     </flux:modal.trigger>
 
     <flux:modal name="create-note" class="w-1/2" :closable="false">

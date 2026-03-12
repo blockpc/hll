@@ -38,6 +38,8 @@ new #[Title('Editar usuario')] class extends Component
 
     public function save(): mixed
     {
+        abort_unless(auth()->user()?->can('users.edit'), 403, __('system.users.403.users-edit'));
+
         $this->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$this->user->id,

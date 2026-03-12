@@ -56,6 +56,7 @@
             <flux:navbar class="w-full">
                 <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
                 <flux:spacer />
+                <livewire:notes.create-dashboard-note />
                 <livewire:notifications.open-close-panel />
                 <div class="lg:hidden!">
                     <x-desktop-user-menu :name="auth()->user()->name" />

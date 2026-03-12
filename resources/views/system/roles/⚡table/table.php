@@ -62,6 +62,8 @@ new class extends Component
 
     public function destroyRole(): void
     {
+        abort_unless(auth()->user()?->can('roles.delete'), 403, __('system.roles.403.roles-delete'));
+
         $this->validate([
             'name' => ['required', new AreEqualsRule($this->current_name, __('system.roles.delete.invalid_role_name'))],
             'password' => 'required|current_password',

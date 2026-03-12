@@ -64,6 +64,8 @@ new #[Title('Lista de Usuarios')] class extends Component
 
     public function destroyUser(): void
     {
+        abort_unless(auth()->user()?->can('users.delete'), 403, __('system.users.403.users-delete'));
+
         $this->validate([
             'name' => ['required', new AreEqualsRule($this->current_name, __('system.users.delete.invalid_user_name'))],
             'password' => 'required|current_password',
