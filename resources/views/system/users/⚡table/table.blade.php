@@ -11,7 +11,9 @@
 
         <div class="flex items-center justify-between">
             <flux:input icon="magnifying-glass" :loading="false" :clearable="true" placeholder="{{ __('system.users.search-users') }}" wire:model.live.debounce.500ms="search" class="max-w-64" autocomplete="off" />
+            @can('users.create')
             <flux:button variant="primary" color="blue" size="sm" href="{{ route('users.create') }}">{{ __('system.users.buttons.create') }}</flux:button>
+            @endcan
         </div>
 
         <x-tables.table>
@@ -45,8 +47,12 @@
                             <flux:badge size="sm" class="w-auto!">{{ $user->permissions_count }}</flux:badge>
                         </td>
                         <td class="td text-right space-x-2">
+                            @can('users.edit')
                             <flux:button variant="primary" color="green" size="sm" href="{{ route('users.edit', $user->id) }}">{{ __('system.users.buttons.edit') }}</flux:button>
+                            @endcan
+                            @can('users.delete')
                             <flux:button variant="danger" size="sm" wire:click="confirmDelete({{ $user->id }})">{{ __('system.users.buttons.delete') }}</flux:button>
+                            @endcan
                         </td>
                     </tr>
                 @empty
@@ -78,7 +84,9 @@
 
             <div class="flex justify-end gap-2">
                 <flux:button size="sm" variant="primary" color="yellow" wire:click="cancel">{{ __('Cancel') }}</flux:button>
+                @can('users.delete')
                 <flux:button size="sm" variant="danger" wire:click="destroyUser">{{ __('system.users.delete.button') }}</flux:button>
+                @endcan
             </div>
         </div>
     </flux:modal>

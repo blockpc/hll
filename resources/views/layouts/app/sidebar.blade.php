@@ -23,19 +23,27 @@
 
             <flux:spacer />
 
+            @canany(['users.index', 'roles.index', 'permissions.index'])
             <flux:sidebar.nav>
                 <flux:sidebar.group :heading="__('System')" class="grid">
+                    @can('users.index')
                     <flux:sidebar.item icon="lock-closed" :href="route('users.table')" :current="request()->routeIs('users.*')" wire:navigate>
                         {{ __('system.users.menu') }}
                     </flux:sidebar.item>
+                    @endcan
+                    @can('roles.index')
                     <flux:sidebar.item icon="lock-closed" :href="route('roles.table')" :current="request()->routeIs('roles.*')" wire:navigate>
                         {{ __('system.roles.menu') }}
                     </flux:sidebar.item>
+                    @endcan
+                    @can('permissions.index')
                     <flux:sidebar.item icon="lock-closed" :href="route('permissions.table')" :current="request()->routeIs('permissions.*')" wire:navigate>
                         {{ __('system.permissions.menu') }}
                     </flux:sidebar.item>
+                    @endcan
                 </flux:sidebar.group>
             </flux:sidebar.nav>
+            @endcanany
 
             <flux:sidebar.nav>
                 <livewire:notifications.open-close-panel />

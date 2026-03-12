@@ -10,7 +10,9 @@
 
         <div class="flex items-center justify-between">
             <flux:input icon="magnifying-glass" :loading="false" :clearable="true" placeholder="{{ __('system.roles.search-roles') }}" wire:model.live.debounce.500ms="search" class="max-w-64" autocomplete="off" />
+            @can('roles.create')
             <flux:button variant="primary" color="blue" size="sm" href="{{ route('roles.create') }}">{{ __('system.roles.buttons.create') }}</flux:button>
+            @endcan
         </div>
 
         <x-tables.table>
@@ -34,8 +36,12 @@
                             <span class="text-xs italic">{{ $role->description }}</span>
                         </td>
                         <td class="td text-right space-x-2">
+                            @can('roles.edit')
                             <flux:button variant="primary" color="green" size="sm" href="{{ route('roles.edit', $role->id) }}">{{ __('system.roles.buttons.edit') }}</flux:button>
+                            @endcan
+                            @can('roles.delete')
                             <flux:button variant="danger" size="sm" wire:click="confirmDelete({{ $role->id }})">{{ __('system.roles.buttons.delete') }}</flux:button>
+                            @endcan
                         </td>
                     </tr>
                 @empty
@@ -67,7 +73,9 @@
 
             <div class="flex justify-end gap-2">
                 <flux:button size="sm" variant="primary" color="yellow" wire:click="cancel">{{ __('Cancel') }}</flux:button>
+                @can('roles.delete')
                 <flux:button size="sm" variant="danger" wire:click="destroyRole">{{ __('system.roles.delete.button') }}</flux:button>
+                @endcan
             </div>
         </div>
     </flux:modal>

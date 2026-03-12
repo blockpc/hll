@@ -44,7 +44,9 @@
                             <span class="text-sm">{{ __('system.permissions.keys.'.$permission->key) }}</span>
                         </td>
                         <td class="td text-right">
+                            @can('permissions.edit')
                             <flux:button variant="primary" color="green" size="sm" wire:click="editPermission({{ $permission->id }})">{{ __('system.permissions.table.edit') }}</flux:button>
+                            @endcan
                         </td>
                     </tr>
                 @empty
@@ -74,7 +76,9 @@
 
             <div class="flex justify-end gap-2">
                 <flux:button size="sm" variant="primary" color="yellow" wire:click="cancel">{{ __('Cancel') }}</flux:button>
+                @can('permissions.edit')
                 <flux:button size="sm" variant="primary" color="green" wire:click="savePermission">{{ __('system.permissions.edit.save') }}</flux:button>
+                @endcan
             </div>
         </div>
     </flux:modal>

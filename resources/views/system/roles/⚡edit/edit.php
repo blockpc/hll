@@ -24,7 +24,7 @@ new class extends Component
 
     public function mount(): void
     {
-        abort_unless(auth()->user()?->can('roles.edit'), 403);
+        abort_unless(auth()->user()?->can('roles.edit'), 403, __('system.roles.403.roles-edit'));
 
         $this->display_name = $this->role->display_name;
         $this->description = $this->role->description;
@@ -53,6 +53,8 @@ new class extends Component
 
     public function save(): mixed
     {
+        abort_unless(auth()->user()?->can('roles.edit'), 403, __('system.roles.403.roles-edit'));
+
         $this->validate([
             'display_name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
