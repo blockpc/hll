@@ -1,0 +1,125 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Blockpc\App\Commands;
+
+use Blockpc\App\Services\PermissionSynchronizerService;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+
+final class SyncPermissionsCommand extends Command
+{
+    protected $signature = 'blockpc:permissions
+                            {--check : Solo verificar permisos existentes}
+                            {--orphans : Mostrar permisos huérfanos}
+                            {--prune : Eliminar permisos huérfanos}
+                            {--ci : Modo continuo para CI/CD}';
+
+    protected $description = 'Sincroniza, valida y limpia los permisos definidos en el sistema';
+
+    public function handle(PermissionSynchronizerService $permissionSynchronizerService): int
+    {
+        $errors = 0;
+        $check = (bool) $this->option('check');
+        $orphans = (bool) $this->option('orphans');
+        $prune = (bool) $this->option('prune');
+
+        $selectedActions = array_filter([$check, $orphans, $prune]);
+
+        if (count($selectedActions) > 1) {
+            $this->error('Las opciones --check, --orphans y --prune son mutuamente excluyentes. Usa solo una.');
+
+            return 1;
+        }
+
+        if ($check) {
+            $errors = $this->handleCheck($permissionSynchronizerService);
+        } elseif ($orphans) {
+            $errors = $this->handleOrphans($permissionSynchronizerService);
+        } elseif ($prune) {
+            $errors = $this->handlePrune($permissionSynchronizerService);
+        } else {
+            $errors = $this->handleSync($permissionSynchronizerService);
+        }
+
+        if ($errors > 0) {
+            $this->error("Errores de sincronización de permisos: {$errors}");
+            Log::error("Errores de sincronización de permisos: {$errors}");
+
+            return 1;
+        }
+
+        return 0;
+    }
+
+    private function handleCheck(PermissionSynchronizerService $permissionSynchronizerService): int
+    {
+        $missing = $permissionSynchronizerService->getMissing();
+
+        if ($missing->isEmpty()) {
+            $this->info('✅ Todo sincronizado.');
+
+            return 0;
+        }
+
+        $this->warn('⚠️  Permisos faltantes:');
+        $errors = 0;
+        foreach ($missing as $perm) {
+            $name = $perm['name'] ?? null;
+            $guard = $perm['guard_name'] ?? 'web';
+            $this->warn("❌ Falta permiso: {$name} (guard: {$guard})");
+            $errors++;
+        }
+
+        return $errors;
+    }
+
+    private function handleOrphans(PermissionSynchronizerService $permissionSynchronizerService): int
+    {
+        $orphans = $permissionSynchronizerService->getOrphans();
+
+        if ($orphans->isEmpty()) {
+            $this->info('✅ No hay permisos huérfanos.');
+
+            return 0;
+        }
+
+        $this->warn('⚠️  Permisos huérfanos:');
+        foreach ($orphans as $orphan) {
+            $this->line("- {$orphan->name} ({$orphan->guard_name})");
+        }
+
+        return $orphans->count();
+    }
+
+    private function handlePrune(PermissionSynchronizerService $permissionSynchronizerService): int
+    {
+        $orphans = $permissionSynchronizerService->getOrphans();
+
+        if ($orphans->isEmpty()) {
+            $this->info('✅ No hay permisos huérfanos.');
+
+            return 0;
+        }
+
+        if (! $this->option('ci') && ! $this->confirm("¿Eliminar {$orphans->count()} permisos huérfanos?", false)) {
+            $this->info('🛑 Cancelado.');
+
+            return 0;
+        }
+
+        $deleted = $permissionSynchronizerService->prune();
+        $this->info("🗑️ Eliminados: {$deleted} permisos huérfanos.");
+
+        return 0;
+    }
+
+    private function handleSync(PermissionSynchronizerService $permissionSynchronizerService): int
+    {
+        $permissionSynchronizerService->sync();
+        $this->info('🎉 Permisos sincronizados.');
+
+        return 0;
+    }
+}

@@ -1,0 +1,117 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Blockpc\App\Services;
+
+use App\Models\Permission;
+use Blockpc\App\Lists\PermissionList;
+use Illuminate\Support\Collection;
+use InvalidArgumentException;
+
+final class PermissionSynchronizerService
+{
+    private ?Collection $existingPermissions = null;
+
+    public function sync(): void
+    {
+        foreach (PermissionList::all() as $permiso) {
+            [$name, $key, $description, $displayName, $guard] = $this->resolvePermiso($permiso);
+
+            Permission::query()->firstOrCreate(
+                ['name' => $name, 'guard_name' => $guard],
+                ['key' => $key, 'description' => $description, 'display_name' => $displayName]
+            );
+        }
+
+        $this->existingPermissions = null;
+    }
+
+    private function ensureExistingPermissionsLoaded(): Collection
+    {
+        if ($this->existingPermissions === null) {
+            $this->existingPermissions = Permission::all()->keyBy(fn ($permission) => "{$permission->name}|{$permission->guard_name}");
+        }
+
+        return $this->existingPermissions;
+    }
+
+    public function getMissing(): Collection
+    {
+        $existing = $this->ensureExistingPermissionsLoaded();
+
+        return collect(PermissionList::all())
+            ->filter(function ($permiso) use ($existing) {
+                [$name, , , , $guard] = $this->resolvePermiso($permiso);
+
+                return ! $existing->has("{$name}|{$guard}");
+            });
+    }
+
+    public function getOutdated(): Collection
+    {
+        $existing = $this->ensureExistingPermissionsLoaded();
+
+        return collect(PermissionList::all())
+            ->filter(function ($permiso) use ($existing) {
+                [$name, $key, , , $guard] = $this->resolvePermiso($permiso);
+
+                $perm = $existing->get("{$name}|{$guard}");
+
+                if (! $perm) {
+                    return false;
+                }
+
+                return $perm->key !== $key;
+            });
+    }
+
+    public function getOrphans(): Collection
+    {
+        $existingPermissions = $this->ensureExistingPermissionsLoaded();
+        $defined = collect(PermissionList::all())->keyBy(function ($permiso) {
+            [$name, , , , $guard] = $this->resolvePermiso($permiso);
+
+            return "{$name}|{$guard}";
+        });
+
+        return $existingPermissions->filter(function ($perm) use ($defined) {
+            return ! $defined->has("{$perm->name}|{$perm->guard_name}");
+        });
+    }
+
+    public function prune(): int
+    {
+        $orphans = $this->getOrphans();
+        $deleted = Permission::query()->whereIn('id', $orphans->pluck('id'))->delete();
+
+        $this->existingPermissions = null;
+
+        return $deleted;
+    }
+
+    /**
+     * Extracts permission fields from array definition.
+     *
+     * @param  array{name: string, key?: string, description?: string, display_name?: string, guard_name?: string}  $permiso
+     * @return array{0: string, 1: ?string, 2: ?string, 3: ?string, 4: string} [name, key, description, displayName, guard]
+     */
+    private function resolvePermiso(array $permiso): array
+    {
+        $name = $permiso['name'] ?? null;
+
+        if (! is_string($name) || trim($name) === '') {
+            $invalidContext = json_encode($permiso, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+            throw new InvalidArgumentException('El permiso no tiene un nombre válido. Definición recibida: '.$invalidContext);
+        }
+
+        return [
+            $name,
+            $permiso['key'] ?? null,
+            $permiso['description'] ?? null,
+            $permiso['display_name'] ?? null,
+            $permiso['guard_name'] ?? 'web',
+        ];
+    }
+}
