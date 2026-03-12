@@ -22,7 +22,7 @@ new class extends Component
 
     public function mount(): void
     {
-        abort_unless(auth()->user()?->can('roles.create'), 403);
+        abort_unless(auth()->user()?->can('roles.create'), 403, __('system.roles.403.roles-create'));
     }
 
     #[Computed()]
@@ -47,6 +47,8 @@ new class extends Component
 
     public function save()
     {
+        abort_unless(auth()->user()?->can('roles.create'), 403, __('system.roles.403.roles-create'));
+
         $this->validate([
             'display_name' => 'required|string|max:255',
             'description' => 'required|string|max:255',

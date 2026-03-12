@@ -88,9 +88,11 @@
                         </flux:button>
                     </div>
                     <div class="flex items-center justify-end">
+                        @can('users.edit')
                         <flux:button variant="primary" type="submit" color="green" class="w-full" data-test="edit-user-button">
                             {{ __('system.users.edit.save') }}
                         </flux:button>
+                        @endcan
                     </div>
                 </div>
             </div>

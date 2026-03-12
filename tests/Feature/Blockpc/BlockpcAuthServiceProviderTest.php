@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Permission;
 use Blockpc\App\Providers\BlockpcAuthServiceProvider;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Support\Facades\Gate;
@@ -31,6 +32,17 @@ it('otorga acceso total a usuario con permiso super admin', function () {
 
 it('no hace bypass para un usuario regular', function () {
     $user = new_user(role: 'user');
+
+    expect(Gate::forUser($user)->allows('blockpc-test-ability'))->toBeFalse();
+});
+
+it('no lanza error si falta el permiso super admin', function () {
+    Permission::query()->where('name', 'super admin')->delete();
+
+    $user = new_user(role: 'user');
+
+    expect(fn () => Gate::forUser($user)->allows('blockpc-test-ability'))
+        ->not->toThrow(\Exception::class);
 
     expect(Gate::forUser($user)->allows('blockpc-test-ability'))->toBeFalse();
 });

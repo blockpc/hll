@@ -42,9 +42,11 @@
                     </flux:button>
                 </div>
                 <div class="flex items-center justify-end">
+                    @can('roles.create')
                     <flux:button variant="primary" type="submit" color="blue" class="w-full" data-test="create-role-button">
                         {{ __('system.roles.create.save') }}
                     </flux:button>
+                    @endcan
                 </div>
             </div>
         </form>
