@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Blockpc\App\Providers;
 
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
@@ -25,7 +26,7 @@ final class BlockpcAuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::before(function ($user, string $ability, array $arguments = []) {
+        Gate::before(function (?User $user, string $ability, array $arguments = []) {
             if (! $user) {
                 return null;
             }

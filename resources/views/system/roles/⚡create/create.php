@@ -3,6 +3,8 @@
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
@@ -45,7 +47,7 @@ new class extends Component
             ->pluck('key', 'key');
     }
 
-    public function save()
+    public function save(): RedirectResponse|Redirector|null
     {
         abort_unless(auth()->user()?->can('roles.create'), 403, __('system.roles.403.roles-create'));
 

@@ -5,7 +5,7 @@ return [
         'menu' => 'Permissions',
         'title' => 'Permissions List',
         'description' => 'Displays the permissions that can be assigned to roles and/or users.',
-        'search-permissions' => 'Search permissions...',
+        'search_permissions' => 'Search permissions...',
         'select_key' => 'Select key',
         '403' => [
             'permissions-index' => 'You do not have permission to view the permissions list.',
@@ -46,7 +46,7 @@ return [
         'menu' => 'Roles',
         'title' => 'Roles List',
         'subtitle' => 'Displays the roles that can be assigned to users.',
-        'search-roles' => 'Search roles...',
+        'search_roles' => 'Search roles...',
         'back_to_table' => 'Back to roles list',
         'super_admin_permission_error' => 'One of the selected permissions is not valid.',
         'name_already_exists' => 'A role with that name already exists.',
@@ -96,7 +96,7 @@ return [
             'title' => 'Create new role',
             'subtitle' => 'Fill in the fields to create a new role.',
             'display_name' => 'Name',
-            'description_field' => 'Description',
+            'description' => 'Description',
             'permissions' => 'Permissions',
             'save' => 'Create role',
             'form' => [
@@ -117,7 +117,7 @@ return [
         'delete' => [
             'title' => 'Delete Role',
             'button' => 'Yes, I want to delete this role',
-            'name_rol' => 'Role name',
+            'role_name' => 'Role name',
             'password' => 'Password',
             'confirmation_message' => 'Are you sure you want to delete this role? This action cannot be undone. Type :name and your password to confirm.',
             'success_message' => 'The role has been successfully deleted.',
@@ -130,7 +130,7 @@ return [
         'menu' => 'Users',
         'title' => 'Users List',
         'subtitle' => 'Displays the users registered in the system.',
-        'search-users' => 'Search users...',
+        'search_users' => 'Search users...',
         'back_to_table' => 'Back to users list',
         '403' => [
             'users-index' => 'You do not have permission to view the users list.',
@@ -156,7 +156,7 @@ return [
         'delete' => [
             'title' => 'Delete User',
             'button' => 'Yes, I want to delete this user',
-            'name_user' => 'User name',
+            'user_name' => 'User name',
             'password' => 'Password',
             'confirmation_message' => 'Are you sure you want to delete this user? This action cannot be undone. Type :name and your password to confirm.',
             'success_message' => 'The user has been successfully deleted.',
