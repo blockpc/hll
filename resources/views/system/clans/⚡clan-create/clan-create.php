@@ -49,11 +49,9 @@ new class extends Component
 
         $data = $this->validate();
 
-        $owner = auth()->user()->hasRole('clan_owner')
-            ? auth()->user()
-            : User::findOrFail($data['owner_user_id']);
-
-        $ownerUserId = $owner->id;
+        $ownerUserId = auth()->user()->hasRole('clan_owner')
+            ? auth()->id()
+            : $data['owner_user_id'];
 
         $clan = DB::transaction(function () use ($data, $ownerUserId) {
             $owner = User::query()

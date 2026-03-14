@@ -4,15 +4,22 @@ namespace App\Http\Requests;
 
 use App\Models\Clan;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class ClanCreateRequest extends FormRequest
+class ClanUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('create', Clan::class) ?? false;
+        $clan = $this->route('clan');
+
+        if (! $clan instanceof Clan) {
+            return false;
+        }
+
+        return $this->user()?->can('update', $clan) ?? false;
     }
 
     /**
@@ -22,10 +29,34 @@ class ClanCreateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $clan = $this->route('clan');
+
+        if (! $clan instanceof Clan) {
+            return [
+                'alias' => ['required', 'string', 'max:8', 'unique:clans,alias'],
+                'name' => ['required', 'string', 'max:32'],
+                'slug' => ['nullable', 'string', 'max:255', 'unique:clans,slug'],
+                'description' => ['nullable', 'string'],
+                'discord' => ['nullable', 'string', 'max:255'],
+                'logo' => ['nullable', 'image', 'max:1024'],
+                'image' => ['nullable', 'image', 'max:1024'],
+            ];
+        }
+
+        return $this->rulesFor($clan);
+    }
+
+    /**
+     * Get the validation rules for updating an existing clan.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rulesFor(Clan $clan): array
+    {
         return [
-            'alias' => ['required', 'string', 'max:8', 'unique:clans,alias'],
+            'alias' => ['required', 'string', 'max:8', Rule::unique('clans', 'alias')->ignore($clan->id)],
             'name' => ['required', 'string', 'max:32'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:clans,slug'],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('clans', 'slug')->ignore($clan->id)],
             'description' => ['nullable', 'string'],
             'discord' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'image', 'max:1024'],
@@ -51,12 +82,12 @@ class ClanCreateRequest extends FormRequest
             'slug.string' => 'The clan slug must be a string.',
             'slug.max' => 'The clan slug must not exceed 255 characters.',
             'slug.unique' => 'This clan slug is already taken.',
-            'logo.image' => 'The file must be a valid image.',
-            'logo.max' => 'The logo must not exceed 1MB.',
-            'image.image' => 'The file must be a valid image.',
-            'image.max' => 'The image must not exceed 1MB.',
             'description.string' => 'The description must be a string.',
             'discord.string' => 'The Discord URL must be a string.',
+            'logo.image' => 'The file must be a valid image.',
+            'logo.max' => 'The image must not exceed 1MB.',
+            'image.image' => 'The file must be a valid image.',
+            'image.max' => 'The image must not exceed 1MB.',
             'discord.max' => 'The Discord URL must not exceed 255 characters.',
         ];
     }

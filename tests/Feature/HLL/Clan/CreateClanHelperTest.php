@@ -22,9 +22,7 @@ it('allows a clan owner to create a helper for their clan', function () {
     $helperName = fake()->name();
     $helperEmail = fake()->unique()->safeEmail();
 
-    $clan = Clan::factory()->create([
-        'owner_user_id' => $this->user->id,
-    ]);
+    $clan = new_clan($this->user);
 
     Livewire::actingAs($this->user)
         ->test('system::clans.helpers-manager', ['clan' => $clan])

@@ -18,7 +18,7 @@ it('allows a user with clans.create permission to access the create clan page', 
     $this->actingAs($this->user)
         ->get(route('clans.create'))
         ->assertOk()
-        ->assertSeeText(__('hll.clans.create.form.owner_help'));
+        ->assertSeeText(__('hll.clans.form_fields.owner_help'));
 });
 
 it('allows a user with clans.create permission to create a clan for another user without a clan', function () {

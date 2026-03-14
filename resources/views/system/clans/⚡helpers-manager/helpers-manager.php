@@ -52,7 +52,7 @@ new class extends Component
         session()->flash('success', __('hll.clans.managers.create.message_success', ['name' => $createdUser->name]));
 
         try {
-            Mail::to($this->email)->send(new NewUserCreatedMail($createdUser));
+            Mail::to($createdUser->email)->send(new NewUserCreatedMail($createdUser));
         } catch (\Exception $e) {
             logger()->error('Failed to send new user created email', [
                 'user_id' => $createdUser->id,

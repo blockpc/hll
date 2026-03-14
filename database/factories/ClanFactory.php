@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\ClanMembershipRoleEnum;
+use App\Models\Clan;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -53,7 +54,7 @@ class ClanFactory extends Factory
 
     public function withHelper(User $helper): static
     {
-        return $this->afterCreating(function ($clan) use ($helper): void {
+        return $this->afterCreating(function (Clan $clan) use ($helper): void {
             $clan->members()->syncWithoutDetaching([
                 $helper->id => ['membership_role' => ClanMembershipRoleEnum::Helper->value],
             ]);
