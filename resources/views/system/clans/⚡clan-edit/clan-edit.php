@@ -22,9 +22,9 @@ new class extends Component
 
     public string $name = '';
 
-    public string $slug = '';
+    public ?string $slug = null;
 
-    public string $description = '';
+    public ?string $description = null;
 
     public ?string $discord = null;
 
@@ -54,7 +54,9 @@ new class extends Component
 
         $data = $this->validate();
 
-        DB::transaction(function () use ($data) {
+        $oldFilesToDelete = [];
+
+        DB::transaction(function () use ($data, &$oldFilesToDelete) {
             $updateData = [
                 'alias' => $data['alias'],
                 'name' => $data['name'],
@@ -69,7 +71,7 @@ new class extends Component
                     throw new \RuntimeException('Failed to store logo file');
                 }
                 if ($this->clan->logo) {
-                    Storage::disk('public')->delete($this->clan->logo);
+                    $oldFilesToDelete[] = $this->clan->logo;
                 }
 
                 $updateData['logo'] = $newLogoPath;
@@ -81,7 +83,7 @@ new class extends Component
                     throw new \RuntimeException('Failed to store image file');
                 }
                 if ($this->clan->image) {
-                    Storage::disk('public')->delete($this->clan->image);
+                    $oldFilesToDelete[] = $this->clan->image;
                 }
 
                 $updateData['image'] = $newImagePath;
@@ -97,6 +99,10 @@ new class extends Component
 
             $this->clan->update($updateData);
         });
+
+        if (! empty($oldFilesToDelete)) {
+            Storage::disk('public')->delete($oldFilesToDelete);
+        }
 
         return redirect()->route('clans.show', ['clan' => $this->clan->slug]);
     }
