@@ -10,7 +10,6 @@ test('input file single uses horizontal layout by default', function () {
     );
 
     expect($html)->toContain('items-center justify-start space-x-4');
-    expect($html)->toContain('wire:loading.remove.flex');
     expect($html)->toContain('wire:loading.block');
     expect($html)->toContain('block h-2 w-full rounded accent-blue-500');
     expect($html)->not->toContain('flex-col items-center space-y-4');

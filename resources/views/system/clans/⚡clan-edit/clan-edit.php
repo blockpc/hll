@@ -65,6 +65,9 @@ new class extends Component
 
             if ($this->logo) {
                 $newLogoPath = $this->logo->store('clans/'.$data['alias'], 'public');
+                if ($newLogoPath === false) {
+                    throw new \RuntimeException('Failed to store logo file');
+                }
                 if ($this->clan->logo) {
                     Storage::disk('public')->delete($this->clan->logo);
                 }
@@ -74,6 +77,9 @@ new class extends Component
 
             if ($this->image) {
                 $newImagePath = $this->image->store('clans/'.$data['alias'], 'public');
+                if ($newImagePath === false) {
+                    throw new \RuntimeException('Failed to store image file');
+                }
                 if ($this->clan->image) {
                     Storage::disk('public')->delete($this->clan->image);
                 }

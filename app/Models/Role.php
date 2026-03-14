@@ -25,11 +25,12 @@ final class Role extends ModelsRole
     #[Scope]
     public function visibleToUser(Builder $query): Builder
     {
-        if (auth()->user() && auth()->user()->hasRole('sudo')) {
+        $superAdminRole = (string) config('permission.super_admin_role', 'sudo');
+        if (auth()->user() && auth()->user()->hasRole($superAdminRole)) {
             return $query;
         }
 
-        return $query->where('name', '!=', 'sudo');
+        return $query->where('name', '!=', $superAdminRole);
     }
 
     #[Scope]

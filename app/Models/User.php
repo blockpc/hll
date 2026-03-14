@@ -73,11 +73,12 @@ class User extends Authenticatable implements MustVerifyEmail
     #[Scope]
     public function visibleToUser(Builder $query): Builder
     {
-        if (auth()->user()?->hasRole('sudo')) {
+        $superAdminRole = (string) config('permission.super_admin_role', 'sudo');
+        if (auth()->user()?->hasRole($superAdminRole)) {
             return $query;
         }
 
-        return $query->withoutRole(['sudo']);
+        return $query->withoutRole([$superAdminRole]);
     }
 
     #[Scope]

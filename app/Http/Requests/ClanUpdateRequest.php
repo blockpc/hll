@@ -82,6 +82,8 @@ class ClanUpdateRequest extends FormRequest
             'slug.string' => 'The clan slug must be a string.',
             'slug.max' => 'The clan slug must not exceed 255 characters.',
             'slug.unique' => 'This clan slug is already taken.',
+            'description.string' => 'The description must be a string.',
+            'discord.string' => 'The Discord URL must be a string.',
             'logo.image' => 'The file must be a valid image.',
             'logo.max' => 'The image must not exceed 1MB.',
             'image.image' => 'The file must be a valid image.',

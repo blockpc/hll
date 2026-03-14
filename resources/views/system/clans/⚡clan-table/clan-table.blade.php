@@ -27,7 +27,7 @@
                     <tr class="tr tr-hover">
                         <td class="td">
                             @if ($clan->logo)
-                            <img src="{{ $clan->logoUrl }}" alt="{{ __('hll.clans.form_fields.logo') }}" class="h-12 w-12 object-cover rounded-full">
+                            <img src="{{ $clan->logoUrl }}" alt="" class="h-12 w-12 object-cover rounded-full">
                             @else
                             <div class="relative overflow-hidden rounded-full border border-neutral-200 dark:border-neutral-700 w-12 h-12">
                                 <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />

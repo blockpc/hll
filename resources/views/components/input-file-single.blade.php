@@ -19,17 +19,20 @@
         x-on:livewire-upload-error="isUploading = false; progress = 0"
         x-on:livewire-upload-progress="progress = $event.detail.progress"
     >
-        <label @class([
-            'flex items-center space-x-2 text-sm cursor-pointer border border-gray-400 p-2 rounded',
-            'flex-1' => ! $stacked,
-        ]) for="{{ $name }}" wire:loading.remove.flex wire:target="{{ $attributes->wire('model')->value() }}">
-            <flux:icon icon="arrow-up-tray" class="w-4" />
-            <div @class([
-                'hidden md:block',
-                'text-center' => $stacked,
-            ])>{{ $title }}</div>
-            <input type='file' class="hidden" id="{{ $name }}" name="{{ $name }}" {{ $attributes->except('class') }} />
-        </label>
+        <div wire:loading.remove wire:target="{{ $attributes->wire('model')->value() }}">
+            <input type='file' class="peer sr-only" id="{{ $name }}" name="{{ $name }}" {{ $attributes->except('class') }} />
+            <label @class([
+                'flex items-center space-x-2 text-sm cursor-pointer border border-gray-400 p-2 rounded',
+                'peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2',
+                'flex-1' => ! $stacked,
+            ]) for="{{ $name }}">
+                <flux:icon icon="arrow-up-tray" class="w-4" />
+                <div @class([
+                    'hidden md:block',
+                    'text-center' => $stacked,
+                ])>{{ $title }}</div>
+            </label>
+        </div>
         <div class="btn btn-sm btn-default w-full" wire:loading.block wire:target="{{ $attributes->wire('model')->value() }}">{{ __('loading') }}</div>
         <div class="px-1 w-full mt-1" x-show="isUploading">
             <progress class="block h-2 w-full rounded accent-blue-500" max="100" x-bind:value="progress"></progress>
