@@ -138,7 +138,7 @@ new class extends Component
 
     public function canSelectOwner(): bool
     {
-        return auth()->user()->hasRole('sudo');
+        return auth()->user()->hasRole(config('permission.super_admin_role', 'sudo'));
     }
 
     public function selectUser(?int $userId = null): void
