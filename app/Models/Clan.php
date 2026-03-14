@@ -67,7 +67,7 @@ class Clan extends Model
      */
     public function getLogoUrlAttribute(): ?string
     {
-        return $this->logo ? Storage::url($this->logo) : null;
+        return $this->logo ? Storage::disk('public')->url($this->logo) : null;
     }
 
     /**
@@ -75,6 +75,6 @@ class Clan extends Model
      */
     public function getImageUrlAttribute(): ?string
     {
-        return $this->image ? Storage::url($this->image) : null;
+        return $this->image ? Storage::disk('public')->url($this->image) : null;
     }
 }

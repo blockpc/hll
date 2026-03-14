@@ -61,10 +61,6 @@ new class extends Component
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            if ($owner->hasRole('clan_owner') && $owner->ownedClan()->exists()) {
-                return null;
-            }
-
             if ($owner->ownedClan()->exists()) {
                 return null;
             }
