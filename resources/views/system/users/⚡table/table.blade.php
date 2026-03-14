@@ -10,7 +10,7 @@
         @include('partials.flash')
 
         <div class="flex items-center justify-between">
-            <flux:input icon="magnifying-glass" :loading="false" :clearable="true" placeholder="{{ __('system.users.search-users') }}" wire:model.live.debounce.500ms="search" class="max-w-64" autocomplete="off" />
+            <flux:input icon="magnifying-glass" :loading="false" :clearable="true" placeholder="{{ __('system.users.search_users') }}" wire:model.live.debounce.500ms="search" class="max-w-64" autocomplete="off" />
             @can('users.create')
             <flux:button variant="primary" color="blue" size="sm" href="{{ route('users.create') }}">{{ __('system.users.buttons.create') }}</flux:button>
             @endcan
@@ -74,7 +74,7 @@
                 <flux:legend>{{ __('system.users.delete.title') }}</flux:legend>
                 <flux:description>{{ trans('system.users.delete.confirmation_message', ['name' => $current_name]) }}</flux:description>
                 <div class="space-y-4">
-                    <flux:input wire:model="name" :label="__('system.users.delete.name_user')" type="text" placeholder="{{ $current_name }}" required autocomplete="off" />
+                    <flux:input wire:model="name" :label="__('system.users.delete.user_name')" type="text" placeholder="{{ $current_name }}" required autocomplete="off" />
                     <flux:input wire:model="password" :label="__('system.users.delete.password')" type="password" required autocomplete="off" />
                     @error('password') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
                 </div>

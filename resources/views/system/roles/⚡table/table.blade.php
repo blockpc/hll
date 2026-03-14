@@ -9,7 +9,7 @@
         @include('partials.flash')
 
         <div class="flex items-center justify-between">
-            <flux:input icon="magnifying-glass" :loading="false" :clearable="true" placeholder="{{ __('system.roles.search-roles') }}" wire:model.live.debounce.500ms="search" class="max-w-64" autocomplete="off" />
+            <flux:input icon="magnifying-glass" :loading="false" :clearable="true" placeholder="{{ __('system.roles.search_roles') }}" wire:model.live.debounce.500ms="search" class="max-w-64" autocomplete="off" />
             @can('roles.create')
             <flux:button variant="primary" color="blue" size="sm" href="{{ route('roles.create') }}">{{ __('system.roles.buttons.create') }}</flux:button>
             @endcan
@@ -62,9 +62,9 @@
         <div class="space-y-4">
             <flux:fieldset>
                 <flux:legend>{{ __('system.roles.delete.title') }}</flux:legend>
-                <flux:description>{{ trans('system.roles.delete.confirmation_message', ['name' => $current_name]) }}</flux:description>
+                <flux:description>{{ __('system.roles.delete.confirmation_message', ['name' => $current_name]) }}</flux:description>
                 <div class="space-y-4">
-                    <flux:input wire:model="name" :label="__('system.roles.delete.name_rol')" type="text" placeholder="{{ $current_name }}" required autocomplete="off" />
+                    <flux:input wire:model="name" :label="__('system.roles.delete.role_name')" type="text" placeholder="{{ $current_name }}" required autocomplete="off" />
                     <flux:input wire:model="password" :label="__('system.roles.delete.password')" type="password" required autocomplete="off" />
                     @error('password') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
                 </div>

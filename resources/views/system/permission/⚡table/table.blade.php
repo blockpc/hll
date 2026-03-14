@@ -9,7 +9,7 @@
         @include('partials.flash')
 
         <div class="flex space-x-2">
-            <flux:input icon="magnifying-glass" :loading="false" :clearable="true" placeholder="{{ __('system.permissions.search-permissions') }}" wire:model.live.debounce.500ms="search" class="max-w-64" autocomplete="off" />
+            <flux:input icon="magnifying-glass" :loading="false" :clearable="true" placeholder="{{ __('system.permissions.search_permissions') }}" wire:model.live.debounce.500ms="search" class="max-w-64" autocomplete="off" />
 
             <flux:select wire:model.live="key" class="w-48">
                 <flux:select.option value="">{{ __('Choose key...') }}</flux:select.option>

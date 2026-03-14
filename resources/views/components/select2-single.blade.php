@@ -54,7 +54,7 @@
                 class="inline-flex items-center px-2 py-1 text-xs whitespace-nowrap font-semibold uppercase btn-select justify-between w-full bg-transparent border rounded border-gray-500 p-2 h-8"
                 x-on:click="toggle()"
             >
-                <span>{{ __($selected_name ?: $title) }}</span>
+                <span>{{ $selected_name ?: __($title) }}</span>
                 <div :class="open ? 'rotate-180' : ''">
                     <flux:icon.chevron-down class="size-4" />
                 </div>

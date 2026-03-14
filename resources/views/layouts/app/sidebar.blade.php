@@ -21,6 +21,18 @@
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
+            @canany(['clans.index'])
+            <flux:sidebar.nav>
+                <flux:sidebar.group :heading="__('hll.clans.menu')" class="grid">
+                    @can('clans.index')
+                    <flux:sidebar.item icon="home" :href="route('clans.table')" :current="request()->routeIs('clans.*')" wire:navigate>
+                        {{ __('hll.clans.index.submenu') }}
+                    </flux:sidebar.item>
+                    @endcan
+                </flux:sidebar.group>
+            </flux:sidebar.nav>
+            @endcanany
+
             <flux:spacer />
 
             @canany(['users.index', 'roles.index', 'permissions.index'])

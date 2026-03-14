@@ -16,7 +16,7 @@
             <div class="flex flex-col space-y-2">
                 <flux:label>{{ __('system.roles.create.form.select_permissions') }}</flux:label>
                 <div class="flex justify-between items-center">
-                    <flux:input wire:model.live="permissions_search" :placeholder="__('system.permissions.search-permissions')" type="text" class="max-w-64" />
+                    <flux:input wire:model.live="permissions_search" :placeholder="__('system.permissions.search_permissions')" type="text" class="max-w-64" />
                     <flux:select wire:model.live="key" class="w-48">
                         <flux:select.option value="">{{ __('system.permissions.select_key') }}</flux:select.option>
                         @foreach ($this->keywords as $keyValue => $keyName)

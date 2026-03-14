@@ -5,7 +5,7 @@ return [
         'menu' => 'Permisos',
         'title' => 'Listado de permisos',
         'description' => 'Muestra los permisos que pueden ser asignados a los roles y/o usuarios.',
-        'search-permissions' => 'Buscar permisos...',
+        'search_permissions' => 'Buscar permisos...',
         'select_key' => 'Seleccionar clave',
         '403' => [
             'permissions-index' => 'No tienes permiso para ver la lista de permisos.',
@@ -40,13 +40,14 @@ return [
             'users' => 'Usuarios',
             'roles' => 'Roles',
             'permissions' => 'Permisos',
+            'clans' => 'Clanes',
         ],
     ],
     'roles' => [
         'menu' => 'Roles',
         'title' => 'Listado de roles',
         'subtitle' => 'Muestra los roles que pueden ser asignados a los usuarios.',
-        'search-roles' => 'Buscar roles...',
+        'search_roles' => 'Buscar roles...',
         'back_to_table' => 'Volver al listado de roles',
         'super_admin_permission_error' => 'Uno de los permisos seleccionados no es válido.',
         'name_already_exists' => 'Ya existe un rol con ese nombre.',
@@ -96,7 +97,7 @@ return [
             'title' => 'Crear nuevo rol',
             'subtitle' => 'Rellena los campos para crear un nuevo rol.',
             'display_name' => 'Nombre',
-            'description_field' => 'Descripción',
+            'description' => 'Descripción',
             'permissions' => 'Permisos',
             'save' => 'Crear rol',
             'form' => [
@@ -117,7 +118,7 @@ return [
         'delete' => [
             'title' => 'Eliminar Rol',
             'button' => 'Sí, quiero eliminar este rol',
-            'name_rol' => 'Nombre del rol',
+            'role_name' => 'Nombre del rol',
             'password' => 'Contraseña',
             'confirmation_message' => '¿Estás seguro de que deseas eliminar este rol? Esta acción no se puede deshacer. Escriba :name y su contraseña para confirmar.',
             'success_message' => 'El rol se ha eliminado exitosamente.',
@@ -130,7 +131,7 @@ return [
         'menu' => 'Usuarios',
         'title' => 'Listado de usuarios',
         'subtitle' => 'Muestra los usuarios registrados en el sistema.',
-        'search-users' => 'Buscar usuarios...',
+        'search_users' => 'Buscar usuarios...',
         'back_to_table' => 'Volver al listado de usuarios',
         '403' => [
             'users-index' => 'No tienes permiso para ver la lista de usuarios.',
@@ -156,7 +157,7 @@ return [
         'delete' => [
             'title' => 'Eliminar Usuario',
             'button' => 'Sí, quiero eliminar este usuario',
-            'name_user' => 'Nombre del usuario',
+            'user_name' => 'Nombre del usuario',
             'password' => 'Contraseña',
             'confirmation_message' => '¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer. Escriba :name y su contraseña para confirmar.',
             'success_message' => 'El usuario se ha eliminado exitosamente.',

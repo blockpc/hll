@@ -23,6 +23,7 @@ final class RoleList
     {
         return [
             ...self::system(),
+            ...self::hllRoles(),
         ];
     }
 
@@ -60,6 +61,42 @@ final class RoleList
                     'users.index',
                     'roles.index',
                     'permissions.index',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Devuelve los roles para la aplicacion HLL.
+     *
+     * @return array<int, array{name: string, display_name: string, description: string, is_editable: bool, guard_name: string, permissions: array<int, string>}>
+     */
+    private static function hllRoles(): array
+    {
+        return [
+            [
+                'name' => 'clan_owner',
+                'display_name' => 'Administrador de Clan',
+                'description' => 'Usuario del sistema con acceso a la gestión de clanes',
+                'is_editable' => false,
+                'guard_name' => 'web',
+                'permissions' => [
+                    'clans.index',
+                    'clans.show',
+                    'clans.create',
+                    'clans.edit',
+                ],
+            ],
+            [
+                'name' => 'clan_helper',
+                'display_name' => 'Ayudante de Clan',
+                'description' => 'Usuario del sistema con acceso limitado a la gestión de clanes',
+                'is_editable' => false,
+                'guard_name' => 'web',
+                'permissions' => [
+                    'clans.index',
+                    'clans.show',
+                    'clans.edit',
                 ],
             ],
         ];

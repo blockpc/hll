@@ -50,4 +50,11 @@ Route::prefix('sistema')
             Route::livewire('/nuevo-usuario', 'system::users.create')->name('users.create');
             Route::livewire('/editar-usuario/{user}', 'system::users.edit')->name('users.edit');
         });
+
+        Route::prefix('clanes')->group(function () {
+            Route::livewire('/', 'system::clans.clan-table')->name('clans.table');
+            Route::livewire('/nuevo-clan', 'system::clans.clan-create')->name('clans.create');
+            Route::livewire('/editar-clan/{clan}', 'system::clans.clan-edit')->name('clans.edit');
+            Route::livewire('/ver-clan/{clan}', 'system::clans.clan-show')->name('clans.show');
+        });
     });
