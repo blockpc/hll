@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ClanMembershipRoleEnum;
 use App\Models\Clan;
 use Blockpc\Traits\PaginationTrait;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -30,8 +31,11 @@ new class extends Component
 
         $clan = Clan::query()->findOrFail($clanId);
 
-        if ($clan->members()->exists()) {
+        if ($clan->members()
+            ->wherePivot('membership_role', '!=', ClanMembershipRoleEnum::Owner->value)
+            ->exists()) {
             session()->flash('error', __('hll.clans.delete.error_has_members'));
+
             return;
         }
 

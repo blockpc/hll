@@ -17,6 +17,7 @@ new class extends Component
     public Clan $clan;
 
     public string $name = '';
+
     public string $email = '';
 
     public function mount(): void
@@ -39,6 +40,7 @@ new class extends Component
                 'email' => $data['email'],
                 'password' => Hash::make(Str::random(12)),
             ]);
+            $helper->assignRole('clan_helper');
 
             $this->clan->members()->attach($helper->id, [
                 'membership_role' => ClanMembershipRoleEnum::Helper->value,

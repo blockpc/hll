@@ -60,6 +60,7 @@ it('shows the owner selector for a user with clans.create permission who is not 
 });
 
 it('shows the owner selector for a sudo user', function () {
+    $this->user->revokePermissionTo('clans.create');
     $this->user->assignRole('sudo');
 
     Livewire::actingAs($this->user)
@@ -80,7 +81,7 @@ it('shows the owner selector for a user with super admin permission', function (
 
 it('prevents a user with clans.create permission from assigning an owner that already has a clan', function () {
     $owner = new_user();
-    Clan::factory()->create(['owner_user_id' => $owner->id]);
+    Clan::factory()->withOwner($owner)->create();
 
     Livewire::actingAs($this->user)
         ->test('system::clans.clan-create')

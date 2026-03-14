@@ -14,16 +14,23 @@ use Livewire\WithFileUploads;
 
 new class extends Component
 {
-    use WithFileUploads, Select2UsersNotificationsTrait;
+    use Select2UsersNotificationsTrait, WithFileUploads;
 
     public string $alias = '';
+
     public string $name = '';
+
     public string $slug = '';
+
     public string $description = '';
+
     public string $discord = '';
+
     public ?int $owner_user_id = null;
+
     /** @var \Livewire\Features\SupportFileUploads\TemporaryUploadedFile|null */
     public $logo;
+
     /** @var \Livewire\Features\SupportFileUploads\TemporaryUploadedFile|null */
     public $image;
 
@@ -106,7 +113,7 @@ new class extends Component
 
     protected function rules(): array
     {
-        $rules = (new ClanCreateRequest())->rules();
+        $rules = (new ClanCreateRequest)->rules();
 
         if ($this->canSelectOwner()) {
             $rules['owner_user_id'] = ['required', 'integer', Rule::exists('users', 'id'), Rule::notIn([auth()->id()])];
