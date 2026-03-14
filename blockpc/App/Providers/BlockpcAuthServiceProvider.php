@@ -7,7 +7,6 @@ namespace Blockpc\App\Providers;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 
 final class BlockpcAuthServiceProvider extends ServiceProvider
 {
@@ -35,11 +34,7 @@ final class BlockpcAuthServiceProvider extends ServiceProvider
                 return true;
             }
 
-            try {
-                return $user->hasPermissionTo('super admin') ? true : null;
-            } catch (PermissionDoesNotExist) {
-                return null;
-            }
+            return $user->checkPermissionTo('super admin') ? true : null;
         });
     }
 }

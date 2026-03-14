@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'super_admin_role' => 'sudo',
 
     'models' => [
 

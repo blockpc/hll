@@ -22,6 +22,7 @@ final class PermissionList
             ...self::users(),
             ...self::roles(),
             ...self::permissions(),
+            ...self::clans(),
             // Agregar aquí otros permisos específicos de la aplicación
         ];
     }
@@ -129,6 +130,54 @@ final class PermissionList
                 'key' => 'permissions',
                 'display_name' => 'Editar Permiso',
                 'description' => 'Permite editar permisos existentes, accediendo al formulario de edición de permisos.',
+                'guard_name' => 'web',
+            ],
+        ];
+    }
+
+    private static function clans(): array
+    {
+        return [
+            [
+                'name' => 'clans.index',
+                'key' => 'clans',
+                'display_name' => 'Listar Clanes',
+                'description' => 'Permite listar clanes, accediendo al listado de clanes.',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'clans.show',
+                'key' => 'clans',
+                'display_name' => 'Mostrar un Clan',
+                'description' => 'Permite mostrar un clan específico, accediendo a la vista de detalles del clan.',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'clans.create',
+                'key' => 'clans',
+                'display_name' => 'Crear Clan',
+                'description' => 'Permite crear nuevos clanes, accediendo al formulario de creación de clanes.',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'clans.edit',
+                'key' => 'clans',
+                'display_name' => 'Editar Clan',
+                'description' => 'Permite editar clanes existentes, accediendo al formulario de edición de clanes.',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'clans.delete',
+                'key' => 'clans',
+                'display_name' => 'Eliminar Clan',
+                'description' => 'Permite eliminar clanes, accediendo a la acción de eliminación de clanes.',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'clans.restore',
+                'key' => 'clans',
+                'display_name' => 'Restaurar Clan',
+                'description' => 'Permite restaurar clanes, accediendo a la acción de restaurar clanes.',
                 'guard_name' => 'web',
             ],
         ];

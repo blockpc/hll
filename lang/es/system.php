@@ -40,6 +40,7 @@ return [
             'users' => 'Usuarios',
             'roles' => 'Roles',
             'permissions' => 'Permisos',
+            'clans' => 'Clanes',
         ],
     ],
     'roles' => [

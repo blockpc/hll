@@ -51,6 +51,8 @@
     "You already have a note with this title. Please choose a different one.": "Ya tienes una nota con este título. Por favor, elige uno diferente.",
     "Save changes": "Guardar cambios",
     "Cancel": "Cancelar",
+    "Edit": "Editar",
+    "See": "Ver",
     "Delete": "Eliminar",
     "Close": "Cerrar",
     "Read Note": "Leer Nota",
@@ -107,5 +109,6 @@
     "mark all as read": "Marcar todas como leídas",
     "no notifications": "No tienes notificaciones.",
     "view all": "Ver todas las notificaciones",
-    "select user": "Seleccionar usuario"
+    "select user": "Seleccionar usuario",
+    "loading": "Cargando..."
 }

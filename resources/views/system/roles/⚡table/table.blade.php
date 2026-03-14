@@ -62,7 +62,7 @@
         <div class="space-y-4">
             <flux:fieldset>
                 <flux:legend>{{ __('system.roles.delete.title') }}</flux:legend>
-                <flux:description>{{ trans('system.roles.delete.confirmation_message', ['name' => $current_name]) }}</flux:description>
+                <flux:description>{{ __('system.roles.delete.confirmation_message', ['name' => $current_name]) }}</flux:description>
                 <div class="space-y-4">
                     <flux:input wire:model="name" :label="__('system.roles.delete.role_name')" type="text" placeholder="{{ $current_name }}" required autocomplete="off" />
                     <flux:input wire:model="password" :label="__('system.roles.delete.password')" type="password" required autocomplete="off" />
