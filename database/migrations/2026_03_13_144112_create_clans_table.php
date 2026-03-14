@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('clans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('owner_user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('owner_user_id')->constrained('users')->cascadeOnDelete()->unique();
             $table->string('alias', 8)->unique();
             $table->string('name', 32);
             $table->string('slug')->nullable()->unique();

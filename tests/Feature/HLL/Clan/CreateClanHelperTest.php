@@ -1,6 +1,8 @@
 <?php
 
+use App\Enums\ClanMembershipRoleEnum;
 use App\Models\Clan;
+use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Livewire\Livewire;
 
@@ -34,6 +36,13 @@ it('allows a clan owner to create a helper for their clan', function () {
     assertDatabaseHas('users', [
         'name' => $helperName,
         'email' => $helperEmail,
+    ]);
+
+    $createdHelper = User::query()->where('email', $helperEmail)->firstOrFail();
+    assertDatabaseHas('clan_user', [
+        'clan_id' => $clan->id,
+        'user_id' => $createdHelper->id,
+        'membership_role' => ClanMembershipRoleEnum::Helper->value,
     ]);
 
     $clan->refresh();

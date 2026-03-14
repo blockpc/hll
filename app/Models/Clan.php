@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\ClanMembershipRoleEnum;
 use App\Models\Pivots\ClanUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
 
 class Clan extends Model
 {
@@ -38,7 +40,7 @@ class Clan extends Model
     }
 
     /**
-     * The users that belong to the clan, including the role of the user in the clan (owner, helper, member).
+     * The users that belong to the clan, including the role of the user in the clan (owner, helper).
      */
     public function members(): BelongsToMany
     {
@@ -57,7 +59,7 @@ class Clan extends Model
             ->using(ClanUser::class)
             ->withPivot('membership_role')
             ->withTimestamps()
-            ->wherePivot('membership_role', 'helper');
+            ->wherePivot('membership_role', ClanMembershipRoleEnum::Helper->value);
     }
 
     /**
@@ -65,7 +67,7 @@ class Clan extends Model
      */
     public function getLogoUrlAttribute(): ?string
     {
-        return $this->logo ? url('storage/'.$this->logo) : null;
+        return $this->logo ? Storage::url($this->logo) : null;
     }
 
     /**
@@ -73,6 +75,6 @@ class Clan extends Model
      */
     public function getImageUrlAttribute(): ?string
     {
-        return $this->image ? url('storage/'.$this->image) : null;
+        return $this->image ? Storage::url($this->image) : null;
     }
 }

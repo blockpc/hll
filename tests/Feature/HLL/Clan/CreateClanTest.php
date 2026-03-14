@@ -47,8 +47,7 @@ it('allows a clan owner to create a clan', function () {
 it('clan owner can access your own clan', function () {
     $this->user->assignRole('clan_owner');
 
-    $clan = Clan::factory()->create([
-        'owner_user_id' => $this->user->id,
+    $clan = Clan::factory()->withOwner($this->user)->create([
         'alias' => 'test',
     ]);
 
@@ -59,8 +58,7 @@ it('the slug clan must be unique', function () {
     $this->user->assignRole('clan_owner');
 
     $user = new_user();
-    Clan::factory()->create([
-        'owner_user_id' => $user->id,
+    Clan::factory()->withOwner($user)->create([
         'alias' => 'test1',
         'name' => 'Test Clan',
         'slug' => 'test-clan',
@@ -78,9 +76,7 @@ it('the slug clan must be unique', function () {
 it('does not allow a clan owner to create a second clan', function () {
     $this->user->assignRole('clan_owner');
 
-    Clan::factory()->create([
-        'owner_user_id' => $this->user->id,
-    ]);
+    Clan::factory()->withOwner($this->user)->create();
 
     $this->actingAs($this->user)->get(route('clans.create'))->assertForbidden();
 });
@@ -112,9 +108,7 @@ it('shows the create clan button to a clan owner without a clan', function () {
 it('hides the create clan button from a clan owner who already owns a clan', function () {
     $this->user->assignRole('clan_owner');
 
-    Clan::factory()->create([
-        'owner_user_id' => $this->user->id,
-    ]);
+    Clan::factory()->withOwner($this->user)->create();
 
     $this->actingAs($this->user)
         ->get(route('clans.table'))

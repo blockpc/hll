@@ -7,15 +7,15 @@
 
     <div class="w-full max-w-xl">
         <form wire:submit.prevent="save" class="w-full space-y-6">
-            <flux:input label="{{ __('hll.clans.create.form.alias') }}" placeholder="{{ __('hll.clans.create.form.alias_placeholder') }}" wire:model="alias" maxlength="32" required />
+            <flux:input label="{{ __('hll.clans.create.form.alias') }}" placeholder="{{ __('hll.clans.create.form.alias_placeholder') }}" wire:model="alias" maxlength="8" required />
 
-            <flux:input label="{{ __('hll.clans.create.form.name') }}" placeholder="{{ __('hll.clans.create.form.name_placeholder') }}" wire:model.blur.live="name" maxlength="64" required />
+            <flux:input label="{{ __('hll.clans.create.form.name') }}" placeholder="{{ __('hll.clans.create.form.name_placeholder') }}" wire:model.blur.live="name" maxlength="32" required />
 
-            <flux:input label="{{ __('hll.clans.create.form.slug') }}" placeholder="{{ __('hll.clans.create.form.slug_placeholder') }}" wire:model="slug" maxlength="64" />
+            <flux:input label="{{ __('hll.clans.create.form.slug') }}" placeholder="{{ __('hll.clans.create.form.slug_placeholder') }}" wire:model="slug" maxlength="255" />
 
             <flux:textarea label="{{ __('hll.clans.create.form.description') }}" placeholder="{{ __('hll.clans.create.form.description_placeholder') }}" wire:model="description" maxlength="255" rows="4" />
 
-            <flux:input label="{{ __('hll.clans.create.form.discord') }}" placeholder="{{ __('hll.clans.create.form.discord_placeholder') }}" wire:model="discord" maxlength="64" />
+            <flux:input label="{{ __('hll.clans.create.form.discord') }}" placeholder="{{ __('hll.clans.create.form.discord_placeholder') }}" wire:model="discord" maxlength="255" />
 
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <x-input-file-single name="logo" title="{{ __('hll.clans.create.form.logo') }}" wire:model.live="logo">
@@ -47,7 +47,7 @@
 
                 <x-select2-single
                     name="users"
-                    title="{{ __('system.notifications.select_user') }}"
+                    title="system.notifications.select_user"
                     :options="$this->users"
                     :selected_id="$selectedUserId"
                     :selected_name="$selectedUserName"

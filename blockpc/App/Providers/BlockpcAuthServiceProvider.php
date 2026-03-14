@@ -30,7 +30,8 @@ final class BlockpcAuthServiceProvider extends ServiceProvider
                 return null;
             }
 
-            if ($user->hasRole('sudo')) {
+            $superAdminRole = (string) config('permission.super_admin_role', 'sudo');
+            if ($user->hasRole($superAdminRole)) {
                 return true;
             }
 

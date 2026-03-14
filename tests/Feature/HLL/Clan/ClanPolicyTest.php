@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ClanMembershipRoleEnum;
 use App\Models\Clan;
 use Database\Seeders\RolesAndPermissionsSeeder;
 
@@ -48,7 +49,7 @@ it('allows a clan_helper to update the clan they belong to', function () {
     $this->user->assignRole('clan_helper');
     $owner = new_user(role: 'clan_owner');
     $clan = Clan::factory()->create(['owner_user_id' => $owner->id]);
-    $clan->members()->attach($this->user->id, ['membership_role' => 'helper']);
+    $clan->members()->attach($this->user->id, ['membership_role' => ClanMembershipRoleEnum::Helper->value]);
 
     expect($this->user->can('update', $clan))->toBeTrue();
 });

@@ -46,22 +46,21 @@ new class extends Component
             ? auth()->user()
             : User::findOrFail($data['owner_user_id']);
 
-        if ($owner->hasRole('clan_owner') && $owner->ownedClan()->exists()) {
-            $this->addError('owner_user_id', __('hll.clans.create.error_owner_already_has_clan'));
-
-            return null;
-        }
-
-        if ($owner->ownedClan()->exists()) {
-            $this->addError('owner_user_id', __('hll.clans.create.error_owner_already_has_clan'));
-
-            return null;
-        }
-
         $ownerUserId = $owner->id;
 
-        DB::transaction(function () use ($data, $ownerUserId) {
-            $owner = User::query()->findOrFail($ownerUserId);
+        $clan = DB::transaction(function () use ($data, $ownerUserId) {
+            $owner = User::query()
+                ->whereKey($ownerUserId)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($owner->hasRole('clan_owner') && $owner->ownedClan()->exists()) {
+                return null;
+            }
+
+            if ($owner->ownedClan()->exists()) {
+                return null;
+            }
 
             $clan = Clan::create([
                 'owner_user_id' => $ownerUserId,
@@ -69,7 +68,7 @@ new class extends Component
                 'name' => $data['name'],
                 'slug' => $data['slug'] ?? $this->slug,
                 'description' => $data['description'] ?: null,
-                'discord' => $data['discord'] ?: null,
+                'discord_url' => $data['discord'] ?: null,
             ]);
 
             if ($this->logo) {
@@ -87,9 +86,17 @@ new class extends Component
             }
 
             $clan->members()->attach($ownerUserId, ['membership_role' => 'owner']);
+
+            return $clan;
         });
 
-        return redirect()->route('clans.show', ['clan' => $this->slug]);
+        if (! $clan) {
+            $this->addError('owner_user_id', __('hll.clans.create.error_owner_already_has_clan'));
+
+            return null;
+        }
+
+        return redirect()->route('clans.show', ['clan' => $clan->slug]);
     }
 
     public function canSelectOwner(): bool

@@ -109,7 +109,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * The clans the user belongs to, including the role of the user in each clan (owner, helper, member).
+     * The clans the user belongs to, including the role of the user in each clan (owner, helper).
      */
     public function clans(): BelongsToMany
     {

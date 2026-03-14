@@ -12,7 +12,7 @@ new class extends Component
 
     public function mount(): void
     {
-        abort_unless(auth()->user()->can('clans.index'), 403, __('hll.clans.index.403'));
+        abort_unless(auth()->user()?->can('clans.index'), 403, __('hll.clans.index.403'));
     }
 
     #[Computed()]
@@ -26,7 +26,7 @@ new class extends Component
 
     public function confirmDelete(int $clanId): void
     {
-        abort_unless(auth()->user()->can('clans.delete'), 403, __('hll.clans.index.403'));
+        abort_unless(auth()->user()?->can('clans.delete'), 403, __('hll.clans.index.403'));
 
         $clan = Clan::query()->findOrFail($clanId);
 

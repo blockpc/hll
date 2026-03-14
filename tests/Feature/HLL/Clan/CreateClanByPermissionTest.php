@@ -45,7 +45,7 @@ it('allows a user with clans.create permission to create a clan for another user
 it('prevents a user with clans.create permission from assigning themselves as owner', function () {
     Livewire::actingAs($this->user)
         ->test('system::clans.clan-create')
-        ->set('owner_user_id', $this->user->id)
+        ->set('selectedUserId', $this->user->id)
         ->set('alias', 'test')
         ->set('name', 'Test Clan')
         ->call('save')
@@ -84,7 +84,7 @@ it('prevents a user with clans.create permission from assigning an owner that al
 
     Livewire::actingAs($this->user)
         ->test('system::clans.clan-create')
-        ->set('owner_user_id', $owner->id)
+        ->set('selectedUserId', $owner->id)
         ->set('alias', 'test')
         ->set('name', 'Test Clan')
         ->set('description', 'Descripción del clan')

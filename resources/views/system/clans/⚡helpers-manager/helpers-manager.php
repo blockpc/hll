@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ClanMembershipRoleEnum;
 use App\Mail\NewUserCreatedMail;
 use App\Models\Clan;
 use App\Models\User;
@@ -39,7 +40,9 @@ new class extends Component
                 'password' => Hash::make(Str::random(12)),
             ]);
 
-            $this->clan->members()->attach($helper->id, ['membership_role' => 'helper']);
+            $this->clan->members()->attach($helper->id, [
+                'membership_role' => ClanMembershipRoleEnum::Helper->value,
+            ]);
 
             return $helper;
         });
@@ -51,7 +54,7 @@ new class extends Component
         } catch (\Exception $e) {
             logger()->error('Failed to send new user created email', [
                 'user_id' => $createdUser->id,
-                'email' => $this->email,
+                'email_hash' => hash('sha256', mb_strtolower($createdUser->email)),
                 'error' => $e->getMessage(),
             ]);
             session()->flash('error', __('system.users.create.email_error_message'));

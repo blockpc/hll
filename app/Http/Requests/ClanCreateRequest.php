@@ -23,8 +23,8 @@ class ClanCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'alias' => ['required', 'string', 'max:255', 'unique:clans,alias'],
-            'name' => ['required', 'string', 'max:255'],
+            'alias' => ['required', 'string', 'max:8', 'unique:clans,alias'],
+            'name' => ['required', 'string', 'max:32'],
             'slug' => ['required', 'string', 'max:255', 'unique:clans,slug'],
             'description' => ['nullable', 'string'],
             'discord' => ['nullable', 'string', 'max:255'],

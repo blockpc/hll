@@ -1,4 +1,4 @@
-@props(['name', 'title' => 'Vincular Archivo(s)'])
+@props(['name', 'title' => __('components.input_file.default_title')])
 
 <div class="flex items-center justify-start space-x-4">
 
@@ -16,7 +16,6 @@
             <div class="hidden md:block">{{ $title }}</div>
             <input type='file' class="hidden" id="{{ $name }}" name="{{ $name }}" {{ $attributes->except('class') }} />
         </label>
-        <div class="btn-sm btn-default w-full" wire:loading wire:target="{{ $attributes->wire('model')->value() }}">{{ __('loading') }}</div>
         <div class="btn-sm btn-default w-full" wire:loading wire:target="{{ $attributes->wire('model')->value() }}">{{ __('loading') }}</div>
         <div class="px-1" x-show="isUploading">
             <progress class="w-full h-2" max="100" x-bind:value="progress"></progress>

@@ -21,6 +21,7 @@ return [
         ],
         'show' => [
             'title' => 'Clan :name',
+            'no_description' => 'Este clan no tiene una descripción.',
         ],
         'create' => [
             'title' => 'Crear Clan',
