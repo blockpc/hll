@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Clan;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -37,6 +38,13 @@ class DatabaseSeeder extends Seeder
         if ($testUser->wasRecentlyCreated) {
             $testUser->markEmailAsVerified();
         }
-        $testUser->syncRoles(['user']);
+        $testUser->syncRoles(['clan_owner']);
+
+        Clan::factory()->withOwner($testUser)->create([
+            'alias' => 'test',
+            'slug' => 'test-clan',
+            'name' => 'Test Clan',
+            'description' => 'Descripción del clan de prueba.',
+        ]);
     }
 }

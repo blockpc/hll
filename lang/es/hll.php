@@ -4,6 +4,21 @@ return [
     'clans' => [
         'menu' => 'Clanes',
         '403' => 'No tienes permiso para gestionar los clanes.',
+        'form_fields' => [
+            'alias' => 'Alias del Clan',
+            'alias_placeholder' => 'Un alias corto para tu clan (ej: "mym")',
+            'slug' => 'Slug del Clan',
+            'slug_placeholder' => 'Un identificador único para tu clan en la URL (ej: "miopes-y-mancos")',
+            'name' => 'Nombre del Clan',
+            'name_placeholder' => 'El nombre completo de tu clan (ej: "Miopes y Mancos")',
+            'description' => 'Descripción del Clan',
+            'description_placeholder' => 'Una breve descripción de tu clan.',
+            'discord' => 'Discord del Clan',
+            'discord_placeholder' => 'Enlace a tu servidor de Discord (opcional)',
+            'owner_help' => 'Selecciona el usuario que será el propietario del clan. No puede ser tu propio usuario y no debe tener un clan creado.',
+            'logo' => 'Logo del Clan',
+            'image' => 'Imagen del Clan',
+        ],
         'index' => [
             '403' => 'No tienes permiso para ver el listado de clanes.',
             'submenu' => 'Listado Clanes',
@@ -22,6 +37,10 @@ return [
         'show' => [
             'title' => 'Clan :name',
             'no_description' => 'Este clan no tiene una descripción.',
+            'members_count' => '{0} Sin miembros|{1} :count miembro|[2,*] :count miembros',
+            'helpers_count' => '{0} Sin asistentes|{1} :count asistente|[2,*] :count asistentes',
+            'owner' => 'Propietario',
+            'edit_clan' => 'Editar Clan',
         ],
         'create' => [
             'title' => 'Crear Clan',
@@ -33,21 +52,6 @@ return [
             'error_owner_already_has_clan' => 'El usuario seleccionado ya tiene un clan creado.',
             'error_owner_is_clan_owner_without_clan' => 'El usuario seleccionado es administrador de un clan y no puede ser asignado.',
             'back_to_list' => 'Volver al listado de clanes',
-            'form' => [
-                'alias' => 'Alias del Clan',
-                'alias_placeholder' => 'Un alias corto para tu clan (ej: "mym")',
-                'slug' => 'Slug del Clan',
-                'slug_placeholder' => 'Un identificador único para tu clan en la URL (ej: "miopes-y-mancos")',
-                'name' => 'Nombre del Clan',
-                'name_placeholder' => 'El nombre completo de tu clan (ej: "Miopes y Mancos")',
-                'description' => 'Descripción del Clan',
-                'description_placeholder' => 'Una breve descripción de tu clan.',
-                'discord' => 'Discord del Clan',
-                'discord_placeholder' => 'Enlace a tu servidor de Discord (opcional)',
-                'owner_help' => 'Selecciona el usuario que será el propietario del clan. No puede ser tu propio usuario y no debe tener un clan creado.',
-                'logo' => 'Logo del Clan',
-                'image' => 'Imagen del Clan',
-            ],
         ],
         'edit' => [
             'title' => 'Editar Clan',
@@ -55,6 +59,7 @@ return [
             'name' => 'Nombre del Clan',
             'description' => 'Descripción del Clan',
             'submit' => 'Actualizar',
+            'back_to_list' => 'Volver al listado de clanes',
         ],
         'delete' => [
             'title' => 'Eliminar Clan',

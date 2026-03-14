@@ -44,12 +44,10 @@ it('allows a clan owner to create a clan', function () {
     ]);
 });
 
-it('clan owner can access your own clan', function () {
+it('clan owner can access their own clan', function () {
     $this->user->assignRole('clan_owner');
 
-    $clan = Clan::factory()->withOwner($this->user)->create([
-        'alias' => 'test',
-    ]);
+    $clan = Clan::factory()->withOwner($this->user)->create();
 
     $this->actingAs($this->user)->get(route('clans.show', ['clan' => $clan->slug]))->assertOk();
 });

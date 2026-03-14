@@ -11,6 +11,7 @@
 |
 */
 
+use App\Models\Clan;
 use App\Models\User;
 
 pest()->extend(Tests\TestCase::class)
@@ -48,4 +49,13 @@ function new_user(?string $role = null): User
     }
 
     return $user;
+}
+
+function new_clan(?User $owner = null, array $attributes = []): Clan
+{
+    if ($owner) {
+        return Clan::factory()->withOwner($owner)->create($attributes);
+    }
+
+    return Clan::factory()->create($attributes);
 }

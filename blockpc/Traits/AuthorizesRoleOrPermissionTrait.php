@@ -12,7 +12,7 @@ trait AuthorizesRoleOrPermissionTrait
     /**
      * Authorize the user for a given role or permission.
      * If user is not logged in, throw an exception.
-     * If user has 'sudo' role, return true.
+     * If user has the super admin role (configurable via 'permission.super_admin_role'), return true.
      * If user does not have the role or permission, return false.
      * If user has the role or permission, return true.
      */

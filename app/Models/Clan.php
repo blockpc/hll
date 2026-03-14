@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ClanMembershipRoleEnum;
 use App\Models\Pivots\ClanUser;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -65,16 +66,20 @@ class Clan extends Model
     /**
      * Get the full URL to the clan's logo.
      */
-    public function getLogoUrlAttribute(): ?string
+    public function logoUrl(): Attribute
     {
-        return $this->logo ? Storage::disk('public')->url($this->logo) : null;
+        return Attribute::get(
+            fn () => $this->logo ? Storage::disk('public')->url($this->logo) : null
+        );
     }
 
     /**
      * Get the full URL to the clan's image.
      */
-    public function getImageUrlAttribute(): ?string
+    public function imageUrl(): Attribute
     {
-        return $this->image ? Storage::disk('public')->url($this->image) : null;
+        return Attribute::get(
+            fn () => $this->image ? Storage::disk('public')->url($this->image) : null
+        );
     }
 }

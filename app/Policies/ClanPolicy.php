@@ -22,6 +22,12 @@ class ClanPolicy
             return true;
         }
 
+        if ($user->hasPermissionTo('clans.edit')
+                && ! $user->hasAnyRole(['clan_owner', 'clan_helper'])
+        ) {
+            return true;
+        }
+
         return $user->hasRole('clan_helper')
             && $clan->helpers()->where('users.id', $user->id)->exists();
     }
