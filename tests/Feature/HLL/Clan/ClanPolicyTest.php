@@ -11,8 +11,6 @@ beforeEach(function () {
     $this->user = new_user();
 });
 
-// ClanPolicy::create
-
 it('prevents a user without the clan_owner role from creating a clan', function () {
     expect($this->user->can('create', Clan::class))->toBeFalse();
 });
@@ -29,8 +27,6 @@ it('allows a clan_owner without a clan to create one', function () {
 
     expect($this->user->can('create', Clan::class))->toBeTrue();
 });
-
-// ClanPolicy::update
 
 it('allows the clan owner to update their clan', function () {
     $clan = new_clan($this->user);
@@ -62,8 +58,6 @@ it('prevents a clan_helper from updating a clan they do not belong to', function
     expect($this->user->can('update', $clan))->toBeFalse();
 });
 
-// ClanPolicy::soldiers
-
 it('allows only clan_owner and clan_helper to manage soldiers', function () {
     $owner = new_user(role: 'clan_owner');
     $helper = new_user(role: 'clan_helper');
@@ -76,8 +70,6 @@ it('allows only clan_owner and clan_helper to manage soldiers', function () {
     expect($helper->can('manageSoldiers', $clan))->toBeTrue();
     expect($otherUser->can('manageSoldiers', $clan))->toBeFalse();
 });
-
-// ClanPolicy::helpers
 
 it('allows the clan owner to manage helpers', function () {
     $owner = new_user(role: 'clan_owner');

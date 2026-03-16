@@ -211,7 +211,7 @@ new class extends Component
     {
         $this->validate([
             'deletingSoldierId' => ['required', 'integer', Rule::exists('soldiers', 'id')->where('clan_id', $this->clan->id)],
-            'current_name' => ['required', 'string', (new AreEqualsRule($this->currentNameToDelete, __('hll.clans.soldiers.delete.current_name')))],
+            'current_name' => ['required', 'string', (new AreEqualsRule($this->currentNameToDelete, __('hll.clans.soldiers.delete.current_name_error')))],
         ], [
             'current_name.required' => __('hll.clans.soldiers.delete.current_name_required'),
             'current_name.are_equals' => __('hll.clans.soldiers.delete.current_name_error'),

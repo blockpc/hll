@@ -26,7 +26,7 @@ new class extends Component
     }
 
     /**
-     * return \Illuminate\Support\Collection<int, array{id: int, name: string}>
+     * @return \Illuminate\Support\Collection<int, array{id: int, name: string}>
      */
     #[Computed]
     public function rosters(): \Illuminate\Support\Collection

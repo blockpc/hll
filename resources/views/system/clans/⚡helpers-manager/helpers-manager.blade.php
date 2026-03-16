@@ -116,7 +116,7 @@
 
             <flux:text color="yellow">{{ __('hll.clans.managers.delete.current_name_write', ['name' => $editingHelperName]) }}</flux:text>
 
-            <flux:input label="{{ __('hll.clans.managers.delete.current_name') }}" wire:model="current_name" aria-placeholder="{{ $editingHelperName }}" placeholder="{{ $editingHelperName }}" />
+            <flux:input label="{{ __('hll.clans.managers.delete.current_name') }}" wire:model="current_name" placeholder="{{ $editingHelperName }}" />
             @error('current_name')
                 <flux:text class="text-red-500 text-sm mt-1">{{ $message }}</flux:text>
             @enderror
