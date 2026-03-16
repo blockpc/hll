@@ -189,8 +189,12 @@ new class extends Component
             return __('hll.clans.create.error_owner_already_has_clan');
         }
 
-        if ($user->hasAnyRole(['clan_owner', 'clan_helper'])) {
+        if ($user->hasRole('clan_owner')) {
             return __('hll.clans.create.error_owner_is_clan_owner_without_clan');
+        }
+
+        if ($user->hasRole('clan_helper')) {
+            return __('hll.clans.create.error_owner_is_clan_helper');
         }
 
         return null;

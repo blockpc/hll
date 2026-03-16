@@ -49,9 +49,9 @@ new class extends Component
 
         $data = $this->validate();
 
-        $ownerUserId = auth()->user()->hasRole('clan_owner')
-            ? auth()->id()
-            : $data['owner_user_id'];
+        $ownerUserId = $this->canSelectOwner()
+            ? $data['owner_user_id']
+            : auth()->id();
 
         $clan = DB::transaction(function () use ($data, $ownerUserId) {
             $owner = User::query()

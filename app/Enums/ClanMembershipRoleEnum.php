@@ -12,7 +12,7 @@ enum ClanMembershipRoleEnum: string
     public function label(): string
     {
         return match ($this) {
-            self::Owner => 'Propietario',
+            self::Owner => 'Administrador',
             self::Helper => 'Asistente',
         };
     }

@@ -61,3 +61,18 @@ it('prevents a clan_helper from updating a clan they do not belong to', function
 
     expect($this->user->can('update', $clan))->toBeFalse();
 });
+
+// ClanPolicy::soldiers
+
+it('allows only clan_owner and clan_helper to manage soldiers', function () {
+    $owner = new_user(role: 'clan_owner');
+    $helper = new_user(role: 'clan_helper');
+    $otherUser = new_user();
+
+    $clan = new_clan($owner);
+    $clan->members()->attach($helper->id, ['membership_role' => ClanMembershipRoleEnum::Helper->value]);
+
+    expect($owner->can('manageSoldiers', $clan))->toBeTrue();
+    expect($helper->can('manageSoldiers', $clan))->toBeTrue();
+    expect($otherUser->can('manageSoldiers', $clan))->toBeFalse();
+});

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 class Clan extends Model
@@ -61,6 +62,14 @@ class Clan extends Model
             ->withPivot('membership_role')
             ->withTimestamps()
             ->wherePivot('membership_role', ClanMembershipRoleEnum::Helper->value);
+    }
+
+    /**
+     * Get the soldiers belonging to the clan.
+     */
+    public function soldiers(): HasMany
+    {
+        return $this->hasMany(Soldier::class);
     }
 
     /**

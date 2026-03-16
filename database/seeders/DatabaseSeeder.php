@@ -40,12 +40,12 @@ class DatabaseSeeder extends Seeder
         }
         $testUser->syncRoles(['clan_owner']);
 
-        if (! Clan::query()->where('slug', 'test-clan')->exists()) {
+        if (! Clan::query()->where('slug', 'miopes-y-mancos')->exists()) {
             Clan::factory()->withOwner($testUser)->create([
-                'alias' => 'test',
-                'slug' => 'test-clan',
-                'name' => 'Test Clan',
-                'description' => 'Descripción del clan de prueba.',
+                'alias' => 'MYM',
+                'slug' => 'miopes-y-mancos',
+                'name' => 'Miopes y Mancos',
+                'description' => 'Comunidad internacional de habla hispana no competitiva.',
             ]);
         }
     }
