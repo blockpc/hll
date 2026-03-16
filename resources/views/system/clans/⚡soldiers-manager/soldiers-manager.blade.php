@@ -43,7 +43,7 @@
             @else
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach ($this->soldiers as $soldier)
-                        <flux:card class="p-2.5 space-y-4">
+                        <flux:card wire:key="soldier-{{ $soldier->id }}" class="p-2.5 space-y-4">
                             <div class="flex justify-between items-center">
                                 <flux:heading size="base">{{ $soldier->name }}</flux:heading>
                                 <flux:text class="text-xs italic">{{ $soldier->role?->label() ?? __('hll.clans.soldiers.no_role') }}</flux:text>

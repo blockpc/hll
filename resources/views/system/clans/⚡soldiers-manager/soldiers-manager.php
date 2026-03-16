@@ -75,10 +75,32 @@ new class extends Component
 
         $message = DB::transaction(function () use ($data): string {
             if ($this->manySoldiers) {
-                $createdCount = $this->saveBulk();
+                $result = $this->saveBulk();
                 $this->reset('bulkNames', 'manySoldiers');
 
-                return __('hll.clans.soldiers.create.bulk_message_success', ['count' => $createdCount]);
+                $message = __('hll.clans.soldiers.create.bulk_message_success', ['count' => $result['created']]);
+
+                if (! empty($result['skippedTooLong'])) {
+                    $message .= ' '.__('hll.clans.soldiers.create.bulk_skipped_too_long', [
+                        'count' => count($result['skippedTooLong']),
+                        'names' => implode(', ', $result['skippedTooLong']),
+                    ]);
+                }
+
+                if (! empty($result['duplicatesIgnored'])) {
+                    $message .= ' '.__('hll.clans.soldiers.create.bulk_duplicates_ignored', [
+                        'count' => count($result['duplicatesIgnored']),
+                        'names' => implode(', ', $result['duplicatesIgnored']),
+                    ]);
+                }
+
+                if ($result['skippedEmpty'] > 0) {
+                    $message .= ' '.__('hll.clans.soldiers.create.bulk_skipped_empty', [
+                        'count' => $result['skippedEmpty'],
+                    ]);
+                }
+
+                return $message;
             } else {
                 $this->clan->soldiers()->create($data);
                 $this->reset(['name', 'role', 'observation', 'manySoldiers']);
@@ -92,24 +114,49 @@ new class extends Component
         $this->cancelModal('create-soldier-manager');
     }
 
-    public function saveBulk(): int
+    /** @return array{created: int, skippedTooLong: list<string>, duplicatesIgnored: list<string>, skippedEmpty: int} */
+    public function saveBulk(): array
     {
-        $names = collect(preg_split('/[\n,]+/', $this->bulkNames))
-            ->map(fn (string $name) => $this->normalizeSoldierName($name))
-            ->filter(fn (string $name) => $name !== '')
-            ->filter(fn (string $name) => mb_strlen($name) <= 32)
-            ->unique()
-            ->values();
+        $skippedEmpty = 0;
+        $skippedTooLong = [];
+        $validNames = [];
+
+        foreach (preg_split('/[\n,]+/', $this->bulkNames ?? '') as $raw) {
+            $normalized = $this->normalizeSoldierName($raw);
+
+            if ($normalized === '') {
+                $skippedEmpty++;
+
+                continue;
+            }
+
+            if (mb_strlen($normalized) > 32) {
+                $skippedTooLong[] = $normalized;
+
+                continue;
+            }
+
+            $validNames[] = $normalized;
+        }
 
         $created = 0;
-        foreach ($names as $name) {
+        $duplicatesIgnored = [];
+
+        foreach (array_unique($validNames) as $name) {
             $soldier = $this->clan->soldiers()->firstOrCreate(['name' => $name]);
             if ($soldier->wasRecentlyCreated) {
                 $created++;
+            } else {
+                $duplicatesIgnored[] = $name;
             }
         }
 
-        return $created;
+        return [
+            'created' => $created,
+            'skippedTooLong' => $skippedTooLong,
+            'duplicatesIgnored' => $duplicatesIgnored,
+            'skippedEmpty' => $skippedEmpty,
+        ];
     }
 
     private function normalizeSoldierName(string $name): string
@@ -151,7 +198,7 @@ new class extends Component
         }
     }
 
-    public function showEditSoldier(int $soldierId): void
+    public function showEditSoldier(int|string $soldierId): void
     {
         $this->authorizeOwner();
 

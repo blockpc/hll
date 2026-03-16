@@ -6,8 +6,9 @@ use App\Models\Clan;
 use App\Models\User;
 use Blockpc\App\Rules\AreEqualsRule;
 use Blockpc\Traits\AlertBrowserEvent;
-use Illuminate\Database\Eloquent\Collection;
+use Blockpc\Traits\PaginationTrait;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -19,6 +20,7 @@ use Livewire\Component;
 new class extends Component
 {
     use AlertBrowserEvent;
+    use PaginationTrait;
 
     public Clan $clan;
 
@@ -40,9 +42,9 @@ new class extends Component
     }
 
     #[Computed]
-    public function members(): Collection
+    public function members(): LengthAwarePaginator
     {
-        return $this->clan->members;
+        return $this->clan->members()->orderBy('name')->paginate(12);
     }
 
     public function save(): RedirectResponse|Redirector|null

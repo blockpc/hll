@@ -62,7 +62,7 @@
                 <div class="space-y-6">
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
                         @forelse ($this->members as $member)
-                            <flux:card class="p-2.5">
+                            <flux:card wire:key="helper-{{ $member->id }}" class="p-2.5">
                                 <div class="space-y-4">
                                     <flux:heading size="base">{{ $member->name }}</flux:heading>
                                     <flux:text class="text-xs italic">{{ $member->pivot->membership_role->label() }}</flux:text>
@@ -81,7 +81,7 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <flux:heading size="lg">{{ __('hll.clans.show.titles.soldiers') }}</flux:heading>
-                        <flux:text class="mt-2">{{ trans_choice('hll.clans.show.titles.soldiers_count', $this->soldiers->count()) }}</flux:text>
+                        <flux:text class="mt-2">{{ trans_choice('hll.clans.show.titles.soldiers_count', $this->soldiers->total()) }}</flux:text>
                     </div>
                 </div>
 
@@ -90,7 +90,7 @@
                 @else
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach ($this->soldiers as $soldier)
-                        <flux:card class="p-2.5 space-y-4">
+                        <flux:card wire:key="soldier-{{ $soldier->id }}" class="p-2.5 space-y-4">
                             <div class="flex justify-between items-center">
                                 <flux:heading size="base">{{ $soldier->name }}</flux:heading>
                                 <flux:text class="text-xs italic">{{ $soldier->role?->label() ?? __('hll.clans.soldiers.no_role') }}</flux:text>
@@ -120,7 +120,7 @@
 
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
                     @forelse ($this->rosters as $roster)
-                        <flux:card class="p-2.5 space-y-4">
+                        <flux:card wire:key="roster-{{ $roster->id }}" class="p-2.5 space-y-4">
                             {{ __('loading') }}
                         </flux:card>
                     @empty

@@ -153,6 +153,9 @@ return [
                 'yes_toggle' => 'Agregar varios soldados',
                 'yes_toggle_placeholder' => "Ingresa los nombres de los soldados separados por saltos de línea o comas.\nEjemplo:\nAlpha\nBravo\nCharlie",
                 'bulk_message_success' => 'Soldados creados correctamente. :count',
+                'bulk_skipped_too_long' => 'Omitidos por exceder 32 caracteres (:count): :names.',
+                'bulk_duplicates_ignored' => 'Ya existían en el clan (:count): :names.',
+                'bulk_skipped_empty' => 'Nombres vacíos omitidos: :count.',
                 'button' => 'Crear Soldado(s)',
             ],
             'edit' => [

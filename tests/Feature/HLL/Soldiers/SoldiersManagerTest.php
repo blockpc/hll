@@ -255,3 +255,49 @@ it('can delete a soldier', function () {
 
     expect($clan->soldiers()->count())->toBe(0);
 });
+
+it('skips names exceeding 32 characters in bulk input', function () {
+    $owner = new_user(role: 'clan_owner');
+    $clan = new_clan($owner);
+    $longName = str_repeat('a', 33);
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.soldiers-manager', ['clan' => $clan])
+        ->set('manySoldiers', true)
+        ->set('bulkNames', "Alpha, {$longName}")
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($clan->soldiers()->count())->toBe(1);
+    expect($clan->soldiers()->first()->name)->toBe('alpha');
+});
+
+it('tracks names already existing in the clan as duplicates in bulk input', function () {
+    $owner = new_user(role: 'clan_owner');
+    $clan = new_clan($owner);
+    Soldier::factory()->forClan($clan)->create(['name' => 'alpha']);
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.soldiers-manager', ['clan' => $clan])
+        ->set('manySoldiers', true)
+        ->set('bulkNames', 'Alpha, Beta')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($clan->soldiers()->count())->toBe(2);
+    expect($clan->soldiers()->pluck('name')->sort()->values()->toArray())->toBe(['alpha', 'beta']);
+});
+
+it('counts empty normalized names as skippedEmpty in bulk input', function () {
+    $owner = new_user(role: 'clan_owner');
+    $clan = new_clan($owner);
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.soldiers-manager', ['clan' => $clan])
+        ->set('manySoldiers', true)
+        ->set('bulkNames', 'Alpha, , Beta')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($clan->soldiers()->count())->toBe(2);
+});

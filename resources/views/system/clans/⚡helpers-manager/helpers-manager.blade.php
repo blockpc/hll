@@ -38,26 +38,30 @@
             </div>
 
             <div class="space-y-6">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                    @forelse ($this->members as $member)
-                        <flux:card class="p-2.5">
-                            <div class="space-y-4">
-                                <flux:heading size="base">{{ $member->name }}</flux:heading>
-                                <flux:text class="text-xs italic">{{ $member->pivot->membership_role->label() }}</flux:text>
+                @if ($this->members->isEmpty())
+                    <flux:text class="text-center text-gray-500">{{ __('hll.clans.managers.no_helpers') }}</flux:text>
+                @else
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                        @foreach ($this->members as $member)
+                            <flux:card wire:key="helper-{{ $member->id }}" class="p-2.5">
+                                <div class="space-y-4">
+                                    <flux:heading size="base">{{ $member->name }}</flux:heading>
+                                    <flux:text class="text-xs italic">{{ $member->pivot->membership_role->label() }}</flux:text>
 
-                                @can('update', $clan)
-                                    <div class="flex justify-start items-center space-x-2">
-                                        <flux:button size="xs" variant="primary" color="green" icon="pencil" wire:click="showEditModal({{ $member->id }})">{{ __('hll.commons.edit') }}</flux:button>
+                                    @can('update', $clan)
+                                        <div class="flex justify-start items-center space-x-2">
+                                            <flux:button size="xs" variant="primary" color="green" icon="pencil" wire:click="showEditModal({{ $member->id }})">{{ __('hll.commons.edit') }}</flux:button>
 
-                                        <flux:button size="xs" variant="primary" color="red" icon="trash" wire:click="showDeleteModal({{ $member->id }})">{{ __('hll.commons.delete') }}</flux:button>
-                                    </div>
-                                @endcan
-                            </div>
-                        </flux:card>
-                    @empty
-                        <flux:text class="text-center text-gray-500">{{ __('hll.clans.managers.no_helpers') }}</flux:text>
-                    @endforelse
-                </div>
+                                            <flux:button size="xs" variant="primary" color="red" icon="trash" wire:click="showDeleteModal({{ $member->id }})">{{ __('hll.commons.delete') }}</flux:button>
+                                        </div>
+                                    @endcan
+                                </div>
+                            </flux:card>
+                        @endforeach
+                    </div>
+
+                    <flux:pagination :paginator="$this->members" />
+                @endif
             </div>
         </flux:card>
     </div>
