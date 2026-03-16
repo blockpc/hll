@@ -75,10 +75,10 @@ new class extends Component
 
         $message = DB::transaction(function () use ($data): string {
             if ($this->manySoldiers) {
-                $createds = $this->saveBulk();
+                $createdCount = $this->saveBulk();
                 $this->reset('bulkNames', 'manySoldiers');
 
-                return __('hll.clans.soldiers.create.bulk_message_success', ['count' => $createds]);
+                return __('hll.clans.soldiers.create.bulk_message_success', ['count' => $createdCount]);
             } else {
                 $this->clan->soldiers()->create($data);
                 $this->reset(['name', 'role', 'observation', 'manySoldiers']);
@@ -169,7 +169,7 @@ new class extends Component
     {
         $this->authorizeOwner();
 
-        $this->soldier_name = $this->normalizeSoldierName($this->soldier_name);
+        $this->soldier_name = $this->normalizeSoldierName($this->soldier_name ?? '');
 
         $this->validate([
             'editingSoldierId' => ['required', 'integer', Rule::exists('soldiers', 'id')->where('clan_id', $this->clan->id)],
@@ -209,6 +209,8 @@ new class extends Component
 
     public function deleteSoldier(): void
     {
+        $this->authorizeOwner();
+
         $this->validate([
             'deletingSoldierId' => ['required', 'integer', Rule::exists('soldiers', 'id')->where('clan_id', $this->clan->id)],
             'current_name' => ['required', 'string', (new AreEqualsRule($this->currentNameToDelete, __('hll.clans.soldiers.delete.current_name_error')))],

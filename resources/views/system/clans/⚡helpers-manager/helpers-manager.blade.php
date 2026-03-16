@@ -77,7 +77,7 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <flux:button size="sm" variant="ghost" wire:click="cancel">{{ __('Cancel') }}</flux:button>
+                <flux:button size="sm" variant="ghost" wire:click="cancel">{{ __('hll.commons.cancel') }}</flux:button>
                 <flux:button size="sm" variant="primary" color="blue" wire:click="save">{{ __('hll.clans.managers.create.title') }}</flux:button>
             </div>
         </div>

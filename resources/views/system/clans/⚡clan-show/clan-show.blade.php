@@ -85,8 +85,11 @@
                     </div>
                 </div>
 
+                @if ($this->soldiers->isEmpty())
+                    <flux:text class="text-center text-gray-500">{{ __('hll.clans.soldiers.no_soldiers') }}</flux:text>
+                @else
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                    @forelse ($this->soldiers as $soldier)
+                    @foreach ($this->soldiers as $soldier)
                         <flux:card class="p-2.5 space-y-4">
                             <div class="flex justify-between items-center">
                                 <flux:heading size="base">{{ $soldier->name }}</flux:heading>
@@ -94,10 +97,11 @@
                             </div>
                             <flux:text class="text-xs italic">{{ $soldier->observation ?? __('hll.clans.soldiers.no_observation') }}</flux:text>
                         </flux:card>
-                    @empty
-                        <flux:text class="text-center text-gray-500">{{ __('hll.clans.soldiers.no_soldiers') }}</flux:text>
-                    @endforelse
+                    @endforeach
                 </div>
+
+                <flux:pagination :paginator="$this->soldiers" />
+                @endif
             </flux:card>
         </div>
 
