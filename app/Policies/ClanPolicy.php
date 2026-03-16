@@ -18,17 +18,31 @@ class ClanPolicy
 
     public function update(User $user, Clan $clan): bool
     {
-        if ($user->id === $clan->owner_user_id) {
-            return true;
-        }
-
-        if ($user->hasPermissionTo('clans.edit')
-                && ! $user->hasAnyRole(['clan_owner', 'clan_helper'])
-        ) {
+        if ($this->isOwnerOrEditor($user, $clan)) {
             return true;
         }
 
         return $user->hasRole('clan_helper')
             && $clan->helpers()->where('users.id', $user->id)->exists();
+    }
+
+    public function manageSoldiers(User $user, Clan $clan): bool
+    {
+        return $this->update($user, $clan);
+    }
+
+    public function manageHelpers(User $user, Clan $clan): bool
+    {
+        return $this->isOwnerOrEditor($user, $clan);
+    }
+
+    private function isOwnerOrEditor(User $user, Clan $clan): bool
+    {
+        if ($user->id === $clan->owner_user_id) {
+            return true;
+        }
+
+        return $user->hasPermissionTo('clans.edit')
+            && ! $user->hasAnyRole(['clan_owner', 'clan_helper']);
     }
 }

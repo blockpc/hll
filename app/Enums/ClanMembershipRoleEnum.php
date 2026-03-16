@@ -12,8 +12,8 @@ enum ClanMembershipRoleEnum: string
     public function label(): string
     {
         return match ($this) {
-            self::Owner => 'Propietario',
-            self::Helper => 'Asistente',
+            self::Owner => __('hll.clan_membership_role.owner'),
+            self::Helper => __('hll.clan_membership_role.helper'),
         };
     }
 }

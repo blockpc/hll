@@ -63,3 +63,85 @@ it('forbids a clan helper from creating helpers', function () {
         ->test('system::clans.helpers-manager', ['clan' => $clan])
         ->assertForbidden();
 });
+
+it('can update a helper member', function () {
+    $owner = new_user(role: 'clan_owner');
+    $helper = new_user(role: 'clan_helper');
+
+    $clan = Clan::factory()
+        ->withOwner($owner)
+        ->withHelper($helper)
+        ->create();
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.helpers-manager', ['clan' => $clan])
+        ->call('showEditModal', $helper->id)
+        ->set('editingHelperName', 'Updated Helper Name')
+        ->set('editingHelperEmail', $helper->email)
+        ->call('editHelper')
+        ->assertHasNoErrors();
+
+    $helper->refresh();
+
+    expect($helper->name)->toBe('Updated Helper Name');
+});
+
+it('fails to update helper when email already exists', function () {
+
+    $owner = new_user(role: 'clan_owner');
+    $helper = new_user(role: 'clan_helper');
+    $otherHelper = new_user(role: 'clan_helper');
+
+    $clan = Clan::factory()
+        ->withOwner($owner)
+        ->withHelper($helper)
+        ->create();
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.helpers-manager', ['clan' => $clan])
+        ->call('showEditModal', $helper->id)
+        ->set('editingHelperName', 'Updated Helper Name')
+        ->set('editingHelperEmail', $otherHelper->email)
+        ->call('editHelper')
+        ->assertHasErrors('editingHelperEmail');
+});
+
+it('can delete a member of clan', function () {
+
+    $owner = new_user(role: 'clan_owner');
+    $helper = new_user(role: 'clan_helper');
+
+    $clan = Clan::factory()
+        ->withOwner($owner)
+        ->withHelper($helper)
+        ->create();
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.helpers-manager', ['clan' => $clan])
+        ->call('showDeleteModal', $helper->id)
+        ->set('current_name', $helper->name)
+        ->call('deleteHelper')
+        ->assertHasNoErrors();
+
+    $clan->refresh();
+
+    expect($clan->helpers)->toHaveCount(0);
+});
+
+it('fails to delete helper when confirmation name does not match', function () {
+
+    $owner = new_user(role: 'clan_owner');
+    $helper = new_user(role: 'clan_helper');
+
+    $clan = Clan::factory()
+        ->withOwner($owner)
+        ->withHelper($helper)
+        ->create();
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.helpers-manager', ['clan' => $clan])
+        ->call('showDeleteModal', $helper->id)
+        ->set('current_name', 'WRONG NAME')
+        ->call('deleteHelper')
+        ->assertHasErrors('current_name');
+});

@@ -15,7 +15,7 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <flux:button size="sm" variant="primary" color="yellow" wire:click="cancel">{{ __('Cancel') }}</flux:button>
+                <flux:button size="sm" variant="ghost" wire:click="cancel">{{ __('Cancel') }}</flux:button>
                 <flux:button size="sm" variant="primary" color="blue" wire:click="create">{{ __('Create Note') }}</flux:button>
             </div>
         </div>
