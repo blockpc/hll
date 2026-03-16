@@ -33,7 +33,7 @@
                 ])>{{ $title }}</div>
             </label>
         </div>
-        <div class="btn btn-sm btn-default w-full" wire:loading.block wire:target="{{ $attributes->wire('model')->value() }}">{{ __('loading') }}</div>
+        <div class="btn btn-sm btn-default w-full" wire:loading.block wire:target="{{ $attributes->wire('model')->value() }}">{{ __('hll.commons.loading') }}</div>
         <div class="px-1 w-full mt-1" x-show="isUploading">
             <progress class="block h-2 w-full rounded accent-blue-500" max="100" x-bind:value="progress"></progress>
         </div>

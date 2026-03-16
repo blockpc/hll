@@ -106,7 +106,7 @@
             @endif
 
             <div class="flex justify-end gap-2">
-                <flux:button size="sm" variant="ghost" wire:click="cancel">{{ __('Cancel') }}</flux:button>
+                <flux:button size="sm" variant="ghost" wire:click="cancel">{{ __('hll.commons.cancel') }}</flux:button>
                 <flux:button size="sm" variant="primary" color="blue" wire:click="save">{{ __('hll.clans.soldiers.create.button') }}</flux:button>
             </div>
 
@@ -141,7 +141,7 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <flux:button size="sm" variant="ghost" wire:click="cancelEditSoldier">{{ __('Cancel') }}</flux:button>
+                <flux:button size="sm" variant="ghost" wire:click="cancelEditSoldier">{{ __('hll.commons.cancel') }}</flux:button>
                 <flux:button size="sm" variant="primary" color="green" wire:click="editSoldier">{{ __('hll.clans.soldiers.edit.button') }}</flux:button>
             </div>
 
@@ -163,7 +163,7 @@
             <flux:input size="sm" label="{{ __('hll.clans.soldiers.delete.current_name') }}" wire:model="current_name" placeholder="{{ $currentNameToDelete }}" />
 
             <div class="flex justify-end gap-2">
-                <flux:button size="sm" variant="ghost" wire:click="cancelDeleteSoldier">{{ __('Cancel') }}</flux:button>
+                <flux:button size="sm" variant="ghost" wire:click="cancelDeleteSoldier">{{ __('hll.commons.cancel') }}</flux:button>
                 <flux:button size="sm" variant="primary" color="red" wire:click="deleteSoldier">{{ __('hll.clans.soldiers.delete.button') }}</flux:button>
             </div>
         </div>

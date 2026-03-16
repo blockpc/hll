@@ -33,7 +33,7 @@
             <div class="flex justify-between items-start">
                 <div>
                     <flux:heading size="lg">{{ __('hll.clans.show.titles.helpers') }}</flux:heading>
-                    <flux:text class="mt-2">{{ trans_choice('hll.clans.show.titles.helpers_count', $this->members->count()) }}</flux:text>
+                    <flux:text class="mt-2">{{ trans_choice('hll.clans.show.titles.helpers_count', $this->members->total()) }}</flux:text>
                 </div>
             </div>
 

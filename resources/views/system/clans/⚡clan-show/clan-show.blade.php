@@ -31,7 +31,7 @@
                 <flux:button variant="outline" color="blue" size="sm" class="w-full" @click="show = 'helpers'">
                     {{ __('hll.clans.show.tabs.helpers') }}
                 </flux:button>
-                @can('update', $clan)
+                @can('manageHelpers', $clan)
                 <flux:button variant="primary" color="green" icon="pencil" size="xs" href="{{ route('clans.helpers.manager', $clan->slug) }}" />
                 @endcan
             </div>
@@ -121,7 +121,7 @@
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
                     @forelse ($this->rosters as $roster)
                         <flux:card wire:key="roster-{{ $roster->id }}" class="p-2.5 space-y-4">
-                            {{ __('loading') }}
+                            {{ __('hll.commons.loading') }}
                         </flux:card>
                     @empty
                         <flux:text class="text-center text-gray-500">{{ __('hll.clans.rosters.no_rosters') }}</flux:text>

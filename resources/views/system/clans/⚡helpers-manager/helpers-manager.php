@@ -157,6 +157,8 @@ new class extends Component
 
     public function deleteHelper(): void
     {
+        $this->authorizeOwner();
+
         $this->validate([
             'current_name' => ['required', 'string', (new AreEqualsRule($this->editingHelperName, __('hll.clans.managers.delete.current_name_error')))],
         ], [
