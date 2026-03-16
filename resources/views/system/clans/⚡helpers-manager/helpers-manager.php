@@ -104,12 +104,7 @@ new class extends Component
         $this->authorizeOwner();
 
         $this->editingHelperId = $helperId;
-        $helper = User::findOrFail($this->editingHelperId);
-
-        if (! $this->clan->members()->where('user_id', $helper->id)->exists()) {
-            abort(404);
-        }
-
+        $helper = $this->ensureMemberExists($this->editingHelperId);
         $this->editingHelperName = $helper->name;
         $this->editingHelperEmail = $helper->email;
 
@@ -128,12 +123,7 @@ new class extends Component
             'editingHelperEmail' => __('hll.clans.managers.edit.email'),
         ]);
 
-        $helper = User::findOrFail($this->editingHelperId);
-
-        if (! $this->clan->members()->where('user_id', $helper->id)->exists()) {
-            abort(404);
-        }
-
+        $helper = $this->ensureMemberExists($this->editingHelperId);
         $helper->update([
             'name' => $data['editingHelperName'],
             'email' => $data['editingHelperEmail'],
@@ -156,19 +146,14 @@ new class extends Component
         $this->authorizeOwner();
 
         $this->editingHelperId = $helperId;
-        $helper = User::findOrFail($this->editingHelperId);
-
-        if (! $this->clan->members()->where('user_id', $helper->id)->exists()) {
-            abort(404);
-        }
-
+        $helper = $this->ensureMemberExists($this->editingHelperId);
         $this->editingHelperName = $helper->name;
         $this->current_name = '';
 
         $this->modal('delete-helper-manager')->show();
     }
 
-    public function deleteHelper()
+    public function deleteHelper(): void
     {
         $this->validate([
             'current_name' => ['required', 'string', (new AreEqualsRule($this->editingHelperName, __('hll.clans.managers.delete.current_name_error')))],
@@ -176,7 +161,7 @@ new class extends Component
             'current_name.in' => __('hll.clans.managers.delete.current_name_write', ['name' => $this->editingHelperName]),
         ]);
 
-        $helper = User::findOrFail($this->editingHelperId);
+        $helper = $this->ensureMemberExists($this->editingHelperId);
         $this->clan->members()->detach($helper->id);
 
         $message = __('hll.clans.managers.delete.message_success', ['name' => $helper->name]);
@@ -196,5 +181,16 @@ new class extends Component
         $this->resetExcept('clan');
         $this->clearValidation();
         $this->modal($modal)->close();
+    }
+
+    private function ensureMemberExists(int|string $helperId): User
+    {
+        $helper = User::findOrFail($helperId);
+
+        if (! $this->clan->members()->where('user_id', $helper->id)->exists()) {
+            abort(404);
+        }
+
+        return $helper;
     }
 };

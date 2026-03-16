@@ -117,13 +117,13 @@
             <flux:text color="yellow">{{ __('hll.clans.managers.delete.current_name_write', ['name' => $editingHelperName]) }}</flux:text>
 
             <flux:input label="{{ __('hll.clans.managers.delete.current_name') }}" wire:model="current_name" aria-placeholder="{{ $editingHelperName }}" placeholder="{{ $editingHelperName }}" />
-            @error('editingHelperName')
+            @error('current_name')
                 <flux:text class="text-red-500 text-sm mt-1">{{ $message }}</flux:text>
             @enderror
 
             <div class="flex justify-end gap-2">
                 <flux:button size="sm" variant="ghost" wire:click="cancelDeleteModal">{{ __('hll.commons.cancel') }}</flux:button>
-                <flux:button size="sm" variant="primary" color="red" wire:click="delete">{{ __('hll.clans.managers.delete.button') }}</flux:button>
+                <flux:button size="sm" variant="primary" color="red" wire:click="deleteHelper">{{ __('hll.clans.managers.delete.button') }}</flux:button>
             </div>
         </div>
     </flux:modal>

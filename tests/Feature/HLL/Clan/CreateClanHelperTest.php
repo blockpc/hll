@@ -86,11 +86,11 @@ it('can update a helper member', function () {
     expect($helper->name)->toBe('Updated Helper Name');
 });
 
-it('check error update name exists', function () {
+it('fails to update helper when email already exists', function () {
 
     $owner = new_user(role: 'clan_owner');
     $helper = new_user(role: 'clan_helper');
-    $otheHelper = new_user(role: 'clan_helper');
+    $otherHelper = new_user(role: 'clan_helper');
 
     $clan = Clan::factory()
         ->withOwner($owner)
@@ -101,7 +101,7 @@ it('check error update name exists', function () {
         ->test('system::clans.helpers-manager', ['clan' => $clan])
         ->call('showEditModal', $helper->id)
         ->set('editingHelperName', 'Updated Helper Name')
-        ->set('editingHelperEmail', $otheHelper->email)
+        ->set('editingHelperEmail', $otherHelper->email)
         ->call('editHelper')
         ->assertHasErrors('editingHelperEmail');
 });
@@ -128,7 +128,7 @@ it('can delete a member of clan', function () {
     expect($clan->helpers)->toHaveCount(0);
 });
 
-it('check error current name are not equal', function () {
+it('fails to delete helper when confirmation name does not match', function () {
 
     $owner = new_user(role: 'clan_owner');
     $helper = new_user(role: 'clan_helper');

@@ -54,7 +54,7 @@ new class extends Component
     #[Computed()]
     public function soldiers(): LengthAwarePaginator
     {
-        return $this->clan->soldiers()->paginate(12);
+        return $this->clan->soldiers()->orderBy('name')->paginate(12);
     }
 
     #[Computed]
@@ -87,7 +87,7 @@ new class extends Component
             }
         });
 
-        $this->alert($message, title: 'Éxito');
+        $this->alert($message, title: __('hll.clans.soldiers.create.title'));
 
         $this->cancelModal('create-soldier-manager');
     }
@@ -167,6 +167,10 @@ new class extends Component
 
     public function editSoldier(): void
     {
+        $this->authorizeOwner();
+
+        $this->soldier_name = $this->normalizeSoldierName($this->soldier_name);
+
         $this->validate([
             'editingSoldierId' => ['required', 'integer', Rule::exists('soldiers', 'id')->where('clan_id', $this->clan->id)],
             'soldier_name' => ['required', 'string', 'max:32', Rule::unique('soldiers', 'name')->where('clan_id', $this->clan->id)->ignore($this->editingSoldierId)],
@@ -176,12 +180,12 @@ new class extends Component
 
         $soldier = $this->clan->soldiers()->findOrFail($this->editingSoldierId);
         $soldier->update([
-            'name' => $this->normalizeSoldierName($this->soldier_name),
+            'name' => $this->soldier_name,
             'role' => $this->soldier_role,
             'observation' => $this->soldier_observation,
         ]);
 
-        $this->alert(__('hll.clans.soldiers.edit.message_success', ['name' => $soldier->name]), title: 'Éxito');
+        $this->alert(__('hll.clans.soldiers.edit.message_success', ['name' => $soldier->name]), title: __('hll.clans.soldiers.edit.title'));
 
         $this->cancelModal('edit-soldier-manager');
     }
@@ -209,14 +213,14 @@ new class extends Component
             'deletingSoldierId' => ['required', 'integer', Rule::exists('soldiers', 'id')->where('clan_id', $this->clan->id)],
             'current_name' => ['required', 'string', (new AreEqualsRule($this->currentNameToDelete, __('hll.clans.soldiers.delete.current_name')))],
         ], [
-            'current_name.required' => __('hll.clans.soldiers.delete.current_name').' es requerido.',
+            'current_name.required' => __('hll.clans.soldiers.delete.current_name_required'),
             'current_name.are_equals' => __('hll.clans.soldiers.delete.current_name_error'),
         ]);
 
         $soldier = $this->clan->soldiers()->findOrFail($this->deletingSoldierId);
         $soldier->delete();
 
-        $this->alert(__('hll.clans.soldiers.delete.message_success', ['name' => $soldier->name]), title: 'Éxito');
+        $this->alert(__('hll.clans.soldiers.delete.message_success', ['name' => $soldier->name]), title: __('hll.clans.soldiers.delete.title'));
 
         $this->cancelModal('delete-soldier-manager');
     }

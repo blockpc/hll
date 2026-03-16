@@ -7,6 +7,7 @@ return [
         'delete' => 'Eliminar',
         'cancel' => 'Cancelar',
         'confirm' => 'Confirmar',
+        'success' => 'Éxito',
         'back' => 'Volver',
     ],
     'clans' => [
@@ -169,6 +170,7 @@ return [
                 'confirmation_message' => '¿Estás seguro de que quieres eliminar este soldado? Esta acción no se puede deshacer.',
                 'current_name_write' => 'Escribe el nombre del soldado para confirmar. :name',
                 'current_name_error' => 'El nombre ingresado no coincide con el nombre del soldado a eliminar.',
+                'current_name_required' => 'Debes escribir el nombre del soldado para confirmar.',
                 'message_success' => 'Soldado eliminado correctamente. :name',
                 'button' => 'Eliminar Soldado',
             ],
@@ -185,6 +187,11 @@ return [
             'back' => 'Volver al clan',
             'create' => 'Crear Roster de Clan',
         ],
+    ],
+    'clan_membership_role' => [
+        'owner' => 'Administrador',
+        'helper' => 'Asistente',
+        'soldier' => 'Soldado',
     ],
     'role_squad_type' => [
         'commander' => 'Comandante',

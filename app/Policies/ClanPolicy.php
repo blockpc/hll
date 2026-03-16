@@ -18,13 +18,7 @@ class ClanPolicy
 
     public function update(User $user, Clan $clan): bool
     {
-        if ($user->id === $clan->owner_user_id) {
-            return true;
-        }
-
-        if ($user->hasPermissionTo('clans.edit')
-                && ! $user->hasAnyRole(['clan_owner', 'clan_helper'])
-        ) {
+        if ($this->isOwnerOrEditor($user, $clan)) {
             return true;
         }
 
@@ -39,16 +33,16 @@ class ClanPolicy
 
     public function manageHelpers(User $user, Clan $clan): bool
     {
+        return $this->isOwnerOrEditor($user, $clan);
+    }
+
+    private function isOwnerOrEditor(User $user, Clan $clan): bool
+    {
         if ($user->id === $clan->owner_user_id) {
             return true;
         }
 
-        if ($user->hasPermissionTo('clans.edit')
-                && ! $user->hasAnyRole(['clan_owner', 'clan_helper'])
-        ) {
-            return true;
-        }
-
-        return false;
+        return $user->hasPermissionTo('clans.edit')
+            && ! $user->hasAnyRole(['clan_owner', 'clan_helper']);
     }
 }

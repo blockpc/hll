@@ -10,7 +10,7 @@
                     @endif
                 </div>
                 <div>
-                    <flux:heading size="xl" level="1">Soldados</flux:heading>
+                    <flux:heading size="xl" level="1">{{ __('hll.clans.soldiers.list') }}</flux:heading>
                     <flux:heading size="lg" level="2">{{ $clan->alias }} | {{ $clan->name }}</flux:heading>
                     <flux:subheading size="base" class="mb-6">{{ $clan->description ?? __('hll.clans.show.no_description') }}</flux:subheading>
                 </div>
@@ -160,7 +160,7 @@
 
             <flux:text color="yellow">{{ __('hll.clans.soldiers.delete.current_name_write', ['name' => $currentNameToDelete]) }}</flux:text>
 
-            <flux:input size="sm" label="{{ __('hll.clans.soldiers.delete.current_name') }}" wire:model="current_name" aria-placeholder="{{ $currentNameToDelete }}" placeholder="{{ $currentNameToDelete }}" />
+            <flux:input size="sm" label="{{ __('hll.clans.soldiers.delete.current_name') }}" wire:model="current_name" placeholder="{{ $currentNameToDelete }}" />
 
             <div class="flex justify-end gap-2">
                 <flux:button size="sm" variant="ghost" wire:click="cancelDeleteSoldier">{{ __('Cancel') }}</flux:button>

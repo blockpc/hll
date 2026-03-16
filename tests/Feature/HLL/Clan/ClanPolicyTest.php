@@ -76,3 +76,22 @@ it('allows only clan_owner and clan_helper to manage soldiers', function () {
     expect($helper->can('manageSoldiers', $clan))->toBeTrue();
     expect($otherUser->can('manageSoldiers', $clan))->toBeFalse();
 });
+
+// ClanPolicy::helpers
+
+it('allows the clan owner to manage helpers', function () {
+    $owner = new_user(role: 'clan_owner');
+    $clan = new_clan($owner);
+
+    expect($owner->can('manageHelpers', $clan))->toBeTrue();
+});
+
+it('prevents a clan_helper from managing helpers even when registered in the clan', function () {
+    $owner = new_user(role: 'clan_owner');
+    $helper = new_user(role: 'clan_helper');
+    $clan = new_clan($owner);
+
+    $clan->members()->attach($helper->id, ['membership_role' => ClanMembershipRoleEnum::Helper->value]);
+
+    expect($helper->can('manageHelpers', $clan))->toBeFalse();
+});
