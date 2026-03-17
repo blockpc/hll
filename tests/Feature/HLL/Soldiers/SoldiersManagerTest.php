@@ -288,7 +288,7 @@ it('tracks names already existing in the clan as duplicates in bulk input', func
     expect($clan->soldiers()->pluck('name')->sort()->values()->toArray())->toBe(['alpha', 'beta']);
 });
 
-it('counts empty normalized names as skippedEmpty in bulk input', function () {
+it('skips whitespace-only segments in bulk input', function () {
     $owner = new_user(role: 'clan_owner');
     $clan = new_clan($owner);
 

@@ -87,7 +87,6 @@ it('can update a helper member', function () {
 });
 
 it('fails to update helper when email already exists', function () {
-
     $owner = new_user(role: 'clan_owner');
     $helper = new_user(role: 'clan_helper');
     $otherHelper = new_user(role: 'clan_helper');
@@ -107,7 +106,6 @@ it('fails to update helper when email already exists', function () {
 });
 
 it('can delete a member of clan', function () {
-
     $owner = new_user(role: 'clan_owner');
     $helper = new_user(role: 'clan_helper');
 
@@ -129,7 +127,6 @@ it('can delete a member of clan', function () {
 });
 
 it('fails to delete helper when confirmation name does not match', function () {
-
     $owner = new_user(role: 'clan_owner');
     $helper = new_user(role: 'clan_helper');
 
