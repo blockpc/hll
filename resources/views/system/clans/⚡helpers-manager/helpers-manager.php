@@ -165,8 +165,8 @@ new class extends Component
 
         $this->validate([
             'current_name' => ['required', 'string', (new AreEqualsRule($this->deletingHelperName, __('hll.clans.managers.delete.current_name_error')))],
-        ], [
-            'current_name.in' => __('hll.clans.managers.delete.current_name_write', ['name' => $this->editingHelperName]),
+        ], [], [
+            'current_name' => __('hll.clans.managers.delete.current_name'),
         ]);
 
         $helper = $this->ensureMemberExists($this->deletingHelperId);

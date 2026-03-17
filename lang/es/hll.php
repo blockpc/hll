@@ -212,4 +212,15 @@ return [
         'spotter' => 'Observador',
         'sniper' => 'Francotirador',
     ],
+    'roster_type_squad' => [
+        'command' => 'Comando',
+        'infantry' => 'Infantería',
+        'recon' => 'Reconocimiento',
+        'armor' => 'Blindados',
+        'artillery' => 'Artillería',
+    ],
+    'side_type' => [
+        'allies' => 'Aliados',
+        'axis' => 'Eje',
+    ],
 ];
