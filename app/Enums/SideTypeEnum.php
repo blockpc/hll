@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum SideTypeEnum : string
+enum SideTypeEnum: string
 {
     case Allies = 'allies';
     case Axis = 'axis';
@@ -16,5 +16,4 @@ enum SideTypeEnum : string
             self::Axis => __('hll.side_type.axis'),
         };
     }
-
 }
