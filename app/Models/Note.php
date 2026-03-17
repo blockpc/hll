@@ -56,6 +56,6 @@ class Note extends Model
             return;
         }
 
-        $query->whereLike(['title', 'content'], $search);
+        $query->whereAnyLike(['title', 'content'], $search);
     }
 }

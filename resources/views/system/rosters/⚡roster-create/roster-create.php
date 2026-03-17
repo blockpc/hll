@@ -153,7 +153,9 @@ new #[Title('Crear Roster')] class extends Component
 
     private function canCreateRoster(): bool
     {
-        return auth()->user()->can('create', [Roster::class, $this->clan]);
+        $user = auth()->user();
+
+        return $user?->can('create', [Roster::class, $this->clan]);
     }
 
     private function normalizeRosterName(string $name): string

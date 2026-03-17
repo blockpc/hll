@@ -60,7 +60,7 @@ class Roster extends Model
             return;
         }
 
-        $query->whereLike(['name'], $search);
+        $query->where('name', 'like', "%{$search}%");
     }
 
     /**

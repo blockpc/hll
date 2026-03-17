@@ -36,7 +36,7 @@ final class Permission extends ModelsPermission
             return;
         }
 
-        $query->whereLike(['name', 'display_name', 'description', 'key'], $search);
+        $query->whereAnyLike(['name', 'display_name', 'description', 'key'], $search);
     }
 
     /**
@@ -48,9 +48,12 @@ final class Permission extends ModelsPermission
     protected function visibleToUser(Builder $query): void
     {
         $superAdminRole = (string) config('permission.super_admin_role', 'sudo');
-        $query->when(auth()->check() && ! auth()->user()->hasRole($superAdminRole), function ($query) {
-            $query->where('name', '!=', 'super admin');
-        });
+
+        if (auth()->user()?->hasRole($superAdminRole)) {
+            return;
+        }
+
+        $query->where('name', '!=', 'super admin');
     }
 
     /**

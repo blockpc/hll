@@ -88,7 +88,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return;
         }
 
-        $query->whereLike(['name', 'email'], $search);
+        $query->whereAnyLike(['name', 'email'], $search);
     }
 
     #[Scope]

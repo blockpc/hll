@@ -41,6 +41,6 @@ final class Role extends ModelsRole
             return;
         }
 
-        $query->whereLike(['name', 'display_name', 'description'], $search);
+        $query->whereAnyLike(['name', 'display_name', 'description'], $search);
     }
 }
