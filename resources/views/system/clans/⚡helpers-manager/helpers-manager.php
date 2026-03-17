@@ -34,6 +34,8 @@ new class extends Component
 
     public string $editingHelperEmail = '';
 
+    public int|string $deletingHelperId = 0;
+
     public string $deletingHelperName = '';
 
     public string $current_name = '';
@@ -149,8 +151,8 @@ new class extends Component
     {
         $this->authorizeOwner();
 
-        $this->editingHelperId = $helperId;
-        $helper = $this->ensureMemberExists($this->editingHelperId);
+        $this->deletingHelperId = $helperId;
+        $helper = $this->ensureMemberExists($this->deletingHelperId);
         $this->deletingHelperName = $helper->name;
         $this->current_name = '';
 
@@ -167,7 +169,7 @@ new class extends Component
             'current_name.in' => __('hll.clans.managers.delete.current_name_write', ['name' => $this->editingHelperName]),
         ]);
 
-        $helper = $this->ensureMemberExists($this->editingHelperId);
+        $helper = $this->ensureMemberExists($this->deletingHelperId);
         $this->clan->members()->detach($helper->id);
 
         $message = __('hll.clans.managers.delete.message_success', ['name' => $helper->name]);

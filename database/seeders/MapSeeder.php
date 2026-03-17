@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Database\seeders;
+namespace Database\Seeders;
 
 use App\Models\Map;
 use Illuminate\Database\Seeder;
@@ -11,10 +11,8 @@ final class MapSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $maps = [
             [
@@ -172,8 +170,9 @@ final class MapSeeder extends Seeder
         ];
 
         foreach ($maps as $mapData) {
-            $map = Map::create([
+            $map = Map::query()->updateOrCreate([
                 'alias' => $mapData['alias'],
+            ], [
                 'name' => $mapData['name'],
                 'timeline' => $mapData['timeline'],
                 'location' => $mapData['location'],
@@ -181,12 +180,11 @@ final class MapSeeder extends Seeder
             ]);
 
             foreach ($mapData['points'] as $index => $point) {
-                $map->centralPoints()->create([
-                    'name' => $point,
-                    'order' => $index + 1,
-                ]);
+                $map->centralPoints()->updateOrCreate(
+                    ['order' => $index + 1],
+                    ['name' => $point]
+                );
             }
         }
     }
-
 }
