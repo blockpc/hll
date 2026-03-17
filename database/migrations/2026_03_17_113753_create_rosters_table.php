@@ -21,8 +21,8 @@ return new class extends Migration
 
             $table->string('faction', 20);
 
-            $table->foreignId('map_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('central_point_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('map_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('central_point_id')->nullable()->constrained()->nullOnDelete();
 
             $table->string('image')->nullable();
 

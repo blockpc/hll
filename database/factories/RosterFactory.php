@@ -19,9 +19,10 @@ class RosterFactory extends Factory
      */
     public function definition(): array
     {
-        $clan = Clan::query()->first();
-        $map = Map::query()->inRandomOrder()->first();
-        $centralPoint = CentralPoint::query()->where('map_id', $map->id)->inRandomOrder()->first();
+        $clan = Clan::query()->first() ?? Clan::factory()->create();
+        $map = Map::query()->inRandomOrder()->first() ?? Map::factory()->create();
+        $centralPoint = $map->centralPoints()->inRandomOrder()->first()
+            ?? CentralPoint::factory()->for($map)->create();
 
         return [
             'clan_id' => $clan->id,

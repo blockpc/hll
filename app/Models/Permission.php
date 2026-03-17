@@ -30,13 +30,13 @@ final class Permission extends ModelsPermission
      * Filter permissions by search term across name, display_name, description, and key.
      */
     #[Scope]
-    public function search(Builder $query, ?string $search): Builder
+    protected function search(Builder $query, ?string $search): void
     {
         if (empty($search)) {
-            return $query;
+            return;
         }
 
-        return $query->whereLike(['name', 'display_name', 'description', 'key'], $search);
+        $query->whereLike(['name', 'display_name', 'description', 'key'], $search);
     }
 
     /**
@@ -45,9 +45,9 @@ final class Permission extends ModelsPermission
      * If the user does not have the 'sudo' role, exclude the 'super admin' permission.
      */
     #[Scope]
-    public function visibleToUser(Builder $query): Builder
+    protected function visibleToUser(Builder $query): void
     {
-        return $query->when(auth()->check() && ! auth()->user()->hasRole('sudo'), function ($query) {
+        $query->when(auth()->check() && ! auth()->user()->hasRole('sudo'), function ($query) {
             $query->where('name', '!=', 'super admin');
         });
     }
@@ -56,12 +56,12 @@ final class Permission extends ModelsPermission
      * Scope a query to filter permissions by their key.
      */
     #[Scope]
-    public function byKey(Builder $query, ?string $key): Builder
+    protected function byKey(Builder $query, ?string $key): void
     {
         if (empty($key)) {
-            return $query;
+            return;
         }
 
-        return $query->where('key', $key);
+        $query->where('key', $key);
     }
 }

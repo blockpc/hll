@@ -44,18 +44,18 @@ class Note extends Model
     }
 
     #[Scope]
-    public function forUser(Builder $query, int $userId): Builder
+    protected function forUser(Builder $query, int $userId): void
     {
-        return $query->where('author_id', $userId);
+        $query->where('author_id', $userId);
     }
 
     #[Scope]
-    public function search(Builder $query, ?string $search): Builder
+    protected function search(Builder $query, ?string $search): void
     {
         if (empty($search)) {
-            return $query;
+            return;
         }
 
-        return $query->whereLike(['title', 'content'], $search);
+        $query->whereLike(['title', 'content'], $search);
     }
 }

@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Enums\RoleSquadTypeEnum;
 use App\Models\Clan;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -30,7 +29,7 @@ class DatabaseSeeder extends Seeder
         }
         $sudo->syncRoles(['sudo']);
 
-        if ( app()->environment('local') ) {
+        if (app()->environment('local')) {
             $testUser = User::firstOrCreate(
                 ['email' => 'test@mail.com'],
                 [

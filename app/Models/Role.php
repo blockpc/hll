@@ -23,24 +23,24 @@ final class Role extends ModelsRole
     }
 
     #[Scope]
-    public function visibleToUser(Builder $query): Builder
+    protected function visibleToUser(Builder $query): void
     {
         $superAdminRole = (string) config('permission.super_admin_role', 'sudo');
         $user = auth()->user();
         if ($user && $user->hasRole($superAdminRole)) {
-            return $query;
+            return;
         }
 
-        return $query->where('name', '!=', $superAdminRole);
+        $query->where('name', '!=', $superAdminRole);
     }
 
     #[Scope]
-    public function search(Builder $query, ?string $search): Builder
+    protected function search(Builder $query, ?string $search): void
     {
         if (empty($search)) {
-            return $query;
+            return;
         }
 
-        return $query->whereLike(['name', 'display_name', 'description'], $search);
+        $query->whereLike(['name', 'display_name', 'description'], $search);
     }
 }

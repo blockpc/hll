@@ -13,9 +13,12 @@ use Illuminate\Validation\Rules\Enum;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 new #[Title('Crear Roster')] class extends Component
 {
+    use WithFileUploads;
+
     public Clan $clan;
 
     public string $name = '';
@@ -34,11 +37,7 @@ new #[Title('Crear Roster')] class extends Component
 
     public function mount(): void
     {
-        abort_unless(
-            $this->canCreateRoster(),
-            403,
-            __('hll.clans.rosters.403')
-        );
+        $this->checkAuthorization();
     }
 
     #[Computed]
@@ -72,6 +71,8 @@ new #[Title('Crear Roster')] class extends Component
 
     public function save(): void
     {
+        $this->checkAuthorization();
+
         $this->slug = $this->normalizeRosterName($this->slug);
 
         $this->map_id = $this->normalizeNullableInt($this->map_id);
@@ -79,6 +80,11 @@ new #[Title('Crear Roster')] class extends Component
         $this->faction = $this->normalizeFaction($this->faction);
 
         $this->validate();
+
+        $imagePath = null;
+        if ($this->image) {
+            $imagePath = $this->image->store('rosters', 'public');
+        }
 
         Roster::create([
             'clan_id' => $this->clan->id,
@@ -88,6 +94,7 @@ new #[Title('Crear Roster')] class extends Component
             'map_id' => $this->map_id,
             'central_point_id' => $this->central_point_id,
             'faction' => $this->faction,
+            'image' => $imagePath,
         ]);
 
         session()->flash('success', __('hll.clans.rosters.create.message_success', ['name' => $this->name]));
@@ -107,6 +114,7 @@ new #[Title('Crear Roster')] class extends Component
                 $query->where('map_id', $this->normalizeNullableInt($this->map_id));
             })],
             'faction' => ['required', new Enum(FactionTypeEnum::class)],
+            'image' => ['nullable', 'image', 'max:2048'],
         ];
     }
 
@@ -124,6 +132,15 @@ new #[Title('Crear Roster')] class extends Component
     public function updatedName(string $value): void
     {
         $this->slug = Str::slug($value);
+    }
+
+    private function checkAuthorization()
+    {
+        abort_unless(
+            $this->canCreateRoster(),
+            403,
+            __('hll.clans.rosters.403')
+        );
     }
 
     private function canCreateRoster(): bool
