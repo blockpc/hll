@@ -47,7 +47,8 @@ final class Permission extends ModelsPermission
     #[Scope]
     protected function visibleToUser(Builder $query): void
     {
-        $query->when(auth()->check() && ! auth()->user()->hasRole('sudo'), function ($query) {
+        $superAdminRole = (string) config('permission.super_admin_role', 'sudo');
+        $query->when(auth()->check() && ! auth()->user()->hasRole($superAdminRole), function ($query) {
             $query->where('name', '!=', 'super admin');
         });
     }

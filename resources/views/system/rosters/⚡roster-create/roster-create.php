@@ -6,7 +6,7 @@ use App\Models\Clan;
 use App\Models\Map;
 use App\Models\Roster;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -86,16 +86,24 @@ new #[Title('Crear Roster')] class extends Component
             $imagePath = $this->image->store('rosters', 'public');
         }
 
-        Roster::create([
-            'clan_id' => $this->clan->id,
-            'name' => $this->name,
-            'slug' => $this->slug,
-            'description' => $this->description,
-            'map_id' => $this->map_id,
-            'central_point_id' => $this->central_point_id,
-            'faction' => $this->faction,
-            'image' => $imagePath,
-        ]);
+        try {
+            Roster::create([
+                'clan_id' => $this->clan->id,
+                'name' => $this->name,
+                'slug' => $this->slug,
+                'description' => $this->description,
+                'map_id' => $this->map_id,
+                'central_point_id' => $this->central_point_id,
+                'faction' => $this->faction,
+                'image' => $imagePath,
+            ]);
+        } catch (\Throwable $exception) {
+            if ($imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+
+            throw $exception;
+        }
 
         session()->flash('success', __('hll.clans.rosters.create.message_success', ['name' => $this->name]));
 
@@ -134,7 +142,7 @@ new #[Title('Crear Roster')] class extends Component
         $this->slug = Str::slug($value);
     }
 
-    private function checkAuthorization()
+    private function checkAuthorization(): void
     {
         abort_unless(
             $this->canCreateRoster(),

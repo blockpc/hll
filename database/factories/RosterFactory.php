@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\FactionTypeEnum;
 use App\Models\CentralPoint;
 use App\Models\Clan;
 use App\Models\Map;
@@ -29,7 +30,7 @@ class RosterFactory extends Factory
             'name' => $this->faker->text(50),
             'slug' => $this->faker->slug(),
             'description' => $this->faker->sentence(),
-            'faction' => $this->faker->randomElement(['allies', 'axis']),
+            'faction' => $this->faker->randomElement(FactionTypeEnum::cases()),
             'map_id' => $map->id,
             'central_point_id' => $centralPoint->id,
             'image' => null,

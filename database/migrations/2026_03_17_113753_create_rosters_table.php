@@ -31,6 +31,7 @@ return new class extends Migration
 
             $table->timestamps();
 
+            $table->unique(['clan_id', 'name']);
             $table->unique(['clan_id', 'slug']);
         });
     }
