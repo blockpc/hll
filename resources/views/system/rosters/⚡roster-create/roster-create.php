@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules\Enum;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 new #[Title('Crear Roster')] class extends Component
@@ -25,7 +26,7 @@ new #[Title('Crear Roster')] class extends Component
 
     public string $slug = '';
 
-    public $image = null;
+    public ?TemporaryUploadedFile $image = null;
 
     public ?string $description = null;
 
@@ -155,7 +156,7 @@ new #[Title('Crear Roster')] class extends Component
     {
         $user = auth()->user();
 
-        return $user?->can('create', [Roster::class, $this->clan]);
+        return $user?->can('create', [Roster::class, $this->clan]) ?? false;
     }
 
     private function normalizeRosterName(string $name): string

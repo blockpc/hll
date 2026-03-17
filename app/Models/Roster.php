@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\FactionTypeEnum;
@@ -60,7 +62,7 @@ class Roster extends Model
             return;
         }
 
-        $query->where('name', 'like', "%{$search}%");
+        $query->whereAnyLike(['name'], $search);
     }
 
     /**
