@@ -47,6 +47,9 @@
                 <flux:button variant="outline" color="blue" size="sm" class="w-full" @click="show = 'rosters'">
                     {{ __('hll.clans.show.tabs.rosters') }}
                 </flux:button>
+                @can('update', $clan)
+                <flux:button variant="primary" color="green" icon="pencil" size="xs" href="{{ route('rosters.table', $clan->slug) }}" />
+                @endcan
             </div>
         </div>
 
@@ -55,23 +58,27 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <flux:heading size="lg">{{ __('hll.clans.show.titles.helpers') }}</flux:heading>
-                        <flux:text class="mt-2">{{ trans_choice('hll.clans.show.titles.helpers_count', $this->members->count()) }}</flux:text>
+                        <flux:text class="mt-2">{{ trans_choice('hll.clans.show.titles.helpers_count', $this->members->total()) }}</flux:text>
                     </div>
                 </div>
 
                 <div class="space-y-6">
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                        @forelse ($this->members as $member)
-                            <flux:card wire:key="helper-{{ $member->id }}" class="p-2.5">
-                                <div class="space-y-4">
-                                    <flux:heading size="base">{{ $member->name }}</flux:heading>
-                                    <flux:text class="text-xs italic">{{ $member->pivot->membership_role->label() }}</flux:text>
-                                </div>
-                            </flux:card>
-                        @empty
-                            <flux:text class="text-center text-gray-500">{{ __('hll.clans.managers.no_helpers') }}</flux:text>
-                        @endforelse
-                    </div>
+                    @if ($this->members->isEmpty())
+                        <flux:text class="text-center text-gray-500">{{ __('hll.clans.managers.no_helpers') }}</flux:text>
+                    @else
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                            @foreach ($this->members as $member)
+                                <flux:card wire:key="helper-{{ $member->id }}" class="p-2.5">
+                                    <div class="space-y-4">
+                                        <flux:heading size="base">{{ $member->name }}</flux:heading>
+                                        <flux:text class="text-xs italic">{{ $member->pivot->membership_role?->label() ?? __('hll.clans.managers.ro_role') }}</flux:text>
+                                    </div>
+                                </flux:card>
+                            @endforeach
+                        </div>
+
+                        <flux:pagination :paginator="$this->members" />
+                    @endif
                 </div>
             </flux:card>
         </div>
@@ -110,23 +117,26 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <flux:heading size="lg">{{ __('hll.clans.show.titles.rosters') }}</flux:heading>
-                        <flux:text class="mt-2">{{ trans_choice('hll.clans.show.titles.rosters_count', $this->rosters->count()) }}</flux:text>
+                        <flux:text class="mt-2">{{ trans_choice('hll.clans.show.titles.rosters_count', $this->rosters->total()) }}</flux:text>
+                    </div>
+                </div>
+
+                @if ($this->rosters->isEmpty())
+                    <flux:text class="text-center text-gray-500">{{ __('hll.clans.rosters.no_rosters') }}</flux:text>
+                @else
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                        @foreach ($this->rosters as $roster)
+                            <flux:card wire:key="roster-{{ $roster->id }}" class="p-2.5 space-y-4">
+                                <div class="space-y-4">
+                                    <flux:heading size="base">{{ $roster->name }}</flux:heading>
+                                    <flux:text class="text-xs italic">{{ $roster->description ?? __('hll.clans.rosters.no_roster_description') }}</flux:text>
+                                </div>
+                            </flux:card>
+                        @endforeach
                     </div>
 
-                    <flux:button variant="outline" color="blue" size="sm">
-                        {{ __('hll.clans.rosters.create') }}
-                    </flux:button>
-                </div>
-
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                    @forelse ($this->rosters as $roster)
-                        <flux:card wire:key="roster-{{ $roster->id }}" class="p-2.5 space-y-4">
-                            {{ __('hll.commons.loading') }}
-                        </flux:card>
-                    @empty
-                        <flux:text class="text-center text-gray-500">{{ __('hll.clans.rosters.no_rosters') }}</flux:text>
-                    @endforelse
-                </div>
+                    <flux:pagination :paginator="$this->rosters" />
+                @endif
             </flux:card>
         </div>
     </div>

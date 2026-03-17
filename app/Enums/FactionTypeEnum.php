@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum SideTypeEnum: string
+enum FactionTypeEnum: string
 {
     case Allies = 'allies';
     case Axis = 'axis';
@@ -12,8 +12,8 @@ enum SideTypeEnum: string
     public function label(): string
     {
         return match ($this) {
-            self::Allies => __('hll.side_type.allies'),
-            self::Axis => __('hll.side_type.axis'),
+            self::Allies => __('hll.faction_type.allies'),
+            self::Axis => __('hll.faction_type.axis'),
         };
     }
 }

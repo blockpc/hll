@@ -142,9 +142,9 @@ new class extends Component
         $this->cancelModal('edit-helper-manager');
     }
 
-    public function cancelModalHelper(): void
+    public function cancelEditModal(): void
     {
-        $this->modal('edit-helper-manager')->close();
+        $this->cancelModal('edit-helper-manager');
     }
 
     public function showDeleteModal(int|string $helperId): void

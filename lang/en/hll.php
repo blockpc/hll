@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 return [
+    'commons' => [
+        'select' => 'Select an option',
+    ],
     'clan_membership_role' => [
         'owner' => 'Owner',
         'helper' => 'Helper',
@@ -30,7 +33,7 @@ return [
         'armor' => 'Armor',
         'artillery' => 'Artillery',
     ],
-    'side_type' => [
+    'faction_type' => [
         'allies' => 'Allies',
         'axis' => 'Axis',
     ],

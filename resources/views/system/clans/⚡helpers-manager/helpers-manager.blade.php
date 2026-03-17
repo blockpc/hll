@@ -102,7 +102,7 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <flux:button size="sm" variant="ghost" wire:click="cancelModalHelper">{{ __('hll.commons.cancel') }}</flux:button>
+                <flux:button size="sm" variant="ghost" wire:click="cancelEditModal">{{ __('hll.commons.cancel') }}</flux:button>
                 <flux:button size="sm" variant="primary" color="green" wire:click="editHelper">{{ __('hll.clans.managers.edit.button') }}</flux:button>
             </div>
         </div>

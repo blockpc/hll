@@ -1,0 +1,160 @@
+<?php
+
+use App\Enums\FactionTypeEnum;
+use App\Models\CentralPoint;
+use App\Models\Clan;
+use App\Models\Map;
+use App\Models\Roster;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Title;
+use Livewire\Component;
+
+new #[Title('Crear Roster')] class extends Component
+{
+    public Clan $clan;
+
+    public string $name = '';
+
+    public string $slug = '';
+
+    public $image = null;
+
+    public ?string $description = null;
+
+    public int|string|null $map_id = null;
+
+    public int|string|null $central_point_id = null;
+
+    public string|FactionTypeEnum|null $faction = null;
+
+    public function mount(): void
+    {
+        abort_unless(
+            $this->canCreateRoster(),
+            403,
+            __('hll.clans.rosters.403')
+        );
+    }
+
+    #[Computed]
+    public function maps(): Collection
+    {
+        return Map::query()
+            ->orderBy('name')
+            ->pluck('name', 'id');
+    }
+
+    #[Computed]
+    public function centralPoints(): Collection
+    {
+        $mapId = $this->normalizeNullableInt($this->map_id);
+
+        if (! $mapId) {
+            return collect();
+        }
+
+        return CentralPoint::query()
+            ->where('map_id', $mapId)
+            ->orderBy('name')
+            ->pluck('name', 'id');
+    }
+
+    #[Computed]
+    public function factions(): array
+    {
+        return FactionTypeEnum::cases();
+    }
+
+    public function save(): void
+    {
+        $this->slug = $this->normalizeRosterName($this->slug);
+
+        $this->map_id = $this->normalizeNullableInt($this->map_id);
+        $this->central_point_id = $this->normalizeNullableInt($this->central_point_id);
+        $this->faction = $this->normalizeFaction($this->faction);
+
+        $this->validate();
+
+        Roster::create([
+            'clan_id' => $this->clan->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'description' => $this->description,
+            'map_id' => $this->map_id,
+            'central_point_id' => $this->central_point_id,
+            'faction' => $this->faction,
+        ]);
+
+        session()->flash('success', __('hll.clans.rosters.create.message_success', ['name' => $this->name]));
+
+        $this->redirectRoute('rosters.table', ['clan' => $this->clan->slug]);
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:100', 'unique:rosters,name,NULL,id,clan_id,' . $this->clan->id],
+            'slug' => ['required', 'string', 'max:100', Rule::unique('rosters', 'slug')->where(function ($query) {
+                return $query->where('clan_id', $this->clan->id);
+            })],
+            'map_id' => ['required', 'integer', 'exists:maps,id'],
+            'central_point_id' => ['required', Rule::exists('central_points', 'id')->where(function ($query) {
+                $query->where('map_id', $this->normalizeNullableInt($this->map_id));
+            })],
+            'faction' => ['required', new Enum(FactionTypeEnum::class)],
+        ];
+    }
+
+    public function updatedMapId(int|string|null $value): void
+    {
+        $this->map_id = $this->normalizeNullableInt($value);
+        $this->central_point_id = null;
+    }
+
+    protected function getValidationAttributes(): array
+    {
+        return __('hll.clans.rosters.form');
+    }
+
+    public function updatedName(string $value): void
+    {
+        $this->slug = Str::slug($value);
+    }
+
+    private function canCreateRoster(): bool
+    {
+        return auth()->user()->can('create', [Roster::class, $this->clan]);
+    }
+
+    private function normalizeRosterName(string $name): string
+    {
+        return Str::slug(Str::transliterate(Str::lower(trim($name))));
+    }
+
+    private function normalizeNullableInt(int|string|null $value): ?int
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return (int) $value;
+    }
+
+    private function normalizeFaction(string|FactionTypeEnum|null $value): ?string
+    {
+        if ($value instanceof FactionTypeEnum) {
+            return $value->value;
+        }
+
+        if ($value === '') {
+            return null;
+        }
+
+        return $value;
+    }
+};
