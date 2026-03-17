@@ -118,6 +118,7 @@ new #[Title('Crear Roster')] class extends Component
             'slug' => ['required', 'string', 'max:100', Rule::unique('rosters', 'slug')->where(function ($query) {
                 return $query->where('clan_id', $this->clan->id);
             })],
+            'description' => ['nullable', 'string', 'max:255'],
             'map_id' => ['required', 'integer', 'exists:maps,id'],
             'central_point_id' => ['required', Rule::exists('central_points', 'id')->where(function ($query) {
                 $query->where('map_id', $this->normalizeNullableInt($this->map_id));
