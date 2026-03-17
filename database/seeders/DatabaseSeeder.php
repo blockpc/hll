@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(MapSeeder::class);
 
         $sudo = User::firstOrCreate(
             ['email' => 'sudo@mail.com'],

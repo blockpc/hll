@@ -34,6 +34,8 @@ new class extends Component
 
     public string $editingHelperEmail = '';
 
+    public string $deletingHelperName = '';
+
     public string $current_name = '';
 
     public function mount(): void
@@ -96,7 +98,7 @@ new class extends Component
         );
     }
 
-    public function cancel(): void
+    public function cancelCreateModal(): void
     {
         $this->cancelModal('create-helper-manager');
     }
@@ -149,7 +151,7 @@ new class extends Component
 
         $this->editingHelperId = $helperId;
         $helper = $this->ensureMemberExists($this->editingHelperId);
-        $this->editingHelperName = $helper->name;
+        $this->deletingHelperName = $helper->name;
         $this->current_name = '';
 
         $this->modal('delete-helper-manager')->show();
@@ -160,7 +162,7 @@ new class extends Component
         $this->authorizeOwner();
 
         $this->validate([
-            'current_name' => ['required', 'string', (new AreEqualsRule($this->editingHelperName, __('hll.clans.managers.delete.current_name_error')))],
+            'current_name' => ['required', 'string', (new AreEqualsRule($this->deletingHelperName, __('hll.clans.managers.delete.current_name_error')))],
         ], [
             'current_name.in' => __('hll.clans.managers.delete.current_name_write', ['name' => $this->editingHelperName]),
         ]);

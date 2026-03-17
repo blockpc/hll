@@ -22,7 +22,7 @@
                     </flux:button>
 
                     <flux:modal.trigger name="create-helper-manager">
-                        <flux:button variant="primary" color="blue" size="sm" class="w-full">{{ __('hll.clans.managers.create.title') }}</flux:button>
+                        <flux:button variant="primary" color="blue" size="sm">{{ __('hll.clans.managers.create.title') }}</flux:button>
                     </flux:modal.trigger>
                 @endcan
             </div>
@@ -81,7 +81,7 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <flux:button size="sm" variant="ghost" wire:click="cancel">{{ __('hll.commons.cancel') }}</flux:button>
+                <flux:button size="sm" variant="ghost" wire:click="cancelCreateModal">{{ __('hll.commons.cancel') }}</flux:button>
                 <flux:button size="sm" variant="primary" color="blue" wire:click="save">{{ __('hll.clans.managers.create.title') }}</flux:button>
             </div>
         </div>
@@ -118,12 +118,9 @@
 
             <flux:text>{{ __('hll.clans.managers.delete.confirmation_message') }}</flux:text>
 
-            <flux:text color="yellow">{{ __('hll.clans.managers.delete.current_name_write', ['name' => $editingHelperName]) }}</flux:text>
+            <flux:text color="yellow">{{ __('hll.clans.managers.delete.current_name_write', ['name' => $deletingHelperName]) }}</flux:text>
 
-            <flux:input label="{{ __('hll.clans.managers.delete.current_name') }}" wire:model="current_name" placeholder="{{ $editingHelperName }}" />
-            @error('current_name')
-                <flux:text class="text-red-500 text-sm mt-1">{{ $message }}</flux:text>
-            @enderror
+            <flux:input label="{{ __('hll.clans.managers.delete.current_name') }}" wire:model="current_name" placeholder="{{ $deletingHelperName }}" />
 
             <div class="flex justify-end gap-2">
                 <flux:button size="sm" variant="ghost" wire:click="cancelDeleteModal">{{ __('hll.commons.cancel') }}</flux:button>
