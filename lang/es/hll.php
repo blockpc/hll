@@ -3,6 +3,7 @@
 return [
     'commons' => [
         'loading' => 'Cargando...',
+        'select' => 'Selecciona una opción',
         'edit' => 'Editar',
         'delete' => 'Eliminar',
         'cancel' => 'Cancelar',
@@ -103,6 +104,7 @@ return [
             'list' => 'Asistentes',
             'list_helpers' => 'Asistentes de Clan',
             'no_helpers' => 'No hay asistentes asignados a este clan.',
+            'no_role' => 'Sin rol asignado',
             'back' => 'Volver al clan',
             'create' => [
                 '403' => 'No tienes permiso para crear asistentes de clan.',
@@ -184,11 +186,31 @@ return [
             ],
         ],
         'rosters' => [
+            '403' => 'No tienes permiso para gestionar los rosters de este clan.',
             'list' => 'Rosters del Clan',
             'list_count' => '{0} Sin rosters|{1} :count roster|[2,*] :count rosters',
             'no_rosters' => 'No hay rosters creados para este clan.',
-            'back' => 'Volver al clan',
-            'create' => 'Crear Roster de Clan',
+            'back_to_clan' => 'Volver al clan',
+            'back_to_rosters' => 'Volver a los Rosters',
+            'create_button' => 'Crear Roster de Clan',
+            'no_roster_description' => 'Este roster no tiene una descripción.',
+            'form' => [
+                'name' => 'Nombre del Roster',
+                'slug' => 'Slug del Roster',
+                'description' => 'Descripción del Roster',
+                'map_id' => 'Mapa',
+                'central_point_id' => 'Punto central',
+                'faction' => 'Facción',
+                'image' => 'Imagen del Roster',
+                'is_public' => '¿Hacer público el roster? (podrá ser visto por usuarios que no pertenezcan al clan)',
+                'multiclan' => '¿Permitir que este roster sea usado por otros clanes?',
+            ],
+            'create' => [
+                'title' => 'Crear Roster',
+                'subtitle' => 'Llena el formulario para crear un roster para tu clan.',
+                'save_button' => 'Crear Roster',
+                'message_success' => 'Roster creado correctamente. :name',
+            ],
         ],
     ],
     'clan_membership_role' => [
@@ -219,7 +241,7 @@ return [
         'armor' => 'Blindados',
         'artillery' => 'Artillería',
     ],
-    'side_type' => [
+    'faction_type' => [
         'allies' => 'Aliados',
         'axis' => 'Eje',
     ],

@@ -60,4 +60,9 @@ Route::prefix('sistema')
             Route::livewire('/ver-clan/{clan}/gestionar-ayudantes', 'system::clans.helpers-manager')->name('clans.helpers.manager');
             Route::livewire('/ver-clan/{clan}/gestionar-soldados', 'system::clans.soldiers-manager')->name('clans.soldiers.manager');
         });
+
+        Route::prefix('rosters')->group(function () {
+            Route::livewire('/{clan}/crear', 'system::rosters.roster-create')->name('rosters.create');
+            Route::livewire('/{clan?}', 'system::rosters.roster-table')->name('rosters.table');
+        });
     });

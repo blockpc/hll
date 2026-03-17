@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Clan;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -14,23 +13,20 @@ new class extends Component
     public Clan $clan;
 
     #[Computed]
-    public function members(): Collection
+    public function members(): LengthAwarePaginator
     {
-        return $this->clan->members;
+        return $this->clan->members()->orderBy('name')->paginate(perPage: 12, pageName: 'members_page');
     }
 
     #[Computed]
     public function soldiers(): LengthAwarePaginator
     {
-        return $this->clan->soldiers()->paginate(perPage: 12, pageName: 'soldiers_page');
+        return $this->clan->soldiers()->orderBy('name')->paginate(perPage: 12, pageName: 'soldiers_page');
     }
 
-    /**
-     * @return \Illuminate\Support\Collection<int, array{id: int, name: string}>
-     */
     #[Computed]
-    public function rosters(): \Illuminate\Support\Collection
+    public function rosters(): LengthAwarePaginator
     {
-        return collect([]);
+        return $this->clan->rosters()->latest()->paginate(perPage: 12, pageName: 'rosters_page');
     }
 };

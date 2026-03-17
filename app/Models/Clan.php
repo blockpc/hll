@@ -91,4 +91,12 @@ class Clan extends Model
             fn () => $this->image ? Storage::disk('public')->url($this->image) : null
         );
     }
+
+    /**
+     * Get the rosters belonging to the clan.
+     */
+    public function rosters(): HasMany
+    {
+        return $this->hasMany(Roster::class);
+    }
 }

@@ -12,11 +12,11 @@ use InvalidArgumentException;
 final class Search
 {
     /**
-     * Add a "where like" clause to the query for searching across attributes.
+     * Add a "where like" clause to the query for searching across multiple attributes.
      *
      * @return Closure(array<int, string>|string $attributes, ?string $searchTerm): static
      */
-    public function whereLike(): Closure
+    public function whereAnyLike(): Closure
     {
         return function ($attributes, ?string $searchTerm = null) {
             if (blank($searchTerm)) {

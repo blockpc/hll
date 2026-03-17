@@ -14,6 +14,16 @@ final class MapSeeder extends Seeder
      */
     public function run(): void
     {
+        /**
+         * @var array<int, array{
+         *     alias: string,
+         *     name: string,
+         *     timeline: string,
+         *     location: string,
+         *     description: string,
+         *     points: array<int, string>
+         * }>
+         */
         $maps = [
             [
                 'alias' => 'alamein',
