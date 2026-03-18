@@ -3,7 +3,7 @@
         <flux:button variant="primary" size="sm">{{ __('New Note') }}</flux:button>
     </flux:modal.trigger>
 
-    <flux:modal name="create-note" class="w-1/2" :closable="false">
+    <flux:modal name="create-note" class="max-w-lg" :closable="false">
         <div class="space-y-3">
             <h2 class="text-lg">{{ __('New Note') }}</h2>
             <div>

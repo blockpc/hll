@@ -57,8 +57,7 @@
         <flux:pagination :paginator="$this->roles" />
     </div>
 
-    {{-- modal eliminar --}}
-    <flux:modal name="delete-note" wire:model="deleteModalVisible" class="w-1/2" :closable="false">
+    <flux:modal name="delete-note" wire:model="deleteModalVisible" class="max-w-lg" :closable="false">
         <div class="space-y-4">
             <flux:fieldset>
                 <flux:legend>{{ __('system.roles.delete.title') }}</flux:legend>

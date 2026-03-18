@@ -62,8 +62,7 @@
         <flux:pagination :paginator="$this->permissions" />
     </div>
 
-    {{-- modal editar --}}
-    <flux:modal name="edit-permission" wire:model="showEditModal" class="w-1/2" :closable="false">
+    <flux:modal name="edit-permission" wire:model="showEditModal" class="max-w-lg" :closable="false">
         <div class="space-y-3">
             <h2 class="text-lg">{{ __('system.permissions.edit.title') }}</h2>
             <div>

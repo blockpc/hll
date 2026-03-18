@@ -193,7 +193,16 @@ return [
             'back_to_clan' => 'Volver al clan',
             'back_to_rosters' => 'Volver a los Rosters',
             'create_button' => 'Crear Roster de Clan',
+            'edit_button' => 'Editar Roster',
+            'view_button' => 'Ver Roster',
+            'delete_button' => 'Eliminar Roster',
             'no_roster_description' => 'Este roster no tiene una descripción.',
+            'table' => [
+                'name' => 'Nombre',
+                'map' => 'Mapa',
+                'central_point' => 'Punto central',
+                'faction' => 'Facción',
+            ],
             'form' => [
                 'name' => 'Nombre del Roster',
                 'slug' => 'Slug del Roster',
@@ -220,7 +229,10 @@ return [
                 'error_transaction' => 'Error al actualizar el roster. Por favor intenta de nuevo o contacta al soporte.',
             ],
             'delete' => [
+                '403' => 'No tienes permiso para eliminar este roster.',
+                '404' => 'Roster no encontrado.',
                 'title' => 'Eliminar Roster',
+                'subtitle' => 'Confirma que deseas eliminar este roster.',
                 'confirmation_message' => '¿Estás seguro de que quieres eliminar este roster? Esta acción no se puede deshacer.',
                 'current_name' => 'Nombre del roster a eliminar',
                 'current_name_write' => 'Escribe el nombre del roster para confirmar. :name',

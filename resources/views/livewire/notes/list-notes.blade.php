@@ -39,7 +39,7 @@
         </div>
     </div>
     {{-- modal crear --}}
-    <flux:modal name="create-note" wire:model="createOpen" class="w-1/2" :closable="false">
+    <flux:modal name="create-note" wire:model="createOpen" class="max-w-lg" :closable="false">
         <div class="space-y-3">
             <h2 class="text-lg">{{ __('New Note') }}</h2>
             <div>
@@ -58,7 +58,7 @@
     </flux:modal>
 
     {{-- modal editar --}}
-    <flux:modal name="edit-note" wire:model="editOpen" class="w-1/2" :closable="false">
+    <flux:modal name="edit-note" wire:model="editOpen" class="max-w-lg" :closable="false">
         <div class="space-y-3">
             <h2 class="text-lg">{{ __('Edit Note') }}</h2>
             <div>
@@ -77,7 +77,7 @@
     </flux:modal>
 
     {{-- modal eliminar --}}
-    <flux:modal name="delete-note" wire:model="deleteOpen" class="w-1/2" :closable="false">
+    <flux:modal name="delete-note" wire:model="deleteOpen" class="max-w-lg :closable="false">
         <div class="space-y-4">
             <h2 class="text-lg">{{ __('Delete Note') }}</h2>
             <p>{{ __('Are you sure you want to delete this note? This action cannot be undone.') }}</p>
@@ -90,7 +90,7 @@
     </flux:modal>
 
     {{-- modal ver nota completa --}}
-    <flux:modal name="view-note" wire:model="viewOpen" class="w-1/2" :closable="false">
+    <flux:modal name="view-note" wire:model="viewOpen" class="max-w-lg" :closable="false">
         <div class="space-y-4">
             <h2 class="text-lg">{{ $title }}</h2>
             <p class="text-sm">{{ $content }}</p>

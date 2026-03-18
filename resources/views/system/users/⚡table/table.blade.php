@@ -67,8 +67,7 @@
         <flux:pagination :paginator="$this->users" />
     </div>
 
-    {{-- modal eliminar --}}
-    <flux:modal name="delete-user" wire:model="deleteModalVisible" class="w-1/2" :closable="false">
+    <flux:modal name="delete-user" wire:model="deleteModalVisible" class="max-w-lg" :closable="false">
         <div class="space-y-4">
             <flux:fieldset>
                 <flux:legend>{{ __('system.users.delete.title') }}</flux:legend>
