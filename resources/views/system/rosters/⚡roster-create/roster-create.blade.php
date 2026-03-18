@@ -33,8 +33,6 @@
         <div class="grid gap-4">
             <flux:input size="sm" label="{{ __('hll.clans.rosters.form.name') }}" placeholder="{{ __('hll.clans.rosters.form.name') }}" wire:model.live="name" required />
 
-            <flux:input size="sm" label="{{ __('hll.clans.rosters.form.slug') }}" placeholder="{{ __('hll.clans.rosters.form.slug') }}" wire:model="slug" required />
-
             <flux:textarea label="{{ __('hll.clans.rosters.form.description') }}" placeholder="{{ __('hll.clans.rosters.form.description') }}" wire:model="description" rows="4" />
 
             <flux:select label="{{ __('hll.clans.rosters.form.map_id') }}" wire:model.live="map_id" placeholder="{{ __('hll.clans.rosters.form.map_id') }}">

@@ -196,6 +196,7 @@ return [
             'create_button' => 'Crear Roster de Clan',
             'edit_button' => 'Editar Roster',
             'view_button' => 'Ver Roster',
+            'manage_roster' => 'Administrar Roster',
             'delete_button' => 'Eliminar Roster',
             'no_roster_description' => 'Este roster no tiene una descripción.',
             'table' => [
@@ -243,6 +244,13 @@ return [
                 'button' => 'Eliminar Roster',
                 'error_transaction' => 'Error al eliminar el roster. Por favor intenta de nuevo o contacta al soporte.',
             ],
+            'template' => [
+                '403' => 'No tienes permiso para ver este roster.',
+                '404' => 'Roster no encontrado.',
+                'title' => 'Plantilla del Roster',
+                'subtitle' => 'Visualiza la plantilla de este roster.',
+                'roster_title' => 'Roster: :name',
+            ],
         ],
     ],
     'clan_membership_role' => [
@@ -267,7 +275,7 @@ return [
         'sniper' => 'Francotirador',
     ],
     'roster_type_squad' => [
-        'command' => 'Comando',
+        'command' => 'Comandante',
         'infantry' => 'Infantería',
         'recon' => 'Reconocimiento',
         'armor' => 'Blindados',

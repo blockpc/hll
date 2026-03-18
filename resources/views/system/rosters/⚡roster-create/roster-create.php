@@ -7,7 +7,6 @@ use App\Models\Map;
 use App\Models\Roster;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Livewire\Attributes\Computed;
@@ -23,8 +22,6 @@ new #[Title('Crear Roster')] class extends Component
     public Clan $clan;
 
     public string $name = '';
-
-    public string $slug = '';
 
     public ?TemporaryUploadedFile $image = null;
 
@@ -78,8 +75,6 @@ new #[Title('Crear Roster')] class extends Component
     {
         $this->checkAuthorization();
 
-        $this->slug = $this->normalizeRosterName($this->slug);
-
         $this->map_id = $this->normalizeNullableInt($this->map_id);
         $this->central_point_id = $this->normalizeNullableInt($this->central_point_id);
         $this->faction = $this->normalizeFaction($this->faction);
@@ -95,7 +90,6 @@ new #[Title('Crear Roster')] class extends Component
             Roster::create([
                 'clan_id' => $this->clan->id,
                 'name' => $this->name,
-                'slug' => $this->slug,
                 'description' => $this->description,
                 'map_id' => $this->map_id,
                 'central_point_id' => $this->central_point_id,
@@ -121,9 +115,6 @@ new #[Title('Crear Roster')] class extends Component
     {
         return [
             'name' => ['required', 'string', 'max:100', 'unique:rosters,name,NULL,id,clan_id,'.$this->clan->id],
-            'slug' => ['required', 'string', 'max:100', Rule::unique('rosters', 'slug')->where(function ($query) {
-                return $query->where('clan_id', $this->clan->id);
-            })],
             'description' => ['nullable', 'string', 'max:255'],
             'map_id' => ['required', 'integer', 'exists:maps,id'],
             'central_point_id' => ['required', Rule::exists('central_points', 'id')->where(function ($query) {
@@ -147,11 +138,6 @@ new #[Title('Crear Roster')] class extends Component
         return __('hll.clans.rosters.form');
     }
 
-    public function updatedName(string $value): void
-    {
-        $this->slug = Str::slug($value);
-    }
-
     private function checkAuthorization(): void
     {
         abort_unless(
@@ -166,11 +152,6 @@ new #[Title('Crear Roster')] class extends Component
         $user = auth()->user();
 
         return $user?->can('create', [Roster::class, $this->clan]) ?? false;
-    }
-
-    private function normalizeRosterName(string $name): string
-    {
-        return Str::slug(Str::transliterate(Str::lower(trim($name))));
     }
 
     private function normalizeNullableInt(int|string|null $value): ?int

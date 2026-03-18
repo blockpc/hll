@@ -49,11 +49,11 @@
                                     <div class="text-xs italic mx-4">{{ $roster->description ?? __('hll.clans.rosters.no_roster_description') }}</div>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <flux:button variant="ghost" size="xs">
-                                        {{ __('hll.clans.rosters.view_button') }}
+                                    <flux:button variant="ghost" size="xs" href="{{ route('rosters.template', [$clan->slug, $roster->uuid]) }}">
+                                        {{ __('hll.clans.rosters.manage_roster') }}
                                     </flux:button>
                                     @can('update', $roster)
-                                        <flux:button variant="primary" color="green" size="xs" href="{{ route('rosters.edit', [$clan->slug, $roster->slug]) }}">
+                                        <flux:button variant="primary" color="green" size="xs" href="{{ route('rosters.edit', [$clan->slug, $roster->uuid]) }}">
                                             {{ __('hll.clans.rosters.edit_button') }}
                                         </flux:button>
                                     @endcan

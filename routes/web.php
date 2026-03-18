@@ -56,7 +56,6 @@ Route::prefix('sistema')
             Route::livewire('/nuevo-clan', 'system::clans.clan-create')->name('clans.create');
             Route::livewire('/editar-clan/{clan}', 'system::clans.clan-edit')->name('clans.edit');
             Route::livewire('/ver-clan/{clan}', 'system::clans.clan-show')->name('clans.show');
-
             Route::livewire('/ver-clan/{clan}/gestionar-ayudantes', 'system::clans.helpers-manager')->name('clans.helpers.manager');
             Route::livewire('/ver-clan/{clan}/gestionar-soldados', 'system::clans.soldiers-manager')->name('clans.soldiers.manager');
         });
@@ -64,6 +63,7 @@ Route::prefix('sistema')
         Route::prefix('rosters')->group(function () {
             Route::livewire('/{clan}/crear', 'system::rosters.roster-create')->name('rosters.create');
             Route::livewire('/{clan}/editar/{roster}', 'system::rosters.roster-edit')->name('rosters.edit');
+            Route::livewire('/{clan}/plantilla/{roster}', 'system::rosters.roster-template')->name('rosters.template');
             Route::livewire('/{clan?}', 'system::rosters.roster-table')->name('rosters.table');
         });
     });

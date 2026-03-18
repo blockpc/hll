@@ -37,11 +37,11 @@ enum RosterTypeSquadEnum: string
     public function color(): string
     {
         return match ($this) {
-            self::Command => 'bg-blue-500',
-            self::Infantry => 'bg-green-500',
-            self::Recon => 'bg-yellow-500',
-            self::Armor => 'bg-gray-500',
-            self::Artillery => 'bg-red-500',
+            self::Command => 'info',
+            self::Infantry => 'success',
+            self::Recon => 'ban',
+            self::Armor => 'warning',
+            self::Artillery => 'secondary',
         };
     }
 

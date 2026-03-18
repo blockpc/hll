@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Roster extends Model
 {
@@ -19,9 +20,9 @@ class Roster extends Model
     use HasFactory;
 
     protected $fillable = [
+        'uuid',
         'clan_id',
         'name',
-        'slug',
         'description',
         'faction',
         'map_id',
@@ -40,22 +41,18 @@ class Roster extends Model
         ];
     }
 
-    public function getRouteKeyName(): string
+    protected static function booted(): void
     {
-        return 'slug';
+        static::creating(function (self $roster): void {
+            if (! $roster->uuid) {
+                $roster->uuid = (string) Str::orderedUuid();
+            }
+        });
     }
 
-    public function resolveRouteBindingQuery($query, $value, $field = null)
+    public function getRouteKeyName(): string
     {
-        $clan = request()->route('clan');
-
-        if (! $clan instanceof Clan || ! isset($clan->id)) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query
-            ->where('slug', $value)
-            ->where('clan_id', $clan->id);
+        return 'uuid';
     }
 
     public function clan(): BelongsTo

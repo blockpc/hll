@@ -69,7 +69,7 @@ new #[Title('Listado de Rosters')] class extends Component
         }
 
         return $query
-            ->with(['map', 'centralPoint'])
+            ->with(['map', 'centralPoint', 'clan'])
             ->search($this->search)
             ->latest()
             ->paginate($this->paginate);

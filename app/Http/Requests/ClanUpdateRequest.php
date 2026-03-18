@@ -38,8 +38,8 @@ class ClanUpdateRequest extends FormRequest
                 'slug' => ['nullable', 'string', 'max:255', 'unique:clans,slug'],
                 'description' => ['nullable', 'string'],
                 'discord' => ['nullable', 'string', 'max:255'],
-                'logo' => ['nullable', 'image', 'max:1024'],
-                'image' => ['nullable', 'image', 'max:1024'],
+                'logo' => ['nullable', 'image', 'max:2048'],
+                'image' => ['nullable', 'image', 'max:2048'],
             ];
         }
 
@@ -59,8 +59,8 @@ class ClanUpdateRequest extends FormRequest
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('clans', 'slug')->ignore($clan->id)],
             'description' => ['nullable', 'string'],
             'discord' => ['nullable', 'string', 'max:255'],
-            'logo' => ['nullable', 'image', 'max:1024'],
-            'image' => ['nullable', 'image', 'max:1024'],
+            'logo' => ['nullable', 'image', 'max:2048'],
+            'image' => ['nullable', 'image', 'max:2048'],
         ];
     }
 

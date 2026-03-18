@@ -5,6 +5,7 @@ use App\Models\CentralPoint;
 use App\Models\Clan;
 use App\Models\Map;
 use App\Models\Roster;
+use App\Traits\CheckAuthorizationRostersTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
@@ -22,6 +23,7 @@ use Livewire\WithFileUploads;
 new #[Title('Editar Roster')] class extends Component
 {
     use WithFileUploads;
+    use CheckAuthorizationRostersTrait;
 
     public Clan $clan;
 
@@ -167,17 +169,6 @@ new #[Title('Editar Roster')] class extends Component
         return __('hll.clans.rosters.form');
     }
 
-    private function checkAuthorization(): void
-    {
-        $this->notMatchClan();
-
-        abort_unless(
-            $this->canUpdateRoster(),
-            403,
-            __('hll.clans.rosters.403')
-        );
-    }
-
     protected function initializeProperties(): void
     {
         $this->name = $this->roster->name;
@@ -187,13 +178,6 @@ new #[Title('Editar Roster')] class extends Component
         $this->faction = $this->normalizeFaction($this->roster->faction);
         $this->is_public = $this->roster->is_public;
         $this->multiclan = $this->roster->multiclan;
-    }
-
-    private function canUpdateRoster(): bool
-    {
-        $user = auth()->user();
-
-        return $user?->can('update', $this->roster) ?? false;
     }
 
     private function normalizeNullableInt(int|string|null $value): ?int
@@ -216,14 +200,5 @@ new #[Title('Editar Roster')] class extends Component
         }
 
         return $value;
-    }
-
-    private function notMatchClan(): void
-    {
-        abort_if(
-            $this->roster->clan_id !== $this->clan->id,
-            404,
-            __('hll.clans.rosters.not_match')
-        );
     }
 };

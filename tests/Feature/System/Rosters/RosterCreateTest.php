@@ -6,7 +6,6 @@ use App\Models\Map;
 use App\Models\Roster;
 use Database\Seeders\MapSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
-use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 uses()->group('hll', 'rosters');
@@ -51,7 +50,6 @@ it('allows a clan owner to create a roster in their clan', function () {
 
     $this->assertDatabaseHas('rosters', [
         'name' => 'Roster Uno',
-        'slug' => Str::slug('Roster Uno'),
         'description' => null,
         'clan_id' => $this->clan->id,
         'map_id' => $map->id,
@@ -107,9 +105,9 @@ it('requires the selected central point to belong to the selected map', function
         ->assertHasErrors('central_point_id');
 });
 
-it('does not allow duplicate slug within the same clan', function () {
+it('does not allow duplicate name within the same clan', function () {
     Roster::factory()->for($this->clan)->create([
-        'slug' => 'roster-uno',
+        'name' => 'Roster Uno',
     ]);
 
     $map = Map::query()->first();
@@ -122,13 +120,13 @@ it('does not allow duplicate slug within the same clan', function () {
         ->set('central_point_id', $centralPoint->id)
         ->set('faction', FactionTypeEnum::Allies)
         ->call('save')
-        ->assertHasErrors('slug');
+        ->assertHasErrors('name');
 });
 
-it('allows the same slug in different clans', function () {
+it('allows the same name in different clans', function () {
     $otherClan = new_clan(new_user());
     Roster::factory()->for($otherClan)->create([
-        'slug' => 'roster-uno',
+        'name' => 'Roster Uno',
     ]);
 
     $map = Map::query()->first();
@@ -137,7 +135,6 @@ it('allows the same slug in different clans', function () {
     Livewire::actingAs($this->owner)
         ->test('system::rosters.roster-create', ['clan' => $this->clan])
         ->set('name', 'Roster Uno')
-        ->set('slug', 'roster-uno')
         ->set('map_id', $map->id)
         ->set('central_point_id', $centralPoint->id)
         ->set('faction', FactionTypeEnum::Allies)
@@ -153,7 +150,7 @@ it('allows the same slug in different clans', function () {
     ]);
 });
 
-it('generates a slug from name if not provided', function () {
+it('persists roster name as provided', function () {
     $map = Map::query()->first();
     $centralPoint = $map->centralPoints()->first();
 
@@ -168,7 +165,6 @@ it('generates a slug from name if not provided', function () {
 
     $this->assertDatabaseHas('rosters', [
         'name' => 'Roster Uno',
-        'slug' => Str::slug('Roster Uno'),
         'clan_id' => $this->clan->id,
         'map_id' => $map->id,
         'central_point_id' => $centralPoint->id,
@@ -176,14 +172,13 @@ it('generates a slug from name if not provided', function () {
     ]);
 });
 
-it('normalizes the slug format before saving', function () {
+it('allows roster names with mixed casing', function () {
     $map = Map::query()->first();
     $centralPoint = $map->centralPoints()->first();
 
     Livewire::actingAs($this->owner)
         ->test('system::rosters.roster-create', ['clan' => $this->clan])
-        ->set('name', 'Roster Uno')
-        ->set('slug', 'RoStEr UnO')
+        ->set('name', 'RoStEr UnO')
         ->set('map_id', $map->id)
         ->set('central_point_id', $centralPoint->id)
         ->set('faction', FactionTypeEnum::Allies)
@@ -191,8 +186,7 @@ it('normalizes the slug format before saving', function () {
         ->assertHasNoErrors();
 
     $this->assertDatabaseHas('rosters', [
-        'name' => 'Roster Uno',
-        'slug' => 'roster-uno',
+        'name' => 'RoStEr UnO',
         'clan_id' => $this->clan->id,
         'map_id' => $map->id,
         'central_point_id' => $centralPoint->id,

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('rosters', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignId('clan_id')->constrained()->cascadeOnDelete();
 
             $table->string('name', 100);
-            $table->string('slug', 100);
             $table->string('description', 255)->nullable();
 
             $table->string('faction', 20);
@@ -32,7 +32,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['clan_id', 'name']);
-            $table->unique(['clan_id', 'slug']);
         });
     }
 
