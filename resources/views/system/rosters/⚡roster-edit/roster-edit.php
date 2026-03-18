@@ -91,37 +91,38 @@ new #[Title('Editar Roster')] class extends Component
 
         $type = 'success';
         $message = '';
-        DB::beginTransaction();
+        $oldImage = $this->roster->image;
+        $newImagePath = null;
         try {
 
-            $this->roster->update([
-                'name' => $this->name,
-                'description' => $this->description,
-                'map_id' => $this->map_id,
-                'central_point_id' => $this->central_point_id,
-                'faction' => $this->faction,
-                'is_public' => $this->is_public,
-                'multiclan' => $this->multiclan,
-            ]);
-
-            if ($this->image) {
-                $oldImage = $this->roster->image;
-                $newImagePath = $this->image->store('rosters', 'public');
-
+            DB::transaction(function () use ($newImagePath): void {
                 $this->roster->update([
-                    'image' => $newImagePath,
+                    'name' => $this->name,
+                    'description' => $this->description,
+                    'map_id' => $this->map_id,
+                    'central_point_id' => $this->central_point_id,
+                    'faction' => $this->faction,
+                    'is_public' => $this->is_public,
+                    'multiclan' => $this->multiclan,
+                    'image' => $newImagePath ?? $this->roster->image,
                 ]);
+            });
 
-                if ($oldImage) {
+            if ($newImagePath && $oldImage) {
+                try {
                     Storage::disk('public')->delete($oldImage);
+                } catch (\Throwable $cleanupException) {
+                    Log::warning("Roster actualizado, pero no se pudo borrar la imagen anterior. {$cleanupException->getMessage()} | {$cleanupException->getFile()} | {$cleanupException->getLine()}");
                 }
             }
 
             DB::commit();
             $message = __('hll.clans.rosters.edit.message_success', ['name' => $this->roster->name]);
-        } catch(\Throwable $th) {
+        } catch (\Throwable $th) {
+            if ($newImagePath) {
+                Storage::disk('public')->delete($newImagePath);
+            }
             Log::error("Error al actualizar un roster. {$th->getMessage()} | {$th->getFile()} | {$th->getLine()}");
-            DB::rollback();
             $type = 'error';
             $message = __('hll.clans.rosters.edit.error_transaction');
         }
@@ -138,13 +139,20 @@ new #[Title('Editar Roster')] class extends Component
     protected function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'name' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('rosters', 'name')
+                    ->where(fn ($query) => $query->where('clan_id', $this->clan->id))
+                    ->ignore($this->roster->id),
+            ],
             'map_id' => ['nullable', 'integer', 'exists:maps,id'],
             'central_point_id' => ['nullable', Rule::exists('central_points', 'id')->where(function ($query) {
                 $query->where('map_id', $this->map_id);
             })],
-            'faction' => ['nullable', new Enum(FactionTypeEnum::class)],
+            'description' => ['nullable', 'string', 'max:255'],
+            'faction' => ['required', new Enum(FactionTypeEnum::class)],
             'image' => ['nullable', 'image', 'max:2048'],
         ];
     }
@@ -156,6 +164,8 @@ new #[Title('Editar Roster')] class extends Component
 
     private function checkAuthorization(): void
     {
+        $this->notMatchClan();
+
         abort_unless(
             $this->canUpdateRoster(),
             403,
@@ -201,5 +211,14 @@ new #[Title('Editar Roster')] class extends Component
         }
 
         return $value;
+    }
+
+    private function notMatchClan(): void
+    {
+        abort_if(
+            $this->roster->clan_id !== $this->clan->id,
+            404,
+            __('hll.clans.rosters.not_match')
+        );
     }
 };

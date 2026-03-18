@@ -36,6 +36,18 @@ it('forbids a clan owner from accessing the edit page for a roster in another cl
         ->assertForbidden();
 });
 
+it('resolves roster route binding by clan and slug', function () {
+    $sharedSlug = 'shared-roster';
+    $rosterInCurrentClan = new_roster($this->clan, ['slug' => $sharedSlug]);
+    $otherClan = new_clan(new_user());
+    new_roster($otherClan, ['slug' => $sharedSlug]);
+
+    $this->actingAs($this->owner)
+        ->get(route('rosters.edit', ['clan' => $this->clan->slug, 'roster' => $sharedSlug]))
+        ->assertOk()
+        ->assertSee($rosterInCurrentClan->name);
+});
+
 it('allows a clan owner to update a roster in their clan', function () {
     $roster = new_roster($this->clan);
     $map = Map::query()->firstOrFail();

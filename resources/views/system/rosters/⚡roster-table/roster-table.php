@@ -69,6 +69,7 @@ new #[Title('Listado de Rosters')] class extends Component
         }
 
         return $query
+            ->with(['map', 'centralPoint'])
             ->search($this->search)
             ->latest()
             ->paginate($this->paginate);
@@ -175,21 +176,24 @@ new #[Title('Listado de Rosters')] class extends Component
         $type = 'success';
         $message = '';
         $imagePath = $roster->image;
-        DB::beginTransaction();
         try {
+            DB::transaction(function () use ($roster): void {
+                $roster->delete();
+            });
 
-            $roster->delete();
-
-            DB::commit();
-            if ($imagePath) {
-                Storage::disk('public')->delete($imagePath);
-            }
             $message = __('hll.clans.rosters.delete.message_success', ['name' => $this->currentNameToDelete]);
         } catch(\Throwable $th) {
             Log::error("Error al eliminar un roster. {$th->getMessage()} | {$th->getFile()} | {$th->getLine()}");
-            DB::rollback();
             $type = 'error';
             $message = __('hll.clans.rosters.delete.error_transaction');
+        }
+
+        if ($type === 'success' && $imagePath) {
+            try {
+                Storage::disk('public')->delete($imagePath);
+            } catch (\Throwable $th) {
+                Log::warning("Roster eliminado, pero no se pudo borrar su imagen. {$th->getMessage()} | {$th->getFile()} | {$th->getLine()}");
+            }
         }
 
         $this->alert($message, $type, title: __('hll.clans.rosters.delete.title'));

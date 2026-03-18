@@ -187,6 +187,7 @@ return [
         ],
         'rosters' => [
             '403' => 'No tienes permiso para gestionar los rosters de este clan.',
+            'not_match' => 'El roster no pertenece a este clan.',
             'list' => 'Rosters del Clan',
             'list_count' => '{0} Sin rosters|{1} :count roster|[2,*] :count rosters',
             'no_rosters' => 'No hay rosters creados para este clan.',

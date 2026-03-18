@@ -73,9 +73,9 @@
                                 </flux:table.columns>
                                 <flux:table.rows>
                                     <flux:table.row>
-                                        <flux:table.cell>{{ $roster->map->name }}</flux:table.cell>
-                                        <flux:table.cell>{{ $roster->centralPoint->name }}</flux:table.cell>
-                                        <flux:table.cell>{{ $roster->faction->label() }}</flux:table.cell>
+                                        <flux:table.cell>{{ $roster->map?->name ?? '--' }}</flux:table.cell>
+                                        <flux:table.cell>{{ $roster->centralPoint?->name ?? '--' }}</flux:table.cell>
+                                        <flux:table.cell>{{ $roster->faction?->label() ?? '--' }}</flux:table.cell>
                                     </flux:table.row>
                                 </flux:table.rows>
                             </flux:table>

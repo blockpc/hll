@@ -45,6 +45,19 @@ class Roster extends Model
         return 'slug';
     }
 
+    public function resolveRouteBindingQuery($query, $value, $field = null)
+    {
+        $clan = request()->route('clan');
+
+        if (! $clan instanceof Clan || ! isset($clan->id)) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query
+            ->where('slug', $value)
+            ->where('clan_id', $clan->id);
+    }
+
     public function clan(): BelongsTo
     {
         return $this->belongsTo(Clan::class);

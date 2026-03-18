@@ -77,7 +77,7 @@
     </flux:modal>
 
     {{-- modal eliminar --}}
-    <flux:modal name="delete-note" wire:model="deleteOpen" class="max-w-lg :closable="false">
+    <flux:modal name="delete-note" wire:model="deleteOpen" class="max-w-lg" :closable="false">
         <div class="space-y-4">
             <h2 class="text-lg">{{ __('Delete Note') }}</h2>
             <p>{{ __('Are you sure you want to delete this note? This action cannot be undone.') }}</p>
