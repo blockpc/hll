@@ -40,6 +40,11 @@ class Roster extends Model
         ];
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function clan(): BelongsTo
     {
         return $this->belongsTo(Clan::class);
@@ -66,7 +71,7 @@ class Roster extends Model
     }
 
     /**
-     * Get the full URL to the clan's image.
+     * Get the full URL to the roster's image
      */
     public function imageUrl(): Attribute
     {

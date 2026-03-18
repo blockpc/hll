@@ -5,7 +5,11 @@ use App\Models\CentralPoint;
 use App\Models\Clan;
 use App\Models\Map;
 use App\Models\Roster;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -16,15 +20,15 @@ use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
-new #[Title('Crear Roster')] class extends Component
+new #[Title('Editar Roster')] class extends Component
 {
     use WithFileUploads;
 
     public Clan $clan;
 
-    public string $name = '';
+    public Roster $roster;
 
-    public string $slug = '';
+    public string $name = '';
 
     public ?TemporaryUploadedFile $image = null;
 
@@ -43,6 +47,7 @@ new #[Title('Crear Roster')] class extends Component
     public function mount(): void
     {
         $this->checkAuthorization();
+        $this->initializeProperties();
     }
 
     #[Computed]
@@ -74,11 +79,9 @@ new #[Title('Crear Roster')] class extends Component
         return FactionTypeEnum::cases();
     }
 
-    public function save(): void
+    public function save(): RedirectResponse|Redirector|null
     {
         $this->checkAuthorization();
-
-        $this->slug = $this->normalizeRosterName($this->slug);
 
         $this->map_id = $this->normalizeNullableInt($this->map_id);
         $this->central_point_id = $this->normalizeNullableInt($this->central_point_id);
@@ -86,54 +89,44 @@ new #[Title('Crear Roster')] class extends Component
 
         $this->validate();
 
-        $imagePath = null;
-        if ($this->image) {
-            $imagePath = $this->image->store('rosters', 'public');
-        }
-
+        $type = 'success';
+        $message = '';
+        DB::beginTransaction();
         try {
-            Roster::create([
-                'clan_id' => $this->clan->id,
+
+            $this->roster->update([
                 'name' => $this->name,
-                'slug' => $this->slug,
                 'description' => $this->description,
                 'map_id' => $this->map_id,
                 'central_point_id' => $this->central_point_id,
                 'faction' => $this->faction,
-                'image' => $imagePath,
                 'is_public' => $this->is_public,
                 'multiclan' => $this->multiclan,
             ]);
-        } catch (\Throwable $exception) {
-            if ($imagePath) {
-                Storage::disk('public')->delete($imagePath);
+
+            if ($this->image) {
+                $oldImage = $this->roster->image;
+                $newImagePath = $this->image->store('rosters', 'public');
+
+                $this->roster->update([
+                    'image' => $newImagePath,
+                ]);
+
+                if ($oldImage) {
+                    Storage::disk('public')->delete($oldImage);
+                }
             }
 
-            throw $exception;
+            DB::commit();
+            $message = __('hll.clans.rosters.edit.message_success', ['name' => $this->roster->name]);
+        } catch(\Throwable $th) {
+            Log::error("Error al actualizar un roster. {$th->getMessage()} | {$th->getFile()} | {$th->getLine()}");
+            DB::rollback();
+            $type = 'error';
+            $message = __('hll.clans.rosters.edit.error_transaction');
         }
 
-        session()->flash('success', __('hll.clans.rosters.create.message_success', ['name' => $this->name]));
-
-        $this->redirectRoute('rosters.table', ['clan' => $this->clan->slug]);
-    }
-
-    protected function rules(): array
-    {
-        return [
-            'name' => ['required', 'string', 'max:100', 'unique:rosters,name,NULL,id,clan_id,' . $this->clan->id],
-            'slug' => ['required', 'string', 'max:100', Rule::unique('rosters', 'slug')->where(function ($query) {
-                return $query->where('clan_id', $this->clan->id);
-            })],
-            'description' => ['nullable', 'string', 'max:255'],
-            'map_id' => ['required', 'integer', 'exists:maps,id'],
-            'central_point_id' => ['required', Rule::exists('central_points', 'id')->where(function ($query) {
-                $query->where('map_id', $this->normalizeNullableInt($this->map_id));
-            })],
-            'faction' => ['required', new Enum(FactionTypeEnum::class)],
-            'image' => ['nullable', 'image', 'max:2048'],
-            'is_public' => ['required', 'boolean'],
-            'multiclan' => ['required', 'boolean'],
-        ];
+        return redirect()->route('rosters.table', ['clan' => $this->clan->slug])->with($type, $message);
     }
 
     public function updatedMapId(int|string|null $value): void
@@ -142,35 +135,50 @@ new #[Title('Crear Roster')] class extends Component
         $this->central_point_id = null;
     }
 
+    protected function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'map_id' => ['nullable', 'integer', 'exists:maps,id'],
+            'central_point_id' => ['nullable', Rule::exists('central_points', 'id')->where(function ($query) {
+                $query->where('map_id', $this->map_id);
+            })],
+            'faction' => ['nullable', new Enum(FactionTypeEnum::class)],
+            'image' => ['nullable', 'image', 'max:2048'],
+        ];
+    }
+
     protected function getValidationAttributes(): array
     {
         return __('hll.clans.rosters.form');
     }
 
-    public function updatedName(string $value): void
-    {
-        $this->slug = Str::slug($value);
-    }
-
     private function checkAuthorization(): void
     {
         abort_unless(
-            $this->canCreateRoster(),
+            $this->canUpdateRoster(),
             403,
             __('hll.clans.rosters.403')
         );
     }
 
-    private function canCreateRoster(): bool
+    protected function initializeProperties(): void
+    {
+        $this->name = $this->roster->name;
+        $this->description = $this->roster->description;
+        $this->map_id = $this->normalizeNullableInt($this->roster->map_id);
+        $this->central_point_id = $this->normalizeNullableInt($this->roster->central_point_id);
+        $this->faction = $this->normalizeFaction($this->roster->faction);
+        $this->is_public = $this->roster->is_public;
+        $this->multiclan = $this->roster->multiclan;
+    }
+
+    private function canUpdateRoster(): bool
     {
         $user = auth()->user();
 
-        return $user?->can('create', [Roster::class, $this->clan]) ?? false;
-    }
-
-    private function normalizeRosterName(string $name): string
-    {
-        return Str::slug(Str::transliterate(Str::lower(trim($name))));
+        return $user?->can('update', $this->roster) ?? false;
     }
 
     private function normalizeNullableInt(int|string|null $value): ?int
