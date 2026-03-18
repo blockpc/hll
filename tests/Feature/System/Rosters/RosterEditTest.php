@@ -1,7 +1,7 @@
 <?php
 
-use App\Enums\ClanMembershipRoleEnum;
 use App\Enums\FactionTypeEnum;
+use App\Models\Clan;
 use App\Models\Map;
 use Database\Seeders\MapSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -16,9 +16,8 @@ beforeEach(function () {
     $this->seed(MapSeeder::class);
 
     $this->owner = new_user(role: 'clan_owner');
-    $this->clan = new_clan($this->owner);
     $this->helper = new_user(role: 'clan_helper');
-    $this->clan->members()->attach($this->helper, ['membership_role' => ClanMembershipRoleEnum::Helper->value]);
+    $this->clan = Clan::factory()->withOwner($this->owner)->withHelper($this->helper)->create();
 });
 
 it('allows a clan owner to access the edit page for a roster in their clan', function () {

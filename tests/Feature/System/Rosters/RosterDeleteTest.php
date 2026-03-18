@@ -7,7 +7,7 @@ use Livewire\Livewire;
 
 uses()->group('hll', 'rosters');
 
-beforeEach(function() {
+beforeEach(function () {
     $this->seed(RolesAndPermissionsSeeder::class);
     $this->seed(MapSeeder::class);
 

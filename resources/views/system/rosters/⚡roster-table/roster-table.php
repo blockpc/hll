@@ -17,8 +17,8 @@ use Livewire\Component;
 
 new #[Title('Listado de Rosters')] class extends Component
 {
-    use AuthorizesRoleOrPermissionTrait;
     use AlertBrowserEvent;
+    use AuthorizesRoleOrPermissionTrait;
     use PaginationTrait;
 
     public ?Clan $clan = null;
@@ -132,7 +132,7 @@ new #[Title('Listado de Rosters')] class extends Component
     private function resolveDefaultClan(): Clan
     {
         if ($this->isGlobalAdmin()) {
-            return Clan::query()->first() ?? new Clan();
+            return Clan::query()->first() ?? new Clan;
         }
 
         $authorizedClanIds = $this->authorizedClanIds();
@@ -168,7 +168,7 @@ new #[Title('Listado de Rosters')] class extends Component
         $this->authorizeOwner($roster);
 
         $this->validate([
-             'current_name' => ['required', 'string', (new AreEqualsRule($this->currentNameToDelete, __('hll.clans.rosters.delete.current_name_error')))],
+            'current_name' => ['required', 'string', (new AreEqualsRule($this->currentNameToDelete, __('hll.clans.rosters.delete.current_name_error')))],
         ], [], [
             'current_name' => __('hll.clans.rosters.delete.current_name'),
         ]);
@@ -182,7 +182,7 @@ new #[Title('Listado de Rosters')] class extends Component
             });
 
             $message = __('hll.clans.rosters.delete.message_success', ['name' => $this->currentNameToDelete]);
-        } catch(\Throwable $th) {
+        } catch (\Throwable $th) {
             Log::error("Error al eliminar un roster. {$th->getMessage()} | {$th->getFile()} | {$th->getLine()}");
             $type = 'error';
             $message = __('hll.clans.rosters.delete.error_transaction');

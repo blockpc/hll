@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Livewire\Attributes\Computed;
@@ -92,8 +91,11 @@ new #[Title('Editar Roster')] class extends Component
         $type = 'success';
         $message = '';
         $oldImage = $this->roster->image;
-        $newImagePath = $this->image?->store('rosters', 'public');
+        $newImagePath = null;
         try {
+            if ($this->image) {
+                $newImagePath = $this->image->store('rosters', 'public');
+            }
 
             DB::transaction(function () use ($newImagePath): void {
                 $this->roster->update([
@@ -119,7 +121,11 @@ new #[Title('Editar Roster')] class extends Component
             $message = __('hll.clans.rosters.edit.message_success', ['name' => $this->roster->name]);
         } catch (\Throwable $th) {
             if ($newImagePath) {
-                Storage::disk('public')->delete($newImagePath);
+                try {
+                    Storage::disk('public')->delete($newImagePath);
+                } catch (\Throwable $cleanupException) {
+                    Log::warning("No se pudo limpiar la imagen nueva tras fallo de actualización. {$cleanupException->getMessage()} | {$cleanupException->getFile()} | {$cleanupException->getLine()}");
+                }
             }
             Log::error("Error al actualizar un roster. {$th->getMessage()} | {$th->getFile()} | {$th->getLine()}");
             $type = 'error';

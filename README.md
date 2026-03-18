@@ -267,13 +267,13 @@ Para ejecutar solo los tests del dominio HLL:
 ### Roster: seguridad y consistencia por clan
 
 - El binding de rutas para `Roster` ahora se resuelve de forma acotada por clan y slug.
-- Se mantiene `getRouteKeyName()` en `slug`, pero la resolucion del modelo en ruta exige coincidencia con el clan actual.
-- Si la ruta no aporta un clan valido, el binding no devuelve resultados para evitar resoluciones fuera de contexto.
+- Se mantiene `getRouteKeyName()` en `slug`, pero la resolución del modelo en ruta exige coincidencia con el clan actual.
+- Si la ruta no aporta un clan válido, el binding no devuelve resultados para evitar resoluciones fuera de contexto.
 
 ### Roster edit: robustez en guardado y validación
 
 - Se reforzó la autorización para evitar editar un roster que no pertenece al clan de la URL (respuesta 404).
-- Se mejoró la gestion de imagenes al actualizar:
+- Se mejoró la gestión de imágenes al actualizar:
 	- limpieza de imagen anterior en ruta de éxito;
 	- limpieza defensiva de imagen nueva si ocurre una excepción.
 - Se ajustaron reglas de validación en edición:
@@ -283,16 +283,16 @@ Para ejecutar solo los tests del dominio HLL:
 
 ### Roster table: rendimiento y tolerancia a nulos
 
-- Se agrego eager loading de `map` y `centralPoint` para reducir consultas N+1.
-- La tabla ahora renderiza valores nulos con fallback (`--`) en mapa, punto central y faccion.
+- Se agregó eager loading de `map` y `centralPoint` para reducir consultas N+1.
+- La tabla ahora renderiza valores nulos con fallback (`--`) en mapa, punto central y facción.
 
-### Notas: correccion de modal
+### Notas: corrección de modal
 
-- Se corrigio un atributo mal formado en el modal de borrado para que `:closable="false"` se aplique correctamente.
+- Se corrigió un atributo mal formado en el modal de borrado para que `:closable="false"` se aplique correctamente.
 
 ### Tests incorporados/actualizados
 
-- Se agrego un test de regresion para confirmar que el route model binding de roster usa clan + slug.
+- Se agregó un test de regresión para confirmar que el route model binding de roster usa clan + slug.
 
 Para ejecutar solo los tests de edición de rosters:
 

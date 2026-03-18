@@ -120,7 +120,7 @@ new #[Title('Crear Roster')] class extends Component
     protected function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100', 'unique:rosters,name,NULL,id,clan_id,' . $this->clan->id],
+            'name' => ['required', 'string', 'max:100', 'unique:rosters,name,NULL,id,clan_id,'.$this->clan->id],
             'slug' => ['required', 'string', 'max:100', Rule::unique('rosters', 'slug')->where(function ($query) {
                 return $query->where('clan_id', $this->clan->id);
             })],
