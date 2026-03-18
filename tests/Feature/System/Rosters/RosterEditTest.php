@@ -5,6 +5,8 @@ use App\Enums\FactionTypeEnum;
 use App\Models\Map;
 use Database\Seeders\MapSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 uses()->group('roster-edit');
@@ -120,5 +122,31 @@ it('preserves the roster slug when updating other fields', function () {
     $this->assertDatabaseHas('rosters', [
         'id' => $roster->id,
         'slug' => $roster->slug,
+    ]);
+});
+
+it('replaces the previous roster image when uploading a new one', function () {
+    Storage::fake('public');
+
+    $oldImagePath = UploadedFile::fake()->image('old.jpg')->store('rosters', 'public');
+
+    $roster = new_roster($this->clan, [
+        'image' => $oldImagePath,
+    ]);
+
+    Livewire::actingAs($this->owner)
+        ->test('system::rosters.roster-edit', ['clan' => $this->clan, 'roster' => $roster])
+        ->set('image', UploadedFile::fake()->image('new.jpg'))
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $roster->refresh();
+
+    Storage::disk('public')->assertExists($roster->image);
+    Storage::disk('public')->assertMissing($oldImagePath);
+
+    $this->assertDatabaseHas('rosters', [
+        'id' => $roster->id,
+        'image' => $roster->image,
     ]);
 });

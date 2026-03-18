@@ -262,7 +262,7 @@ Para ejecutar solo los tests del dominio HLL:
 ./vendor/bin/sail artisan test --compact tests/Feature/HLL
 ```
 
-## Ultimos cambios (2026-03-18)
+## Últimos cambios (2026-03-18)
 
 ### Roster: seguridad y consistencia por clan
 
@@ -270,14 +270,14 @@ Para ejecutar solo los tests del dominio HLL:
 - Se mantiene `getRouteKeyName()` en `slug`, pero la resolucion del modelo en ruta exige coincidencia con el clan actual.
 - Si la ruta no aporta un clan valido, el binding no devuelve resultados para evitar resoluciones fuera de contexto.
 
-### Roster edit: robustez en guardado y validacion
+### Roster edit: robustez en guardado y validación
 
-- Se reforzo la autorizacion para evitar editar un roster que no pertenece al clan de la URL (respuesta 404).
-- Se mejoro la gestion de imagenes al actualizar:
-	- limpieza de imagen anterior en ruta de exito;
-	- limpieza defensiva de imagen nueva si ocurre una excepcion.
-- Se ajustaron reglas de validacion en edicion:
-	- `name` unico por clan (ignorando el propio roster en update);
+- Se reforzó la autorización para evitar editar un roster que no pertenece al clan de la URL (respuesta 404).
+- Se mejoró la gestion de imagenes al actualizar:
+	- limpieza de imagen anterior en ruta de éxito;
+	- limpieza defensiva de imagen nueva si ocurre una excepción.
+- Se ajustaron reglas de validación en edición:
+	- `name` único por clan (ignorando el propio roster en la actualización);
 	- `faction` obligatoria;
 	- `description` limitada a 255 caracteres.
 
@@ -294,7 +294,7 @@ Para ejecutar solo los tests del dominio HLL:
 
 - Se agrego un test de regresion para confirmar que el route model binding de roster usa clan + slug.
 
-Para ejecutar solo los tests de rosters edit:
+Para ejecutar solo los tests de edición de rosters:
 
 ```bash
 ./vendor/bin/sail artisan test --compact tests/Feature/System/Rosters/RosterEditTest.php

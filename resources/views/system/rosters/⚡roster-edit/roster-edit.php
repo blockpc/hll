@@ -92,7 +92,7 @@ new #[Title('Editar Roster')] class extends Component
         $type = 'success';
         $message = '';
         $oldImage = $this->roster->image;
-        $newImagePath = null;
+        $newImagePath = $this->image?->store('rosters', 'public');
         try {
 
             DB::transaction(function () use ($newImagePath): void {
@@ -116,7 +116,6 @@ new #[Title('Editar Roster')] class extends Component
                 }
             }
 
-            DB::commit();
             $message = __('hll.clans.rosters.edit.message_success', ['name' => $this->roster->name]);
         } catch (\Throwable $th) {
             if ($newImagePath) {
