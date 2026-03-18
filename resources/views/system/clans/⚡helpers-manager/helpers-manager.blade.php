@@ -17,7 +17,7 @@
             </div>
             <div class="flex items-center space-x-2">
                 @can('update', $clan)
-                    <flux:button variant="outline" color="blue" size="sm" href="{{ route('clans.show', $clan->slug) }}">
+                    <flux:button variant="ghost" size="sm" href="{{ route('clans.show', $clan->slug) }}">
                         {{ __('hll.clans.managers.back') }}
                     </flux:button>
 
@@ -66,7 +66,7 @@
         </flux:card>
     </div>
 
-    <flux:modal name="create-helper-manager" class="w-1/2" :closable="false">
+    <flux:modal name="create-helper-manager" class="max-w-lg" :closable="false">
         <div class="space-y-3">
             <div class="relative mb-6 w-full">
                 <flux:heading size="xl" level="1">{{ __('hll.clans.managers.create.title') }}</flux:heading>
@@ -87,7 +87,7 @@
         </div>
     </flux:modal>
 
-    <flux:modal name="edit-helper-manager" class="w-1/2" :closable="false">
+    <flux:modal name="edit-helper-manager" class="max-w-lg" :closable="false">
         <div class="space-y-3">
             <div class="relative mb-6 w-full">
                 <flux:heading size="xl" level="1">{{ __('hll.clans.managers.edit.title') }}</flux:heading>
@@ -108,7 +108,7 @@
         </div>
     </flux:modal>
 
-    <flux:modal name="delete-helper-manager" class="w-1/2" :closable="false">
+    <flux:modal name="delete-helper-manager" class="max-w-lg" :closable="false">
         <div class="space-y-3">
             <div class="relative mb-6 w-full">
                 <flux:heading size="xl" level="1">{{ __('hll.clans.managers.delete.title') }}</flux:heading>

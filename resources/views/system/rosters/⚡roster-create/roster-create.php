@@ -36,6 +36,10 @@ new #[Title('Crear Roster')] class extends Component
 
     public string|FactionTypeEnum|null $faction = null;
 
+    public bool $is_public = false;
+
+    public bool $multiclan = false;
+
     public function mount(): void
     {
         $this->checkAuthorization();
@@ -97,6 +101,8 @@ new #[Title('Crear Roster')] class extends Component
                 'central_point_id' => $this->central_point_id,
                 'faction' => $this->faction,
                 'image' => $imagePath,
+                'is_public' => $this->is_public,
+                'multiclan' => $this->multiclan,
             ]);
         } catch (\Throwable $exception) {
             if ($imagePath) {
@@ -114,7 +120,7 @@ new #[Title('Crear Roster')] class extends Component
     protected function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100', 'unique:rosters,name,NULL,id,clan_id,' . $this->clan->id],
+            'name' => ['required', 'string', 'max:100', 'unique:rosters,name,NULL,id,clan_id,'.$this->clan->id],
             'slug' => ['required', 'string', 'max:100', Rule::unique('rosters', 'slug')->where(function ($query) {
                 return $query->where('clan_id', $this->clan->id);
             })],
@@ -125,6 +131,8 @@ new #[Title('Crear Roster')] class extends Component
             })],
             'faction' => ['required', new Enum(FactionTypeEnum::class)],
             'image' => ['nullable', 'image', 'max:2048'],
+            'is_public' => ['required', 'boolean'],
+            'multiclan' => ['required', 'boolean'],
         ];
     }
 

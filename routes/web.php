@@ -63,6 +63,7 @@ Route::prefix('sistema')
 
         Route::prefix('rosters')->group(function () {
             Route::livewire('/{clan}/crear', 'system::rosters.roster-create')->name('rosters.create');
+            Route::livewire('/{clan}/editar/{roster}', 'system::rosters.roster-edit')->name('rosters.edit');
             Route::livewire('/{clan?}', 'system::rosters.roster-table')->name('rosters.table');
         });
     });
