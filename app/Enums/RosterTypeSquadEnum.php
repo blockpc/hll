@@ -6,6 +6,8 @@ namespace App\Enums;
 
 enum RosterTypeSquadEnum: string
 {
+    private const UNLIMITED_SOLDIERS = 999;
+
     case Command = 'command';
     case Infantry = 'infantry';
     case Recon = 'recon';
@@ -33,7 +35,7 @@ enum RosterTypeSquadEnum: string
             self::Recon => 2,
             self::Armor => 3,
             self::Artillery => 3,
-            self::Custom => 999,
+            self::Custom => self::UNLIMITED_SOLDIERS,
         };
     }
 

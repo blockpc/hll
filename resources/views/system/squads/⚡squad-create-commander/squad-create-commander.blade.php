@@ -6,7 +6,7 @@
     @else
         <flux:button variant="outline" size="xs" icon="x-mark" disabled />
     @endif
-    <flux:modal name="create-squad-command" class="max-w-lg" @close="cancelModal" @cancel="cancelModal" :dismissible="false">
+    <flux:modal name="create-squad-command" class="max-w-lg" @close="$wire.cancelModal()" @cancel="$wire.cancelModal()" :dismissible="false">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">{{ __('hll.squads.squad_command.title') }}</flux:heading>
@@ -20,7 +20,7 @@
             <flux:input size="sm" label="{{ __('hll.squads.form.alias') }}" wire:model="alias" />
 
             <div class="flex flex-col space-y-1 max-h-64 overflow-y-auto overscroll-y-auto">
-                @foreach ($soldiers as $soldierId => $soldierName)
+                @forelse ($soldiers as $soldierId => $soldierName)
                     @if ($selectedSoldierId !== $soldierId)
                         <flux:button size="sm" class="justify-start" wire:click="addCommander({{ $soldierId }})">
                             {{ $soldierName }}
@@ -30,7 +30,9 @@
                             {{ $soldierName }}
                         </flux:button>
                     @endif
-                @endforeach
+                @empty
+                    <flux:text class="text-sm text-zinc-500">{{ __('hll.squads.squad_command.no_soldiers') }}</flux:text>
+                @endforelse
             </div>
 
             <flux:error name="selectedSoldierId" />

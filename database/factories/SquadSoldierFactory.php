@@ -22,13 +22,13 @@ class SquadSoldierFactory extends Factory
             'squad_id' => Squad::factory(),
             'soldier_id' => Soldier::factory(),
             'display_name' => $this->faker->word(),
-            'slot_number' => 1,
+            'slot_number' => $this->faker->numberBetween(1, 10),
             'role_squad_type' => null,
         ];
     }
 
     /**
-     * Indicate that the squad soldier is a commander.
+     * Associate the squad soldier with a specific squad.
      *
      * @return static
      */
@@ -40,7 +40,7 @@ class SquadSoldierFactory extends Factory
     }
 
     /**
-     * Indicate that the squad soldier is a commander.
+     *  Associate the squad soldier with a specific soldier.
      *
      * @return static
      */

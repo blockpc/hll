@@ -85,10 +85,6 @@ function new_roster(Clan $clan, array $attributes = []): Roster
 
 function new_squad(Roster $roster, ?RosterTypeSquadEnum $rosterTypeSquad = null, array $attributes = []): Squad
 {
-    if ($rosterTypeSquad && ! in_array($rosterTypeSquad, RosterTypeSquadEnum::cases())) {
-        throw new \InvalidArgumentException('Invalid roster type squad.');
-    }
-
     if ($rosterTypeSquad) {
         $attributes['roster_type_squad'] = $rosterTypeSquad->value;
     }
@@ -113,30 +109,29 @@ function new_soldier(Clan $clan, ?Squad $squad = null, array $attributes = []): 
     return $soldier;
 }
 
-function add_soldier_to_squad(Soldier $soldier, ?Squad $squad = null, ?string $onlyName, ?int $slot = null): SquadSoldier
+function add_soldier_to_squad(Soldier $soldier, ?Squad $squad = null, ?string $onlyName = null, ?int $slot = null): SquadSoldier
 {
-    $squadSoldier = null;
-
-    if (! $squad->exists() && ! $onlyName) {
+    if (! $squad && ! $onlyName) {
         throw new \InvalidArgumentException('Cannot add soldier without a squad or a name.');
     }
 
-    $nextSlot = $slot ?? $squad->squadSoldiers()->max('slot_number') + 1;
-
-    if ($squad->exists()) {
-        $squadSoldier = $squad->squadSoldiers()->create([
-            'soldier_id' => $soldier->id,
-            'display_name' => $soldier->name,
-            'slot_number' => $nextSlot,
-        ]);
+    if (! $squad) {
+        throw new \InvalidArgumentException('A squad is required to add a soldier.');
     }
 
+
+    $nextSlot = $slot ?? $squad->squadSoldiers()->max('slot_number') + 1;
+
     if ($onlyName) {
-        $squadSoldier = $squad->squadSoldiers()->create([
+        return $squad->squadSoldiers()->create([
             'display_name' => $onlyName,
             'slot_number' => $nextSlot,
         ]);
     }
 
-    return $squadSoldier;
+    return $squad->squadSoldiers()->create([
+        'soldier_id' => $soldier->id,
+        'display_name' => $soldier->name,
+        'slot_number' => $nextSlot,
+    ]);
 }

@@ -71,7 +71,6 @@
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.artillery') }}</div>
                         </div>
                     </div>
-                    </div>
                 </div>
                 <div class="col-span-4 border flex flex-col space-y-4 p-1">
                     <div class="flex items-center justify-between">

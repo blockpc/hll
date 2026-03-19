@@ -89,17 +89,17 @@ class DatabaseSeeder extends Seeder
                 if ($map) {
                     $centralPoint = $map->centralPoints()->inRandomOrder()->first();
 
-                    // Agregar un roster al clan
-                    $clan->rosters()->create([
-                        'name' => 'Roster Principal',
-                        'description' => 'Roster principal para eventos y competiciones.',
-                        'map_id' => $map->id,
-                        'central_point_id' => $centralPoint->id,
-                        'faction' => 'allies',
-                    ]);
+                    if ($centralPoint) {
+                        $clan->rosters()->create([
+                            'name' => 'Roster Principal',
+                            'description' => 'Roster principal para eventos y competiciones.',
+                            'map_id' => $map->id,
+                            'central_point_id' => $centralPoint->id,
+                            'faction' => 'allies',
+                        ]);
+                    }
                 }
             }
         }
-
     }
 }

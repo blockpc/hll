@@ -55,9 +55,9 @@ new #[Lazy, Title('Plantilla Roster')] class extends Component
     }
 
     /**
-     * Handle the add-squad event.
+     * Triggers component re-render when a squad is added.
      *
-     * This method can be used to perform any necessary actions after a squad has been added.
+     * Listens to the 'add-squad' event and refreshes the component state.
      */
     #[On('add-squad')]
     public function squadAdded(): void {}

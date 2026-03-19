@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('soldier_id')->nullable()->constrained()->nullOnDelete();
             $table->string('display_name', 32);
             $table->unsignedTinyInteger('slot_number');
-            $table->string('role_squad_type')->nullable();
+            $table->string('role_squad_type', 50)->nullable();
             $table->timestamps();
 
             $table->unique(['squad_id', 'slot_number']);

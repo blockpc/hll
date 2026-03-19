@@ -17,14 +17,16 @@ new class extends Component
     public function mount(Roster $roster): void
     {
         $this->roster = $roster;
-        $commanderSquads = $roster->commandSquads()->get();
-        $this->countSquads = $commanderSquads->count();
+        $query = $roster->commandSquads();
+        $this->countSquads = $query->count();
         $this->commandSquads = $this->countSquads > 0;
-        $this->squadCommander = $commanderSquads->first();
+        $this->squadCommander = $this->commandSquads ? $query->first() : null;
     }
 
+    /**
+     * @todo Implement show functionality
+     */
     public function show(): void
     {
-        // TODO: Implement show functionality
     }
 };

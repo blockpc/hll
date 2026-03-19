@@ -42,21 +42,21 @@
                     <div class="flex flex-col space-y-1 p-1" id="armor-section">
                         <div class="flex justify-between items-center">
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.armor') }}</div>
-                            <flux:button variant="outline" size="xs">(1/3) +</flux:button>
+                            <flux:button variant="outline" size="xs" icon="plus">(1/3)</flux:button>
                         </div>
                         <flux:button variant="ghost" size="xs">cap winters</flux:button>
                     </div>
                     <div class="flex flex-col space-y-1 p-1" id="recon-section">
                         <div class="flex justify-between items-center">
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.recon') }}</div>
-                            <flux:button variant="outline" size="xs">(1/2) +</flux:button>
+                            <flux:button variant="outline" size="xs" icon="plus">(1/2)</flux:button>
                         </div>
                         <flux:button variant="ghost" size="xs">monty_365</flux:button>
                     </div>
                     <div class="flex flex-col space-y-1 p-1" id="artillery-section">
                         <div class="flex justify-between items-center">
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.artillery') }}</div>
-                            <flux:button variant="outline" size="xs">(0/2) +</flux:button>
+                            <flux:button variant="outline" size="xs" icon="plus">(0/2)</flux:button>
                         </div>
                         <div class="text-sm text-gray-500">{{ __('hll.squads.no_soldiers_assigned') }}</div>
                     </div>

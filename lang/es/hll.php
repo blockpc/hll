@@ -275,6 +275,8 @@ return [
             'requirements' => 'Solo se permite la elección de un soldado de clan como comandante. Este soldado no podrá ser asignado a otras escuadras mientras sea comandante.',
             'button' => 'Agregar Comandante',
             'no_command_squad' => 'Sin comandante asignado.',
+            'commander_name' => 'Comandante: :name',
+            'no_soldiers' => 'No hay soldados disponibles para asignar como comandante. Agrega soldados a tu clan para poder asignar un comandante a este roster.',
         ],
         'squad_infantry' => [
             'title' => 'Infantería',

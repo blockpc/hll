@@ -4,6 +4,7 @@ use App\Enums\RosterTypeSquadEnum;
 use App\Models\Roster;
 use App\Models\Squad;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 new class extends Component
@@ -18,6 +19,7 @@ new class extends Component
 
     public ?int $selectedSoldierId = null;
 
+    /** @var Collection<int, \App\Models\Soldier> */
     public Collection $soldiers;
 
     public function mount(Roster $roster, Collection $soldiers): void
@@ -40,7 +42,7 @@ new class extends Component
     public function save(): void
     {
         $this->validate([
-            'selectedSoldierId' => 'required|exists:soldiers,id',
+            'selectedSoldierId' => ['required', 'integer', Rule::in($this->soldiers->pluck('id'))],
             'name' => 'required|string|max:32',
             'alias' => 'nullable|string|max:8',
         ], [], [
@@ -63,7 +65,7 @@ new class extends Component
 
     public function cancelModal(): void
     {
-        $this->reset('name', 'alias');
+        $this->reset('name', 'alias', 'selectedSoldierId');
         $this->clearValidation();
         $this->modal('create-squad-command')->close();
     }
