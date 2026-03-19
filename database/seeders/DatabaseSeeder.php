@@ -30,20 +30,32 @@ class DatabaseSeeder extends Seeder
         $sudo->syncRoles(['sudo']);
 
         if (app()->environment('local')) {
-            $testUser = User::firstOrCreate(
-                ['email' => 'test@mail.com'],
+            $ownerUser = User::firstOrCreate(
+                ['email' => 'owner@mail.com'],
                 [
-                    'name' => 'Test User',
+                    'name' => 'Owner Clan',
                     'password' => 'password',
                 ]
             );
-            if ($testUser->wasRecentlyCreated) {
-                $testUser->markEmailAsVerified();
+            if ($ownerUser->wasRecentlyCreated) {
+                $ownerUser->markEmailAsVerified();
             }
-            $testUser->syncRoles(['clan_owner']);
+            $ownerUser->syncRoles(['clan_owner']);
+
+            $helperUser = User::firstOrCreate(
+                ['email' => 'helper@mail.com'],
+                [
+                    'name' => 'Helper Clan',
+                    'password' => 'password',
+                ]
+            );
+            if ($helperUser->wasRecentlyCreated) {
+                $helperUser->markEmailAsVerified();
+            }
+            $helperUser->syncRoles(['clan_helper']);
 
             if (! Clan::query()->where('slug', 'miopes-y-mancos')->exists()) {
-                $clan = Clan::factory()->withOwner($testUser)->create([
+                $clan = Clan::factory()->withOwner($ownerUser)->withHelper($helperUser)->create([
                     'alias' => 'MYM',
                     'slug' => 'miopes-y-mancos',
                     'name' => 'Miopes y Mancos',

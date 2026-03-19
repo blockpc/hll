@@ -99,7 +99,10 @@
                     @foreach ($this->soldiers as $soldier)
                         <flux:card wire:key="soldier-{{ $soldier->id }}" class="p-2.5 space-y-4">
                             <div class="flex justify-between items-center">
-                                <flux:heading size="base">{{ $soldier->name }}</flux:heading>
+                                <div class="flex items-center space-x-3">
+                                    <flux:avatar :name="$soldier->name" />
+                                    <flux:heading size="base">{{ $soldier->name }}</flux:heading>
+                                </div>
                                 <flux:text class="text-xs italic">{{ $soldier->role?->label() ?? __('hll.clans.soldiers.no_role') }}</flux:text>
                             </div>
                             <flux:text class="text-xs italic">{{ $soldier->observation ?? __('hll.clans.soldiers.no_observation') }}</flux:text>

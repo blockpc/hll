@@ -5,9 +5,11 @@ use App\Models\Clan;
 use App\Models\Roster;
 use App\Traits\CheckAuthorizationRostersTrait;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new class extends Component
+new #[Lazy(), Title('Plantilla Roster')] class extends Component
 {
     use CheckAuthorizationRostersTrait;
 

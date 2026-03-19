@@ -1,20 +1,7 @@
 <div>
     <div class="relative mb-6 w-full">
         <div class="flex items-start justify-between space-x-6">
-            <div class="flex space-x-6">
-                <div>
-                    @if ($clan->logo)
-                        <img src="{{ $clan->logo_url }}" alt="{{ $clan->name }}" class="h-16 w-16 rounded-full object-cover">
-                    @else
-                        <x-placeholder-pattern class="h-16 w-16 rounded-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-                    @endif
-                </div>
-                <div>
-                    <flux:heading size="xl" level="1">{{ __('hll.clans.soldiers.list') }}</flux:heading>
-                    <flux:heading size="lg" level="2">{{ $clan->alias }} | {{ $clan->name }}</flux:heading>
-                    <flux:subheading size="base" class="mb-6">{{ $clan->description ?? __('hll.clans.show.no_description') }}</flux:subheading>
-                </div>
-            </div>
+            <x-header-clan :clan="$clan" :title="__('hll.clans.soldiers.list')" />
             <div class="flex items-center space-x-2">
                 @can('update', $clan)
                     <flux:button variant="ghost" size="sm" href="{{ route('clans.show', $clan->slug) }}">
@@ -45,7 +32,10 @@
                     @foreach ($this->soldiers as $soldier)
                         <flux:card wire:key="soldier-{{ $soldier->id }}" class="p-2.5 space-y-4">
                             <div class="flex justify-between items-center">
-                                <flux:heading size="base">{{ $soldier->name }}</flux:heading>
+                                <div class="flex items-center space-x-3">
+                                    <flux:avatar :name="$soldier->name" />
+                                    <flux:heading size="base">{{ $soldier->name }}</flux:heading>
+                                </div>
                                 <flux:text class="text-xs italic">{{ $soldier->role?->label() ?? __('hll.clans.soldiers.no_role') }}</flux:text>
                             </div>
                             <flux:text class="text-xs italic">{{ $soldier->observation ?? __('hll.clans.soldiers.no_observation') }}</flux:text>
