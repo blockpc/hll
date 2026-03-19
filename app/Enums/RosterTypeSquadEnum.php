@@ -11,6 +11,7 @@ enum RosterTypeSquadEnum: string
     case Recon = 'recon';
     case Armor = 'armor';
     case Artillery = 'artillery';
+    case Custom = 'custom';
 
     public function label(): string
     {
@@ -20,6 +21,7 @@ enum RosterTypeSquadEnum: string
             self::Recon => __('hll.roster_type_squad.recon'),
             self::Armor => __('hll.roster_type_squad.armor'),
             self::Artillery => __('hll.roster_type_squad.artillery'),
+            self::Custom => __('hll.roster_type_squad.custom'),
         };
     }
 
@@ -31,17 +33,19 @@ enum RosterTypeSquadEnum: string
             self::Recon => 2,
             self::Armor => 3,
             self::Artillery => 3,
+            self::Custom => 999,
         };
     }
 
     public function color(): string
     {
         return match ($this) {
-            self::Command => 'info',
-            self::Infantry => 'success',
-            self::Recon => 'ban',
-            self::Armor => 'warning',
-            self::Artillery => 'secondary',
+            self::Command => 'indigo',
+            self::Infantry => 'green',
+            self::Recon => 'pink',
+            self::Armor => 'yellow',
+            self::Artillery => 'blue',
+            self::Custom => 'gray',
         };
     }
 
@@ -53,6 +57,7 @@ enum RosterTypeSquadEnum: string
             self::Recon => 'REC',
             self::Armor => 'ARM',
             self::Artillery => 'ART',
+            self::Custom => 'CST',
         };
     }
 }

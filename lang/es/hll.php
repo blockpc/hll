@@ -199,6 +199,11 @@ return [
             'manage_roster' => 'Administrar Roster',
             'delete_button' => 'Eliminar Roster',
             'no_roster_description' => 'Este roster no tiene una descripción.',
+            'search_soldier' => 'Buscar soldado...',
+            'roster_manage' => 'Administrar Roster',
+            'roster_map' => 'Mapa del Roster',
+            'commands' => 'Comandos',
+            'soldiers' => 'Soldados',
             'table' => [
                 'name' => 'Nombre',
                 'map' => 'Mapa',
@@ -253,6 +258,57 @@ return [
             ],
         ],
     ],
+    'squads' => [
+        '403' => 'No tienes permiso para gestionar las escuadras de este roster.',
+        'not_match' => 'La escuadra no pertenece a este roster.',
+        'no_soldiers_assigned' => 'No hay soldados asignados a esta escuadra.',
+        'sections' => [
+            'commander' => 'Comandante',
+            'infantry' => 'Infantería',
+            'recon' => 'Reconocimiento',
+            'armor' => 'Blindados',
+            'artillery' => 'Artillería',
+        ],
+        'squad_command' => [
+            'title' => 'Crear Comandante',
+            'subtitle' => 'Asigna un comandante a este roster para liderar tus escuadras.',
+            'requirements' => 'Solo se permite la elección de un soldado de clan como comandante. Este soldado no podrá ser asignado a otras escuadras mientras sea comandante.',
+            'button' => 'Agregar Comandante',
+            'no_command_squad' => 'Sin comandante asignado.',
+        ],
+        'squad_infantry' => [
+            'title' => 'Infantería',
+            'no_command_squad' => 'Sin escuadras de infantería asignadas.',
+        ],
+        'squad_recon' => [
+            'title' => 'Reconocimiento',
+            'no_command_squad' => 'Sin escuadras de reconocimiento asignadas.',
+        ],
+        'squad_armor' => [
+            'title' => 'Blindados',
+            'no_command_squad' => 'Sin escuadras de blindados asignadas.',
+        ],
+        'squad_artillery' => [
+            'title' => 'Artillería',
+            'no_command_squad' => 'Sin escuadras de artillería asignadas.',
+        ],
+        'form' => [
+            'name' => 'Nombre de la Escuadra',
+            'alias' => 'Alias de la Escuadra',
+            'roster_type_squad' => 'Tipo de escuadra',
+            'pos_x' => 'Posición X',
+            'pos_y' => 'Posición Y',
+            'z_index' => 'Nivel Z (superposición)',
+            'soldier' => 'Soldado',
+        ],
+        'create' => [
+            'title' => 'Crear Escuadra',
+            'subtitle' => 'Llena el formulario para crear una escuadra en este roster.',
+            'button' => 'Crear Escuadra',
+            'select_type' => 'Selecciona el tipo de escuadra',
+            'message_success' => 'Escuadra creada correctamente. :name',
+        ],
+    ],
     'clan_membership_role' => [
         'owner' => 'Administrador',
         'helper' => 'Asistente',
@@ -280,6 +336,7 @@ return [
         'recon' => 'Reconocimiento',
         'armor' => 'Blindados',
         'artillery' => 'Artillería',
+        'custom' => 'Personalizada',
     ],
     'faction_type' => [
         'allies' => 'Aliados',

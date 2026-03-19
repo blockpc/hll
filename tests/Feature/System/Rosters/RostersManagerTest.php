@@ -230,7 +230,7 @@ it('stores multiclan flag correctly', function () {
 it('shows edit url for rosters in users clan', function () {
     $owner = new_user();
     $owner->assignRole('clan_owner');
-    $clan = new_clan($owner, ['slug' => 'clan-a']);
+    $clan = new_clan(owner: $owner, attributes: ['slug' => 'clan-a']);
     $roster = Roster::factory()->for($clan)->create();
 
     $response = $this->actingAs($owner)->get(route('rosters.table'));
@@ -242,9 +242,10 @@ it('shows edit url for rosters in users clan', function () {
 it('does not show rosters from other clans', function () {
     $owner = new_user();
     $owner->assignRole('clan_owner');
+    new_clan(owner: $owner, attributes: ['slug' => 'clan-a']);
 
     $otherOwner = new_user();
-    $otherClan = new_clan($otherOwner, ['slug' => 'clan-b']);
+    $otherClan = new_clan(owner: $otherOwner, attributes: ['slug' => 'clan-b']);
     $otherRoster = Roster::factory()->for($otherClan)->create();
 
     $response = $this->actingAs($owner)->get(route('rosters.table'));

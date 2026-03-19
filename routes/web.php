@@ -64,6 +64,8 @@ Route::prefix('sistema')
             Route::livewire('/{clan}/crear', 'system::rosters.roster-create')->name('rosters.create');
             Route::livewire('/{clan}/editar/{roster}', 'system::rosters.roster-edit')->name('rosters.edit');
             Route::livewire('/{clan}/plantilla/{roster}', 'system::rosters.roster-template')->name('rosters.template');
+            Route::livewire('/{clan}/plantilla/{roster}/administrar', 'system::rosters.roster-template-manage')->name('rosters.template.manage');
+            Route::livewire('/{clan}/plantilla/{roster}/mapa', 'system::rosters.roster-template-map')->name('rosters.template.map');
             Route::livewire('/{clan?}', 'system::rosters.roster-table')->name('rosters.table');
         });
     });

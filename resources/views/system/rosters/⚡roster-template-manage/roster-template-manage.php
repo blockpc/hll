@@ -6,12 +6,10 @@ use App\Models\Roster;
 use App\Traits\CheckAuthorizationRostersTrait;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Lazy, Title('Plantilla Roster')] class extends Component
+new class extends Component
 {
     use CheckAuthorizationRostersTrait;
 
@@ -55,9 +53,7 @@ new #[Lazy, Title('Plantilla Roster')] class extends Component
     }
 
     /**
-     * Handle the add-squad event.
-     *
-     * This method can be used to perform any necessary actions after a squad has been added.
+     * Handle actions after a squad has been added.
      */
     #[On('add-squad')]
     public function squadAdded(): void {}

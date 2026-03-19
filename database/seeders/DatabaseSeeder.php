@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\RoleSquadTypeEnum;
 use App\Models\Clan;
+use App\Models\Map;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -83,6 +84,20 @@ class DatabaseSeeder extends Seeder
                     ['name' => 'monty_365', 'role' => RoleSquadTypeEnum::Engineer->value],
                     ['name' => 'grayskull', 'role' => RoleSquadTypeEnum::Engineer->value],
                 ]);
+
+                $map = Map::inRandomOrder()->first();
+                if ($map) {
+                    $centralPoint = $map->centralPoints()->inRandomOrder()->first();
+
+                    // Agregar un roster al clan
+                    $clan->rosters()->create([
+                        'name' => 'Roster Principal',
+                        'description' => 'Roster principal para eventos y competiciones.',
+                        'map_id' => $map->id,
+                        'central_point_id' => $centralPoint->id,
+                        'faction' => 'allies',
+                    ]);
+                }
             }
         }
 

@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\FactionTypeEnum;
+use App\Enums\RosterTypeSquadEnum;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -88,5 +90,20 @@ class Roster extends Model
         return Attribute::get(
             fn () => $this->image ? Storage::disk('public')->url($this->image) : null
         );
+    }
+
+    public function squads(): HasMany
+    {
+        return $this->hasMany(Squad::class);
+    }
+
+    public function commandSquads(): HasMany
+    {
+        return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Command);
+    }
+
+    public function infantrySquads(): HasMany
+    {
+        return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Infantry);
     }
 }

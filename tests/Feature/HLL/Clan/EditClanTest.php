@@ -132,7 +132,7 @@ it('replaces existing logo and image files when editing a clan', function () {
     Storage::disk('public')->put('clans/origin/old-logo.png', 'old-logo');
     Storage::disk('public')->put('clans/origin/old-image.png', 'old-image');
 
-    $clan = new_clan($this->user, [
+    $clan = new_clan(owner: $this->user, attributes: [
         'alias' => 'origin',
         'logo' => 'clans/origin/old-logo.png',
         'image' => 'clans/origin/old-image.png',

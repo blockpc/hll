@@ -22,8 +22,8 @@ use Livewire\WithFileUploads;
 
 new #[Title('Editar Roster')] class extends Component
 {
-    use WithFileUploads;
     use CheckAuthorizationRostersTrait;
+    use WithFileUploads;
 
     public Clan $clan;
 
