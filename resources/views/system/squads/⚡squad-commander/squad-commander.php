@@ -17,10 +17,9 @@ new class extends Component
     public function mount(Roster $roster): void
     {
         $this->roster = $roster;
-        $query = $roster->commandSquads();
-        $this->countSquads = $query->count();
-        $this->commandSquads = $this->countSquads > 0;
-        $this->squadCommander = $this->commandSquads ? $query->first() : null;
+        $this->squadCommander = $roster->commandSquads()->first();
+        $this->commandSquads = $this->squadCommander !== null;
+        $this->countSquads = $this->commandSquads ? 1 : 0;
     }
 
     /**

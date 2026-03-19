@@ -6,7 +6,7 @@ namespace App\Enums;
 
 enum RosterTypeSquadEnum: string
 {
-    private const UNLIMITED_SOLDIERS = 999;
+    private const int UNLIMITED_SOLDIERS = 999;
 
     case Command = 'command';
     case Infantry = 'infantry';

@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -111,14 +110,13 @@ function new_soldier(Clan $clan, ?Squad $squad = null, array $attributes = []): 
 
 function add_soldier_to_squad(Soldier $soldier, ?Squad $squad = null, ?string $onlyName = null, ?int $slot = null): SquadSoldier
 {
-    if (! $squad && ! $onlyName) {
-        throw new \InvalidArgumentException('Cannot add soldier without a squad or a name.');
-    }
-
     if (! $squad) {
         throw new \InvalidArgumentException('A squad is required to add a soldier.');
     }
 
+    if (! $soldier && ! $onlyName) {
+        throw new \InvalidArgumentException('Either a soldier or a display name is required.');
+    }
 
     $nextSlot = $slot ?? $squad->squadSoldiers()->max('slot_number') + 1;
 

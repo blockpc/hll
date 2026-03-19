@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Roster;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 
 new class extends Component

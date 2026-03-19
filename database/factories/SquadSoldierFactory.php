@@ -40,7 +40,7 @@ class SquadSoldierFactory extends Factory
     }
 
     /**
-     *  Associate the squad soldier with a specific soldier.
+     * Associate the squad soldier with a specific soldier.
      *
      * @return static
      */
