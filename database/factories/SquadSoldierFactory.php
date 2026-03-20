@@ -29,8 +29,6 @@ class SquadSoldierFactory extends Factory
 
     /**
      * Associate the squad soldier with a specific squad.
-     *
-     * @return static
      */
     public function withRoster(Squad $squad): static
     {
@@ -41,8 +39,6 @@ class SquadSoldierFactory extends Factory
 
     /**
      * Associate the squad soldier with a specific soldier.
-     *
-     * @return static
      */
     public function withSoldier(Soldier $soldier): static
     {

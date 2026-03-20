@@ -17,10 +17,15 @@ new class extends Component
     public Roster $roster;
 
     public string $name = '';
+
     public string $alias = '';
+
     public ?string $roster_type_squad = null;
+
     public int $pos_x = 0;
+
     public int $pos_y = 0;
+
     public int $z_index = 1;
 
     public function mount(): void

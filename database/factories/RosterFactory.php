@@ -30,11 +30,13 @@ class RosterFactory extends Factory
             'name' => $this->faker->text(50),
             'description' => $this->faker->sentence(),
             'faction' => $this->faker->randomElement(FactionTypeEnum::cases()),
+            'max_soldiers' => $this->faker->randomElement([30, 40, 50]),
             'map_id' => $map->id,
             'central_point_id' => $centralPoint->id,
             'image' => null,
             'is_public' => false,
             'multiclan' => false,
+            'multifaction' => false,
         ];
     }
 }

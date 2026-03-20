@@ -217,9 +217,11 @@ return [
                 'map_id' => 'Mapa',
                 'central_point_id' => 'Punto central',
                 'faction' => 'Facción',
+                'max_soldiers' => 'Cantidad de soldados',
                 'image' => 'Imagen del Roster',
                 'is_public' => '¿Hacer público el roster? (podrá ser visto por usuarios que no pertenezcan al clan)',
                 'multiclan' => '¿Permitir que este roster sea usado por otros clanes?',
+                'multifaction' => '¿Permitir que este roster tenga soldados de diferentes facciones?',
             ],
             'create' => [
                 'title' => 'Crear Roster',
@@ -268,6 +270,7 @@ return [
             'recon' => 'Reconocimiento',
             'armor' => 'Blindados',
             'artillery' => 'Artillería',
+            'custom' => 'Personalizada',
         ],
         'squad_command' => [
             'title' => 'Crear Comandante',
@@ -280,19 +283,23 @@ return [
         ],
         'squad_infantry' => [
             'title' => 'Infantería',
-            'no_command_squad' => 'Sin escuadras de infantería asignadas.',
+            'no_command_squad' => 'Sin escuadras de infantería agregadas.',
         ],
         'squad_recon' => [
             'title' => 'Reconocimiento',
-            'no_command_squad' => 'Sin escuadras de reconocimiento asignadas.',
+            'no_command_squad' => 'Sin escuadras de reconocimiento agregadas.',
         ],
         'squad_armor' => [
             'title' => 'Blindados',
-            'no_command_squad' => 'Sin escuadras de blindados asignadas.',
+            'no_command_squad' => 'Sin escuadras de blindados agregadas.',
         ],
         'squad_artillery' => [
             'title' => 'Artillería',
-            'no_command_squad' => 'Sin escuadras de artillería asignadas.',
+            'no_command_squad' => 'Sin escuadras de artillería agregadas.',
+        ],
+        'squad_custom' => [
+            'title' => 'Personalizada',
+            'no_command_squad' => 'Sin escuadras personalizadas agregadas.',
         ],
         'form' => [
             'name' => 'Nombre de la Escuadra',
@@ -309,6 +316,29 @@ return [
             'button' => 'Crear Escuadra',
             'select_type' => 'Selecciona el tipo de escuadra',
             'message_success' => 'Escuadra creada correctamente. :name',
+        ],
+    ],
+    'squad_soldiers' => [
+        '403' => 'No tienes permiso para gestionar los soldados de esta escuadra.',
+        'not_match' => 'El soldado no pertenece a esta escuadra.',
+        'soldier_not_found' => 'Soldado no encontrado.',
+        'soldier_not_in_clan_from_roster' => 'El soldado seleccionado no pertenece al mismo clan que la escuadra.',
+        'soldier_already_assigned' => 'El soldado seleccionado ya está asignado a una escuadra en este roster.',
+        'squad_full' => 'La escuadra ha alcanzado su capacidad máxima.',
+        'add' => [
+            'title' => 'Agregar Soldado a Escuadra',
+            'subtitle' => 'Selecciona un soldado de tu clan para agregarlo a esta escuadra.',
+            'requirements' => 'Solo se permiten soldados que pertenezcan al mismo clan que la escuadra y que no estén asignados a otra escuadra en este roster. La escuadra no puede exceder su capacidad máxima de soldados.',
+            'add_by_id' => 'Agregar soldado por selección',
+            'add_by_name' => 'Agregar soldado por nombre',
+            'select_soldier' => 'Selecciona un soldado',
+            'soldier_by_name' => 'Agregar soldado por nombre',
+            'soldier_by_name_placeholder' => 'Ingresa el nombre del soldado que deseas agregar a esta escuadra.',
+            'button' => 'Agregar Soldado',
+            'form' => [
+                'soldier_id' => 'Soldado',
+                'soldier_by_name' => 'Nombre del soldado',
+            ],
         ],
     ],
     'clan_membership_role' => [

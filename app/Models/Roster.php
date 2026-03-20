@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -27,19 +28,23 @@ class Roster extends Model
         'name',
         'description',
         'faction',
+        'max_soldiers',
         'map_id',
         'central_point_id',
         'image',
         'is_public',
         'multiclan',
+        'multifaction',
     ];
 
     protected function casts(): array
     {
         return [
             'faction' => FactionTypeEnum::class,
+            'max_soldiers' => 'integer',
             'is_public' => 'boolean',
             'multiclan' => 'boolean',
+            'multifaction' => 'boolean',
         ];
     }
 
@@ -92,6 +97,19 @@ class Roster extends Model
         );
     }
 
+    public function squadSoldiers(): HasManyThrough
+    {
+        return $this->hasManyThrough(SquadSoldier::class, Squad::class);
+    }
+
+    /**
+     * Count soldiers assigned to the roster across all squads.
+     */
+    public function assignedSoldiersCount(): int
+    {
+        return $this->squadSoldiers()->count();
+    }
+
     public function squads(): HasMany
     {
         return $this->hasMany(Squad::class);
@@ -105,5 +123,10 @@ class Roster extends Model
     public function infantrySquads(): HasMany
     {
         return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Infantry);
+    }
+
+    public function customSquads(): HasMany
+    {
+        return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Custom);
     }
 }

@@ -6,7 +6,7 @@
     @else
         <flux:button variant="outline" size="xs" icon="x-mark" disabled />
     @endif
-    <flux:modal name="create-squad-command" class="max-w-lg" @close="$wire.cancelModal()" @cancel="$wire.cancelModal()" :dismissible="false">
+    <flux:modal name="create-squad-command" @close="$wire.cancelModal()" @cancel="$wire.cancelModal()" :dismissible="false">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">{{ __('hll.squads.squad_command.title') }}</flux:heading>

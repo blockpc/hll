@@ -1,6 +1,6 @@
 
 <div>
-    <flux:modal name="create-squad" class="max-w-lg">
+    <flux:modal name="create-squad" @close="$wire.cancelModal()" @cancel="$wire.cancelModal()" :dismissible="false">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">{{ __('hll.squads.create.title') }}</flux:heading>

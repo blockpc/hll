@@ -58,6 +58,7 @@ it('allows a clan owner to create a roster in their clan', function () {
         'image' => null,
         'is_public' => false,
         'multiclan' => false,
+        'multifaction' => false,
     ]);
 });
 

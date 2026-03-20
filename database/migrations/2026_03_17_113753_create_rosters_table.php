@@ -21,6 +21,8 @@ return new class extends Migration
 
             $table->string('faction', 20);
 
+            $table->unsignedInteger('max_soldiers')->default(0);
+
             $table->foreignId('map_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('central_point_id')->nullable()->constrained()->nullOnDelete();
 
@@ -28,6 +30,7 @@ return new class extends Migration
 
             $table->boolean('is_public')->default(false);
             $table->boolean('multiclan')->default(false);
+            $table->boolean('multifaction')->default(false);
 
             $table->timestamps();
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -17,6 +18,8 @@ use App\Models\Soldier;
 use App\Models\Squad;
 use App\Models\SquadSoldier;
 use App\Models\User;
+use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
@@ -43,6 +46,17 @@ pest()->extend(Tests\TestCase::class)
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
+
+/**
+ * date: 2023-04-18 12:00:00 | time: 1681830000
+ *
+ * @throws InvalidFormatException
+ */
+function set_carbon(int $year = 2023, int $month = 4, int $day = 18, int $hour = 12): void
+{
+    $knownDate = Carbon::createSafe($year, $month, $day, $hour);
+    Carbon::setTestNow($knownDate);
+}
 
 function new_user(?string $role = null): User
 {
@@ -96,9 +110,9 @@ function new_soldier(Clan $clan, ?Squad $squad = null, array $attributes = []): 
     $soldier = Soldier::factory()->forClan($clan)->create($attributes);
 
     if ($squad) {
-        $nextSlot = $squad->squadSoldiers()->max('slot_number') + 1;
+        $nextSlot = $squad->soldiers()->max('slot_number') + 1;
 
-        $squad->squadSoldiers()->create([
+        $squad->soldiers()->create([
             'soldier_id' => $soldier->id,
             'display_name' => $soldier->name,
             'slot_number' => $nextSlot,
@@ -118,16 +132,16 @@ function add_soldier_to_squad(Squad $squad, ?Soldier $soldier = null, ?string $o
         throw new \InvalidArgumentException('Either a soldier or a display name is required.');
     }
 
-    $nextSlot = $slot ?? $squad->squadSoldiers()->max('slot_number') + 1;
+    $nextSlot = $slot ?? $squad->soldiers()->max('slot_number') + 1;
 
     if ($onlyName) {
-        return $squad->squadSoldiers()->create([
+        return $squad->soldiers()->create([
             'display_name' => $onlyName,
             'slot_number' => $nextSlot,
         ]);
     }
 
-    return $squad->squadSoldiers()->create([
+    return $squad->soldiers()->create([
         'soldier_id' => $soldier->id,
         'display_name' => $soldier->name,
         'slot_number' => $nextSlot,

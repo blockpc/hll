@@ -21,11 +21,4 @@ new class extends Component
         $this->commandSquads = $this->squadCommander !== null;
         $this->countSquads = $this->commandSquads ? 1 : 0;
     }
-
-    /**
-     * @todo Implement show functionality
-     */
-    public function show(): void
-    {
-    }
 };

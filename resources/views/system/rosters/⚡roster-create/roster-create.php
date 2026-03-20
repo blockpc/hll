@@ -37,6 +37,10 @@ new #[Title('Crear Roster')] class extends Component
 
     public bool $multiclan = false;
 
+    public bool $multifaction = false;
+
+    public int $max_soldiers = 30;
+
     public function mount(): void
     {
         $this->checkAuthorization();
@@ -94,9 +98,11 @@ new #[Title('Crear Roster')] class extends Component
                 'map_id' => $this->map_id,
                 'central_point_id' => $this->central_point_id,
                 'faction' => $this->faction,
+                'max_soldiers' => $this->max_soldiers,
                 'image' => $imagePath,
                 'is_public' => $this->is_public,
                 'multiclan' => $this->multiclan,
+                'multifaction' => $this->multifaction,
             ]);
         } catch (\Throwable $exception) {
             if ($imagePath) {
@@ -124,6 +130,8 @@ new #[Title('Crear Roster')] class extends Component
             'image' => ['nullable', 'image', 'max:2048'],
             'is_public' => ['required', 'boolean'],
             'multiclan' => ['required', 'boolean'],
+            'multifaction' => ['required', 'boolean'],
+            'max_soldiers' => ['required', 'integer', 'min:1', 'max:50'],
         ];
     }
 

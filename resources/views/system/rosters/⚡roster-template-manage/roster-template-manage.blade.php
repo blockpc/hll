@@ -46,15 +46,15 @@
         <div class="border-dashed border-gray-300 dark:border-gray-700 flex-1">
             <div class="grid grid-cols-6 gap-4 max-h-max">
                 <div class="col-span-5 border flex flex-col space-y-4 p-1">
-                    {{-- Comandante --}}
-                    <div class="flex flex-col space-y-1 p-1" id="commander-section">
+
+                    {{-- <div class="flex flex-col space-y-1 p-1" id="commander-section">
                         <div class="flex justify-between items-center">
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.commander') }}</div>
                             <livewire:system::squads.squad-create-commander :roster="$roster" :soldiers="$this->soldiers" />
                         </div>
                         <livewire:system::squads.squad-commander :roster="$roster" />
                     </div>
-                    {{-- Infantería --}}
+
                     <div class="flex flex-col space-y-1 p-1" id="infantry-section">
                         <div class="flex justify-between items-center">
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.infantry') }}</div>
@@ -64,7 +64,7 @@
                             <livewire:system::squads.squad-infantry :roster="$roster" :key="$roster->uuid" />
                         </div>
                     </div>
-                    {{-- Tanques --}}
+
                     <div class="flex flex-col space-y-1 p-1" id="armor-section">
                         <div class="flex justify-between items-center">
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.armor') }}</div>
@@ -72,7 +72,7 @@
                         </div>
                         <flux:button variant="outline" size="xs">cap winters</flux:button>
                     </div>
-                    {{-- Reconocimiento --}}
+
                     <div class="flex flex-col space-y-1 p-1" id="recon-section">
                         <div class="flex justify-between items-center">
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.recon') }}</div>
@@ -80,21 +80,29 @@
                         </div>
                         <flux:button variant="outline" size="xs">monty_365</flux:button>
                     </div>
+
                     <div class="flex flex-col space-y-1 p-1" id="artillery-section">
                         <div class="flex justify-between items-center">
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.artillery') }}</div>
-                            {{-- <button class="btn btn-sm btn-default">(0/2) +</button> --}}
                             <flux:button variant="outline" size="xs" icon="plus">(0/2)</flux:button>
                         </div>
                         <div class="text-sm text-gray-500">{{ __('hll.squads.no_soldiers_assigned') }}</div>
+                    </div> --}}
+
+                    <div class="flex flex-col space-y-1 p-1" id="custom-section">
+                        <div class="flex justify-between items-center">
+                            <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.custom') }}</div>
+                            <flux:button variant="outline" size="xs" icon="plus" />
+                        </div>
+                        <livewire:system::squads.squad-custom :roster="$roster" :key="$roster->uuid" :buttons="true" />
                     </div>
                 </div>
+
                 <div class="col-span-1 border flex flex-col space-y-4 p-1">
                     <div class="flex flex-col space-y-1 p-1">
                         <div class="text-sm italic border-b">{{ __('hll.clans.rosters.commands') }}</div>
                         @foreach ($this->typeSquads as $typeSquad)
-                        {{-- <button type="button" class="btn btn-sm btn-{{ $typeSquad->color() }}" wire:click="createSquad('{{ $typeSquad->value }}')">{{ $typeSquad->label() }}</button> --}}
-                        <flux:button variant="primary" size="xs" color="{{ $typeSquad->color() }}" wire:click="createSquad('{{ $typeSquad->value }}')">{{ $typeSquad->label() }}</flux:button>
+                            <flux:button variant="primary" size="xs" color="{{ $typeSquad->color() }}" wire:click="createSquad('{{ $typeSquad->value }}')">{{ $typeSquad->label() }}</flux:button>
                         @endforeach
                     </div>
                     <div class="flex flex-col space-y-1 p-1">
@@ -123,4 +131,5 @@
     </div>
 
     <livewire:system::squads.squad-create :roster="$roster" />
+    <livewire:system::squads.add-soldier-to-squad :roster="$roster" />
 </div>

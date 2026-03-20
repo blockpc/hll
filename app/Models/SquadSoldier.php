@@ -30,6 +30,16 @@ class SquadSoldier extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::deleted(function (self $squadSoldier): void {
+            self::query()
+                ->where('squad_id', $squadSoldier->squad_id)
+                ->where('slot_number', '>', $squadSoldier->slot_number)
+                ->decrement('slot_number');
+        });
+    }
+
     public function squad(): BelongsTo
     {
         return $this->belongsTo(Squad::class);

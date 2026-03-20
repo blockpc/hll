@@ -6,7 +6,7 @@ namespace App\Enums;
 
 enum RosterTypeSquadEnum: string
 {
-    private const int UNLIMITED_SOLDIERS = 999;
+    private const MAX_CUSTOM_SOLDIERS = 99;
 
     case Command = 'command';
     case Infantry = 'infantry';
@@ -27,7 +27,10 @@ enum RosterTypeSquadEnum: string
         };
     }
 
-    public function maxSoldiers(): int
+    /**
+     * Determine the maximum number of soldiers allowed in the squad based on its roster type.
+     */
+    public function capacity(): int
     {
         return match ($this) {
             self::Command => 1,
@@ -35,10 +38,13 @@ enum RosterTypeSquadEnum: string
             self::Recon => 2,
             self::Armor => 3,
             self::Artillery => 3,
-            self::Custom => self::UNLIMITED_SOLDIERS,
+            self::Custom => self::MAX_CUSTOM_SOLDIERS,
         };
     }
 
+    /**
+     * Get the color associated with the squad type for UI purposes.
+     */
     public function color(): string
     {
         return match ($this) {
@@ -51,6 +57,9 @@ enum RosterTypeSquadEnum: string
         };
     }
 
+    /**
+     * Get the prefix for the squad type to be used in display names or identifiers.
+     */
     public function prefix(): string
     {
         return match ($this) {

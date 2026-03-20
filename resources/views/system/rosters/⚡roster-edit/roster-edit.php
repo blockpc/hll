@@ -45,6 +45,10 @@ new #[Title('Editar Roster')] class extends Component
 
     public bool $multiclan = false;
 
+    public bool $multifaction = false;
+
+    public ?int $max_soldiers = null;
+
     public function mount(): void
     {
         $this->checkAuthorization();
@@ -108,6 +112,7 @@ new #[Title('Editar Roster')] class extends Component
                     'faction' => $this->faction,
                     'is_public' => $this->is_public,
                     'multiclan' => $this->multiclan,
+                    'multifaction' => $this->multifaction,
                     'image' => $newImagePath ?? $this->roster->image,
                 ]);
             });
@@ -176,8 +181,10 @@ new #[Title('Editar Roster')] class extends Component
         $this->map_id = $this->normalizeNullableInt($this->roster->map_id);
         $this->central_point_id = $this->normalizeNullableInt($this->roster->central_point_id);
         $this->faction = $this->normalizeFaction($this->roster->faction);
+        $this->max_soldiers = $this->roster->max_soldiers;
         $this->is_public = $this->roster->is_public;
         $this->multiclan = $this->roster->multiclan;
+        $this->multifaction = $this->roster->multifaction;
     }
 
     private function normalizeNullableInt(int|string|null $value): ?int
