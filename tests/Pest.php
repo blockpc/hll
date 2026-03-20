@@ -108,7 +108,7 @@ function new_soldier(Clan $clan, ?Squad $squad = null, array $attributes = []): 
     return $soldier;
 }
 
-function add_soldier_to_squad(Soldier $soldier, ?Squad $squad = null, ?string $onlyName = null, ?int $slot = null): SquadSoldier
+function add_soldier_to_squad(Squad $squad, ?Soldier $soldier = null, ?string $onlyName = null, ?int $slot = null): SquadSoldier
 {
     if (! $squad) {
         throw new \InvalidArgumentException('A squad is required to add a soldier.');
