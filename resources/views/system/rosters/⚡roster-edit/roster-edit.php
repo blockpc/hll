@@ -43,9 +43,9 @@ new #[Title('Editar Roster')] class extends Component
 
     public bool $is_public = false;
 
-    public bool $multiclan = false;
+    public bool $is_multiclan = false;
 
-    public bool $multifaction = false;
+    public bool $is_multifaction = false;
 
     public ?int $max_soldiers = null;
 
@@ -110,9 +110,10 @@ new #[Title('Editar Roster')] class extends Component
                     'map_id' => $this->map_id,
                     'central_point_id' => $this->central_point_id,
                     'faction' => $this->faction,
+                    'max_soldiers' => $this->max_soldiers,
                     'is_public' => $this->is_public,
-                    'multiclan' => $this->multiclan,
-                    'multifaction' => $this->multifaction,
+                    'is_multiclan' => $this->is_multiclan,
+                    'is_multifaction' => $this->is_multifaction,
                     'image' => $newImagePath ?? $this->roster->image,
                 ]);
             });
@@ -165,6 +166,10 @@ new #[Title('Editar Roster')] class extends Component
             })],
             'description' => ['nullable', 'string', 'max:255'],
             'faction' => ['required', new Enum(FactionTypeEnum::class)],
+            'max_soldiers' => ['nullable', 'integer', 'min:1'],
+            'is_public' => ['boolean'],
+            'is_multiclan' => ['boolean'],
+            'is_multifaction' => ['boolean'],
             'image' => ['nullable', 'image', 'max:2048'],
         ];
     }
@@ -183,8 +188,8 @@ new #[Title('Editar Roster')] class extends Component
         $this->faction = $this->normalizeFaction($this->roster->faction);
         $this->max_soldiers = $this->roster->max_soldiers;
         $this->is_public = $this->roster->is_public;
-        $this->multiclan = $this->roster->multiclan;
-        $this->multifaction = $this->roster->multifaction;
+        $this->is_multiclan = $this->roster->is_multiclan;
+        $this->is_multifaction = $this->roster->is_multifaction;
     }
 
     private function normalizeNullableInt(int|string|null $value): ?int

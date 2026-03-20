@@ -33,8 +33,8 @@ class Roster extends Model
         'central_point_id',
         'image',
         'is_public',
-        'multiclan',
-        'multifaction',
+        'is_multiclan',
+        'is_multifaction',
     ];
 
     protected function casts(): array
@@ -43,8 +43,8 @@ class Roster extends Model
             'faction' => FactionTypeEnum::class,
             'max_soldiers' => 'integer',
             'is_public' => 'boolean',
-            'multiclan' => 'boolean',
-            'multifaction' => 'boolean',
+            'is_multiclan' => 'boolean',
+            'is_multifaction' => 'boolean',
         ];
     }
 

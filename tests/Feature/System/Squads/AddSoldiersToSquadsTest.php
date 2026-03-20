@@ -25,8 +25,8 @@ beforeEach(function () {
     $this->soldier = new_soldier($this->clan, $this->squad);
 });
 
-it('verifies the roster is not multiclan', function () {
-    expect($this->roster->multiclan)->toBeFalse();
+it('verifies the roster is not is_multiclan', function () {
+    expect($this->roster->is_multiclan)->toBeFalse();
 });
 
 it('byId: allows adding a clan soldier to a squad', function () {

@@ -29,8 +29,8 @@ return new class extends Migration
             $table->string('image')->nullable();
 
             $table->boolean('is_public')->default(false);
-            $table->boolean('multiclan')->default(false);
-            $table->boolean('multifaction')->default(false);
+            $table->boolean('is_multiclan')->default(false);
+            $table->boolean('is_multifaction')->default(false);
 
             $table->timestamps();
 

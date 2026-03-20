@@ -35,9 +35,9 @@ new #[Title('Crear Roster')] class extends Component
 
     public bool $is_public = false;
 
-    public bool $multiclan = false;
+    public bool $is_multiclan = false;
 
-    public bool $multifaction = false;
+    public bool $is_multifaction = false;
 
     public int $max_soldiers = 30;
 
@@ -101,8 +101,8 @@ new #[Title('Crear Roster')] class extends Component
                 'max_soldiers' => $this->max_soldiers,
                 'image' => $imagePath,
                 'is_public' => $this->is_public,
-                'multiclan' => $this->multiclan,
-                'multifaction' => $this->multifaction,
+                'is_multiclan' => $this->is_multiclan,
+                'is_multifaction' => $this->is_multifaction,
             ]);
         } catch (\Throwable $exception) {
             if ($imagePath) {
@@ -129,8 +129,8 @@ new #[Title('Crear Roster')] class extends Component
             'faction' => ['required', new Enum(FactionTypeEnum::class)],
             'image' => ['nullable', 'image', 'max:2048'],
             'is_public' => ['required', 'boolean'],
-            'multiclan' => ['required', 'boolean'],
-            'multifaction' => ['required', 'boolean'],
+            'is_multiclan' => ['required', 'boolean'],
+            'is_multifaction' => ['required', 'boolean'],
             'max_soldiers' => ['required', 'integer', 'min:1', 'max:50'],
         ];
     }

@@ -220,8 +220,8 @@ return [
                 'max_soldiers' => 'Cantidad de soldados',
                 'image' => 'Imagen del Roster',
                 'is_public' => '¿Hacer público el roster? (podrá ser visto por usuarios que no pertenezcan al clan)',
-                'multiclan' => '¿Permitir que este roster sea usado por otros clanes?',
-                'multifaction' => '¿Permitir que este roster tenga soldados de diferentes facciones?',
+                'is_multiclan' => '¿Permitir que este roster sea usado por otros clanes?',
+                'is_multifaction' => '¿Permitir que este roster tenga soldados de diferentes facciones?',
             ],
             'create' => [
                 'title' => 'Crear Roster',

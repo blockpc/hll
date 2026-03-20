@@ -171,13 +171,13 @@ it('forbids creating a roster for a clan the user does not own', function () {
     expect($ownerA->can('create', [Roster::class, $clanB]))->toBeFalse();
 });
 
-it('defaults is_public and multiclan to false', function () {
+it('defaults is_public and is_multiclan to false', function () {
     $owner = new_user();
     $clan = new_clan($owner);
     $roster = Roster::factory()->for($clan)->create();
 
     expect($roster->is_public)->toBeFalse();
-    expect($roster->multiclan)->toBeFalse();
+    expect($roster->is_multiclan)->toBeFalse();
 });
 
 it('allows creating a public roster', function () {
@@ -217,14 +217,14 @@ it('redirects guest to login for private roster table URL', function () {
     $response->assertRedirect(route('login'));
 });
 
-it('stores multiclan flag correctly', function () {
+it('stores is_multiclan flag correctly', function () {
     $owner = new_user();
     $clan = new_clan($owner);
     $roster = Roster::factory()->for($clan)->create([
-        'multiclan' => true,
+        'is_multiclan' => true,
     ]);
 
-    expect($roster->multiclan)->toBeTrue();
+    expect($roster->is_multiclan)->toBeTrue();
 });
 
 it('shows edit url for rosters in users clan', function () {

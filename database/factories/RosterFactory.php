@@ -35,8 +35,8 @@ class RosterFactory extends Factory
             'central_point_id' => $centralPoint->id,
             'image' => null,
             'is_public' => false,
-            'multiclan' => false,
-            'multifaction' => false,
+            'is_multiclan' => false,
+            'is_multifaction' => false,
         ];
     }
 }

@@ -57,8 +57,8 @@ it('allows a clan owner to create a roster in their clan', function () {
         'faction' => FactionTypeEnum::Allies->value,
         'image' => null,
         'is_public' => false,
-        'multiclan' => false,
-        'multifaction' => false,
+        'is_multiclan' => false,
+        'is_multifaction' => false,
     ]);
 });
 

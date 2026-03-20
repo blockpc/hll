@@ -107,7 +107,7 @@ it('allows a clan owner to update a roster in their clan', function () {
         'faction' => FactionTypeEnum::Allies->value,
         'image' => null,
         'is_public' => 0,
-        'multiclan' => 0,
+        'is_multiclan' => 0,
     ]);
 });
 
