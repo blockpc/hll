@@ -25,7 +25,7 @@ beforeEach(function () {
     $this->soldier = new_soldier($this->clan, $this->squad);
 });
 
-it('verifies the roster is not is_multiclan', function () {
+it('verifies the roster is_multiclan property is false', function () {
     expect($this->roster->is_multiclan)->toBeFalse();
 });
 
