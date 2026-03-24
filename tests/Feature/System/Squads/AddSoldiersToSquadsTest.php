@@ -64,7 +64,7 @@ it('byId: does not allow adding a soldier already assigned to the roster', funct
         ->call('openModal', $this->squad->id)
         ->set('soldierId', $this->soldier->id)
         ->call('addSoldier')
-        ->assertHasErrors(['soldierId' => __('hll.squad_soldiers.soldier_already_assigned')]);
+        ->assertHasErrors(['soldierId' => __('hll.squad_soldiers.soldier_already_assigned', ['name' => $this->soldier->name])]);
 });
 
 it('byId: does not allow adding more soldiers than the squad type capacity', function () {
@@ -108,7 +108,7 @@ it('byName: does not allow assigning the same soldier twice in the same roster',
         ->call('openModal', $this->squad->id)
         ->set('soldierByName', $this->soldier->name)
         ->call('addSoldier')
-        ->assertHasErrors(['soldierByName' => __('hll.squad_soldiers.soldier_already_assigned')]);
+        ->assertHasErrors(['soldierByName' => __('hll.squad_soldiers.soldier_already_assigned', ['name' => $this->soldier->name])]);
 });
 
 it('byName: does not allow adding more soldiers than the squad type capacity', function () {

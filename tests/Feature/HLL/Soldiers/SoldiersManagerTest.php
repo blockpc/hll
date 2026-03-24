@@ -66,7 +66,7 @@ it('creates a soldier with optional role and observation', function () {
     expect($clan->soldiers()->count())->toBe(1);
 
     $soldier = $clan->soldiers()->first();
-    expect($soldier->name)->toBe('alpha');
+    expect($soldier->name)->toBe('Alpha');
     expect($soldier->role)->toBe(RoleSquadTypeEnum::Rifleman);
     expect($soldier->observation)->toBe('Test observation');
 });
@@ -135,7 +135,7 @@ it('creates many soldiers from comma or newline separated input', function () {
 
     expect($clan->soldiers()->count())->toBe(3);
     expect($clan->soldiers()->pluck('name')->sort()->values()->toArray())
-        ->toBe(['alpha', 'beta', 'gamma']);
+        ->toBe(['Alpha', 'Beta', 'Gamma']);
 });
 
 it('stores null role and observation for bulk created soldiers', function () {
@@ -189,7 +189,7 @@ it('forbids managing soldiers for a clan the user does not own', function () {
         ->assertStatus(403);
 });
 
-it('the soldier name must be saved in lowercase', function () {
+it('the soldier name must not be saved in lowercase', function () {
     $owner = new_user(role: 'clan_owner');
     $clan = new_clan($owner);
 
@@ -202,7 +202,7 @@ it('the soldier name must be saved in lowercase', function () {
     expect($clan->soldiers()->count())->toBe(1);
 
     $soldier = $clan->soldiers()->first();
-    expect($soldier->name)->toBe('alpha');
+    expect($soldier->name)->toBe('Alpha');
 });
 
 it('the soldier name must be saved without accents', function () {
@@ -218,7 +218,7 @@ it('the soldier name must be saved without accents', function () {
     expect($clan->soldiers()->count())->toBe(1);
 
     $soldier = $clan->soldiers()->first();
-    expect($soldier->name)->toBe('alpha');
+    expect($soldier->name)->toBe('Alpha');
 });
 
 it('can edit a soldier', function () {
@@ -236,7 +236,7 @@ it('can edit a soldier', function () {
         ->assertHasNoErrors();
 
     $soldier->refresh();
-    expect($soldier->name)->toBe('bravo');
+    expect($soldier->name)->toBe('Bravo');
     expect($soldier->role)->toBe(RoleSquadTypeEnum::Medic);
     expect($soldier->observation)->toBe('Updated observation');
 });
@@ -269,7 +269,7 @@ it('skips names exceeding 32 characters in bulk input', function () {
         ->assertHasNoErrors();
 
     expect($clan->soldiers()->count())->toBe(1);
-    expect($clan->soldiers()->first()->name)->toBe('alpha');
+    expect($clan->soldiers()->first()->name)->toBe('Alpha');
 });
 
 it('tracks names already existing in the clan as duplicates in bulk input', function () {
@@ -285,7 +285,7 @@ it('tracks names already existing in the clan as duplicates in bulk input', func
         ->assertHasNoErrors();
 
     expect($clan->soldiers()->count())->toBe(2);
-    expect($clan->soldiers()->pluck('name')->sort()->values()->toArray())->toBe(['alpha', 'beta']);
+    expect($clan->soldiers()->pluck('name')->sort()->values()->toArray())->toContain('alpha', 'Beta');
 });
 
 it('skips whitespace-only segments in bulk input', function () {

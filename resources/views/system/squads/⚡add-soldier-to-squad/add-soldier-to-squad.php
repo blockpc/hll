@@ -146,7 +146,7 @@ new class extends Component
         }
 
         if ($soldier->squads()->where('roster_id', $this->squad->roster_id)->exists()) {
-            return __('hll.squad_soldiers.soldier_already_assigned');
+            return __('hll.squad_soldiers.soldier_already_assigned', ['name' => $soldier->name]);
         }
 
         if ($this->squad->soldiers()->count() >= $this->squad->capacity) {
@@ -159,7 +159,7 @@ new class extends Component
     private function extraValidationsSoldierByName(): ?string
     {
         if ($this->squad->soldiers()->where('display_name', $this->soldierByName)->exists()) {
-            return __('hll.squad_soldiers.soldier_already_assigned');
+            return __('hll.squad_soldiers.soldier_already_assigned', ['name' => $this->soldierByName]);
         }
 
         if ($this->squad->soldiers()->count() >= $this->squad->capacity) {

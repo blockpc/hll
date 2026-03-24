@@ -2,7 +2,7 @@
 
 <div class="flex space-x-6">
     <div class="flex-1">
-        @if ($clan->logo)
+        @if ($clan?->logo)
             <img src="{{ $clan->logo_url }}" alt="{{ $clan->name }}" class="h-20 w-20 rounded-full object-cover">
         @else
             <x-placeholder-pattern class="h-20 w-20 rounded-full stroke-gray-900/20 dark:stroke-neutral-100/20" />

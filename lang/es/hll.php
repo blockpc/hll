@@ -157,6 +157,7 @@ return [
                 'bulk_message_success' => 'Soldados creados correctamente. :count',
                 'bulk_skipped_too_long' => 'Omitidos por exceder 32 caracteres (:count): :names.',
                 'bulk_duplicates_ignored' => 'Ya existían en el clan (:count): :names.',
+                'bulk_skipped_duplicates' => 'Omitidos por ser duplicados en la lista de entrada (:count): :names.',
                 'bulk_skipped_empty' => 'Nombres vacíos omitidos: :count.',
                 'button' => 'Crear Soldado(s)',
             ],
@@ -323,7 +324,7 @@ return [
         'not_match' => 'El soldado no pertenece a esta escuadra.',
         'soldier_not_found' => 'Soldado no encontrado.',
         'soldier_not_in_clan_from_roster' => 'El soldado seleccionado no pertenece al mismo clan que la escuadra.',
-        'soldier_already_assigned' => 'El soldado seleccionado ya está asignado a una escuadra en este roster.',
+        'soldier_already_assigned' => 'El soldado ":name" ya está asignado a una escuadra en este roster.',
         'squad_full' => 'La escuadra ha alcanzado su capacidad máxima.',
         'add' => [
             'title' => 'Agregar Soldado a Escuadra',

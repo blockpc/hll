@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\RoleSquadTypeEnum;
 use App\Models\Clan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,7 +21,7 @@ class SoldierFactory extends Factory
         return [
             'clan_id' => Clan::factory(),
             'name' => $this->faker->unique()->firstName(),
-            'role' => null,
+            'role' => $this->faker->randomElement(RoleSquadTypeEnum::cases()),
             'observation' => null,
         ];
     }

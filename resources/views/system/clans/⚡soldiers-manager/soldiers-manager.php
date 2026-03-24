@@ -2,6 +2,7 @@
 
 use App\Enums\RoleSquadTypeEnum;
 use App\Models\Clan;
+use App\Services\AddSoldiersService;
 use Blockpc\App\Rules\AreEqualsRule;
 use Blockpc\Traits\AlertBrowserEvent;
 use Blockpc\Traits\PaginationTrait;
@@ -63,105 +64,35 @@ new class extends Component
         return RoleSquadTypeEnum::cases();
     }
 
-    public function save(): void
+    public function save(AddSoldiersService $addSoldiersService): void
     {
         $this->authorizeOwner();
 
-        if (! $this->manySoldiers) {
-            $this->name = $this->normalizeSoldierName($this->name);
-        }
+        $addSoldiersService->configure($this->manySoldiers)->for($this->clan);
 
         $data = $this->validate();
 
-        $message = DB::transaction(function () use ($data): string {
+        $message = DB::transaction(function () use ($data, $addSoldiersService): string {
             if ($this->manySoldiers) {
-                $result = $this->saveBulk();
-                $this->reset('bulkNames', 'manySoldiers');
-
-                $message = __('hll.clans.soldiers.create.bulk_message_success', ['count' => $result['created']]);
-
-                if (! empty($result['skippedTooLong'])) {
-                    $message .= ' '.__('hll.clans.soldiers.create.bulk_skipped_too_long', [
-                        'count' => count($result['skippedTooLong']),
-                        'names' => implode(', ', $result['skippedTooLong']),
-                    ]);
-                }
-
-                if (! empty($result['duplicatesIgnored'])) {
-                    $message .= ' '.__('hll.clans.soldiers.create.bulk_duplicates_ignored', [
-                        'count' => count($result['duplicatesIgnored']),
-                        'names' => implode(', ', $result['duplicatesIgnored']),
-                    ]);
-                }
-
-                if ($result['skippedEmpty'] > 0) {
-                    $message .= ' '.__('hll.clans.soldiers.create.bulk_skipped_empty', [
-                        'count' => $result['skippedEmpty'],
-                    ]);
-                }
-
-                return $message;
+                $result = $addSoldiersService->names($this->bulkNames)->saveBulk();
             } else {
-                $this->clan->soldiers()->create($data);
-                $this->reset(['name', 'role', 'observation', 'manySoldiers']);
-
-                return __('hll.clans.soldiers.create.message_success', ['name' => $data['name'] ?? '']);
+                $role = ! empty($data['role']) ? RoleSquadTypeEnum::from($data['role']) : null;
+                $result = $addSoldiersService->saveSingle($data['name'], $role, $data['observation'] ?? null);
             }
+
+            return $addSoldiersService->messages($result);
         });
+
+        $this->reset(['name', 'role', 'observation', 'bulkNames', 'manySoldiers']);
 
         $this->alert($message, title: __('hll.clans.soldiers.create.title'));
 
         $this->cancelModal('create-soldier-manager');
     }
 
-    /** @return array{created: int, skippedTooLong: list<string>, duplicatesIgnored: list<string>, skippedEmpty: int} */
-    public function saveBulk(): array
-    {
-        $skippedEmpty = 0;
-        $skippedTooLong = [];
-        $validNames = [];
-
-        foreach (preg_split('/[\n,]+/', $this->bulkNames ?? '') as $raw) {
-            $normalized = $this->normalizeSoldierName($raw);
-
-            if ($normalized === '') {
-                $skippedEmpty++;
-
-                continue;
-            }
-
-            if (mb_strlen($normalized) > 32) {
-                $skippedTooLong[] = $normalized;
-
-                continue;
-            }
-
-            $validNames[] = $normalized;
-        }
-
-        $created = 0;
-        $duplicatesIgnored = [];
-
-        foreach (array_unique($validNames) as $name) {
-            $soldier = $this->clan->soldiers()->firstOrCreate(['name' => $name]);
-            if ($soldier->wasRecentlyCreated) {
-                $created++;
-            } else {
-                $duplicatesIgnored[] = $name;
-            }
-        }
-
-        return [
-            'created' => $created,
-            'skippedTooLong' => $skippedTooLong,
-            'duplicatesIgnored' => $duplicatesIgnored,
-            'skippedEmpty' => $skippedEmpty,
-        ];
-    }
-
     private function normalizeSoldierName(string $name): string
     {
-        return Str::transliterate(Str::lower(trim($name)));
+        return Str::transliterate(trim($name));
     }
 
     private function authorizeOwner(): void
