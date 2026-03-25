@@ -6,7 +6,19 @@
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
-                <x-roster-hll :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
+                <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-md border border-amber-500/40 bg-amber-500/10 text-sm font-bold text-amber-300">
+                        {{ config('app.sigla', 'HLL') }}
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold tracking-[0.2em] text-amber-300 uppercase">
+                            {{ config('app.subname', 'Tactical Roster Planner') }}
+                        </p>
+                        <h1 class="text-base font-bold text-white">
+                            {{ config('app.name', 'HLL Rosters') }}
+                        </h1>
+                    </div>
+                </div>
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 

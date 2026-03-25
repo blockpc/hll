@@ -4,11 +4,12 @@ use App\Livewire\Notes\ListNotes;
 use App\Livewire\Notifications\Table;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (): View {
+    return view('home');
 })->name('home');
 
 Route::get('/email/verify/invitation/{id}/{hash}', function (Request $request, int $id, string $hash) {

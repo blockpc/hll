@@ -281,6 +281,7 @@ return [
             'no_command_squad' => 'Sin comandante asignado.',
             'commander_name' => 'Comandante: :name',
             'no_soldiers' => 'No hay soldados disponibles para asignar como comandante. Agrega soldados a tu clan para poder asignar un comandante a este roster.',
+            'remove_commander' => 'Eliminar Comandante',
         ],
         'squad_infantry' => [
             'title' => 'Infantería',
