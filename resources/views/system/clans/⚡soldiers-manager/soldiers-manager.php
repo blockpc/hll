@@ -2,7 +2,7 @@
 
 use App\Enums\RoleSquadTypeEnum;
 use App\Models\Clan;
-use App\Services\AddSoldiersService;
+use App\Services\AddSoldiersToClanService;
 use Blockpc\App\Rules\AreEqualsRule;
 use Blockpc\Traits\AlertBrowserEvent;
 use Blockpc\Traits\PaginationTrait;
@@ -64,11 +64,11 @@ new class extends Component
         return RoleSquadTypeEnum::cases();
     }
 
-    public function save(AddSoldiersService $addSoldiersService): void
+    public function save(AddSoldiersToClanService $addSoldiersService): void
     {
         $this->authorizeOwner();
 
-        $addSoldiersService->configure($this->manySoldiers)->for($this->clan);
+        $addSoldiersService->for($this->clan);
 
         $data = $this->validate();
 

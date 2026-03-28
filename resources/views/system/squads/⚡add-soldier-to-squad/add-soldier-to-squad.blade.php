@@ -6,14 +6,19 @@
                 <flux:text class="mt-2">{{ __('hll.squad_soldiers.add.subtitle') }}</flux:text>
             </div>
 
-            <flux:text class="text-sm text-gray-500">
-                {{ __('hll.squad_soldiers.add.requirements') }}
-            </flux:text>
+            <ul class="text-sm text-gray-500">
+                <li>{{ __('hll.squad_soldiers.add.requirements.same_clan') }}</li>
+                <li>{{ __('hll.squad_soldiers.add.requirements.not_assigned') }}</li>
+                <li>{{ __('hll.squad_soldiers.add.requirements.capacity', ['capacity' => $squad?->capacity ?? 0]) }}</li>
+            </ul>
+
+            <p class="text-sm text-gray-500">{{ __('hll.squad_soldiers.add.current_count', ['count' => $squad?->soldiers()->count() ?? 0]) }}</p>
 
             <div class="space-y-2">
-                <x-toggle name="findByIdOrByName" yes="hll.squad_soldiers.add.add_by_id" not="hll.squad_soldiers.add.add_by_name" wire:model.live="option" />
+                <x-toggle name="adding_many_soldiers" yes="hll.squad_soldiers.add.add_by_id" not="hll.squad_soldiers.add.add_by_name" wire:model.live="singleSelection" />
 
-                @if ($option)
+                @if ($singleSelection)
+                    <p class="text-sm text-gray-500">{{ __('hll.squad_soldiers.add.requirements.by_id') }}</p>
                     <div class="flex flex-col space-y-1 p-1">
                         <div class="flex items-center justify-between">
                             <div class="text-sm italic">{{ __('hll.clans.rosters.soldiers') }}</div>
@@ -29,13 +34,20 @@
                         <div class="flex flex-col space-y-1 max-h-64 overflow-y-auto overscroll-y-auto">
                             @foreach ($this->soldiers as $soldierKeyId => $soldierKeyName)
                                 <flux:button variant="outline" size="xs" class="justify-start" wire:click="setSoldierId({{ $soldierKeyId }})">
-                                    {{ $soldierKeyName }}
+                                    <div class="flex justify-between w-full">
+                                        <span>{{ $soldierKeyName }}</span>
+                                        @if ($soldierId === $soldierKeyId)
+                                            <flux:icon name="check" class="text-green-500" variant="micro" />
+                                        @endif
+                                    </div>
                                 </flux:button>
                             @endforeach
                         </div>
                     </div>
                 @else
-                    <flux:input size="sm" label="{{ __('hll.squad_soldiers.add.form.soldier_by_name') }}" wire:model="soldierByName" />
+                    <p class="text-sm text-gray-500">{{ __('hll.squad_soldiers.add.requirements.by_name') }}</p>
+                    <p class="text-sm text-gray-500">{{ __('hll.squad_soldiers.add.requirements.by_name_requirements') }}</p>
+                    <flux:textarea size="sm" label="{{ __('hll.squad_soldiers.add.form.soldier_by_name') }}" wire:model="soldiersByName" />
                 @endif
 
             </div>
@@ -44,8 +56,8 @@
                 <flux:button variant="ghost" size="sm" wire:click="cancelModal">
                     {{ __('hll.commons.cancel') }}
                 </flux:button>
-                <flux:button variant="primary" color="blue" size="sm" wire:click="save">
-                    {{ __('hll.squads.create.button') }}
+                <flux:button variant="primary" color="blue" size="sm" wire:click="addSoldier">
+                    {{ __('hll.squad_soldiers.add.button') }}
                 </flux:button>
             </div>
         </div>

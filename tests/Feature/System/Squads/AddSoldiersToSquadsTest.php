@@ -91,7 +91,7 @@ it('byName: allows adding a manual soldier to a squad', function () {
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
-        ->set('soldierByName', $manualName)
+        ->set('soldiersByName', $manualName)
         ->call('addSoldier');
 
     $this->assertDatabaseHas('squad_soldiers', [
@@ -102,13 +102,69 @@ it('byName: allows adding a manual soldier to a squad', function () {
     ]);
 });
 
+it('byName: allows adding many manual soldiers separated by comma', function () {
+    $soldierNames = [fake()->name(), fake()->name(), fake()->name()];
+
+    Livewire::actingAs($this->owner)
+        ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
+        ->call('openModal', $this->squad->id)
+        ->set('soldiersByName', implode(', ', $soldierNames))
+        ->call('addSoldier');
+
+    foreach ($soldierNames as $index => $soldierName) {
+        $this->assertDatabaseHas('squad_soldiers', [
+            'squad_id' => $this->squad->id,
+            'soldier_id' => null,
+            'slot_number' => $index + 2,
+            'display_name' => $soldierName,
+        ]);
+    }
+});
+
+it('byName: ignores empty entries and trims names when adding many soldiers separated by comma', function () {
+    $nameOne = fake()->name();
+    $nameTwo = fake()->name();
+    $nameThree = fake()->name();
+
+    $rawInput = "{$nameOne},  {$nameTwo} , ,{$nameThree},";
+
+    Livewire::actingAs($this->owner)
+        ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
+        ->call('openModal', $this->squad->id)
+        ->set('soldiersByName', $rawInput)
+        ->call('addSoldier');
+
+    $this->assertDatabaseHas('squad_soldiers', [
+        'squad_id' => $this->squad->id,
+        'soldier_id' => null,
+        'slot_number' => 2,
+        'display_name' => $nameOne,
+    ]);
+
+    $this->assertDatabaseHas('squad_soldiers', [
+        'squad_id' => $this->squad->id,
+        'soldier_id' => null,
+        'slot_number' => 3,
+        'display_name' => $nameTwo,
+    ]);
+
+    $this->assertDatabaseHas('squad_soldiers', [
+        'squad_id' => $this->squad->id,
+        'soldier_id' => null,
+        'slot_number' => 4,
+        'display_name' => $nameThree,
+    ]);
+
+    expect($this->squad->soldiers()->count())->toBe(4);
+});
+
 it('byName: does not allow assigning the same soldier twice in the same roster', function () {
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
-        ->set('soldierByName', $this->soldier->name)
+        ->set('soldiersByName', $this->soldier->name)
         ->call('addSoldier')
-        ->assertHasErrors(['soldierByName' => __('hll.squad_soldiers.soldier_already_assigned', ['name' => $this->soldier->name])]);
+        ->assertHasErrors(['soldiersByName' => __('hll.squad_soldiers.soldier_already_assigned', ['name' => $this->soldier->name])]);
 });
 
 it('byName: does not allow adding more soldiers than the squad type capacity', function () {
@@ -122,9 +178,9 @@ it('byName: does not allow adding more soldiers than the squad type capacity', f
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
-        ->set('soldierByName', $manualName)
+        ->set('soldiersByName', $manualName)
         ->call('addSoldier')
-        ->assertHasErrors(['soldierByName' => __('hll.squad_soldiers.squad_full')]);
+        ->assertHasErrors(['soldiersByName' => __('hll.squad_soldiers.squad_full')]);
 });
 
 it('assigns the next available slot number when adding a squad soldier', function () {
@@ -135,7 +191,7 @@ it('assigns the next available slot number when adding a squad soldier', functio
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
-        ->set('soldierByName', $manualName)
+        ->set('soldiersByName', $manualName)
         ->call('addSoldier');
 
     $this->squad->refresh();

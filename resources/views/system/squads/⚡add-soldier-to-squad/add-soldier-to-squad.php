@@ -3,7 +3,8 @@
 use App\Models\Roster;
 use App\Models\Soldier;
 use App\Models\Squad;
-use Illuminate\Database\Eloquent\Collection;
+use App\Services\AddSoldiersToSquadService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -15,13 +16,13 @@ new class extends Component
 
     public Squad $squad;
 
-    public bool $option = false;
+    public bool $singleSelection = false;
 
     public ?string $searchSoldier = null;
 
     public ?int $soldierId = null;
 
-    public ?string $soldierByName = null;
+    public ?string $soldiersByName = null;
 
     public function mount(): void
     {
@@ -48,15 +49,15 @@ new class extends Component
     public function setSoldierId(int $soldierId): void
     {
         $this->soldierId = $soldierId;
-        $this->soldierByName = null;
+        $this->soldiersByName = null;
     }
 
-    public function updatedOption(bool $value): void
+    public function updatedManySoldiers(bool $value): void
     {
         if (! $value) {
             $this->soldierId = null;
         } else {
-            $this->soldierByName = null;
+            $this->soldiersByName = null;
         }
     }
 
@@ -64,13 +65,16 @@ new class extends Component
     {
         $this->validate([
             'soldierId' => 'nullable|exists:soldiers,id',
-            'soldierByName' => 'required_without:soldierId|nullable|string|max:32',
+            'soldiersByName' => 'required_without:soldierId|nullable|string',
+        ], [], [
+            'soldierId' => __('hll.squad_soldiers.add.form.soldier_by_id'),
+            'soldiersByName' => __('hll.squad_soldiers.add.form.soldier_by_name'),
         ]);
 
         if ($this->soldierId) {
             $this->addSoldierById();
         } else {
-            $this->addSoldierManually();
+            $this->addSoldiersManually();
         }
     }
 
@@ -102,12 +106,13 @@ new class extends Component
         }
     }
 
-    public function addSoldierManually(): void
+    public function addSoldiersManually(): void
     {
         $error = null;
 
         DB::transaction(function () use (&$error) {
             $this->squad = Squad::lockForUpdate()->findOrFail($this->squad->id);
+            $this->roster = Roster::lockForUpdate()->findOrFail($this->roster->id);
 
             if ($validationError = $this->extraValidationsSoldierByName()) {
                 $error = $validationError;
@@ -115,16 +120,19 @@ new class extends Component
                 return;
             }
 
-            $nextSlotNumber = $this->squad->soldiers()->count() + 1;
+            $service = new AddSoldiersToSquadService;
+            $result = $service
+                ->for($this->squad)
+                ->names((string) $this->soldiersByName)
+                ->saveBulk();
 
-            $this->squad->soldiers()->create([
-                'display_name' => $this->soldierByName,
-                'slot_number' => $nextSlotNumber,
-            ]);
+            if (! empty($result['skippedFull'])) {
+                $error = __('hll.squad_soldiers.squad_full');
+            }
         });
 
         if ($error) {
-            $this->addError('soldierByName', $error);
+            $this->addError('soldiersByName', $error);
         }
     }
 
@@ -158,8 +166,8 @@ new class extends Component
 
     private function extraValidationsSoldierByName(): ?string
     {
-        if ($this->squad->soldiers()->where('display_name', $this->soldierByName)->exists()) {
-            return __('hll.squad_soldiers.soldier_already_assigned', ['name' => $this->soldierByName]);
+        if ($this->squad->soldiers()->where('display_name', $this->soldiersByName)->exists()) {
+            return __('hll.squad_soldiers.soldier_already_assigned', ['name' => $this->soldiersByName]);
         }
 
         if ($this->squad->soldiers()->count() >= $this->squad->capacity) {
