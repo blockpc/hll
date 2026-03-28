@@ -2,6 +2,7 @@
 
 use App\Models\Roster;
 use Illuminate\Database\Eloquent\Collection;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component
@@ -25,5 +26,28 @@ new class extends Component
     public function addSoldier(int $squadId): void
     {
         $this->dispatch('open-add-soldier', $squadId);
+    }
+
+    #[On('re-render')]
+    public function reRender(): void
+    {
+        $this->roster->refresh();
+        $this->customSquads = $this->roster->customSquads;
+        $this->countSquads = $this->customSquads->count();
+    }
+
+    /**
+     * Removes a soldier from the squad commander and re-renders the component.
+     */
+    public function remove_soldier(int $soldierId): void
+    {
+        $squad = $this->roster->customSquads()->whereHas('soldiers', function ($query) use ($soldierId) {
+            $query->where('soldier_id', $soldierId);
+        })->first();
+
+        if ($squad) {
+            $squad->soldiers()->detach($soldierId);
+            $this->reRender();
+        }
     }
 };

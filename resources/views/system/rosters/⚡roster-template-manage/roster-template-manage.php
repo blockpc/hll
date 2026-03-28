@@ -53,8 +53,18 @@ new class extends Component
     }
 
     /**
-     * Handle actions after a squad has been added.
+     * Re-renders the appropriate squad component based on type.
+     *
+     * Listens to: `add-soldiers`, `add-squad`
      */
+    #[On('add-soldiers')]
     #[On('add-squad')]
-    public function squadAdded(): void {}
+    public function dispatchToTypeSquad(?RosterTypeSquadEnum $squadType = null): void
+    {
+        match ($squadType) {
+            RosterTypeSquadEnum::Custom => $this->dispatch('re-render')->to('system::squads.squad-custom'),
+            RosterTypeSquadEnum::Commander => $this->dispatch('re-render')->to('system::squads.squad-commander'),
+            default => null,
+        };
+    }
 };

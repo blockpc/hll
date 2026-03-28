@@ -96,6 +96,7 @@ class DatabaseSeeder extends Seeder
                             'map_id' => $map->id,
                             'central_point_id' => $centralPoint->id,
                             'faction' => 'allies',
+                            'max_soldiers' => 50,
                         ]);
                     }
                 }

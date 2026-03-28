@@ -71,14 +71,19 @@ new class extends Component
             'soldiersByName' => __('hll.squad_soldiers.add.form.soldier_by_name'),
         ]);
 
-        if ($this->soldierId) {
-            $this->addSoldierById();
-        } else {
-            $this->addSoldiersManually();
+        $added = $this->soldierId
+            ? $this->addSoldierById()
+            : $this->addSoldiersManually();
+
+        if (! $added) {
+            return;
         }
+
+        $this->dispatch('add-soldiers', $this->squad->roster_type_squad->value)->to('system::rosters.roster-template-manage');
+        $this->cancelModal();
     }
 
-    public function addSoldierById(): void
+    public function addSoldierById(): bool
     {
         $soldier = Soldier::findOrFail($this->soldierId);
 
@@ -103,10 +108,14 @@ new class extends Component
 
         if ($error) {
             $this->addError('soldierId', $error);
+
+            return false;
         }
+
+        return true;
     }
 
-    public function addSoldiersManually(): void
+    public function addSoldiersManually(): bool
     {
         $error = null;
 
@@ -133,7 +142,11 @@ new class extends Component
 
         if ($error) {
             $this->addError('soldiersByName', $error);
+
+            return false;
         }
+
+        return true;
     }
 
     public function cancelModal(): void

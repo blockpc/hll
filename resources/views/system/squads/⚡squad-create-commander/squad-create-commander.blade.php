@@ -3,8 +3,6 @@
         <flux:modal.trigger name="create-squad-command">
             <flux:button variant="outline" size="xs" icon="plus" />
         </flux:modal.trigger>
-    @else
-        <flux:button variant="outline" size="xs" icon="x-mark" disabled />
     @endif
     <flux:modal name="create-squad-command" @close="$wire.cancelModal()" @cancel="$wire.cancelModal()" :dismissible="false">
         <div class="space-y-6">

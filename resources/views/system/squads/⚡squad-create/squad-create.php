@@ -64,8 +64,8 @@ new class extends Component
 
         $this->roster->squads()->create($data);
 
-        $this->resetExcept('roster');
-        $this->modal('create-squad')->close();
+        $this->dispatch('add-squad', $this->roster_type_squad)->to('system::rosters.roster-template-manage');
+        $this->cancelModal();
 
         $this->alert(
             __('hll.squads.create.message_success', ['name' => $data['name']]),

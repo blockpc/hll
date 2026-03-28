@@ -265,6 +265,7 @@ return [
         '403' => 'No tienes permiso para gestionar las escuadras de este roster.',
         'not_match' => 'La escuadra no pertenece a este roster.',
         'no_soldiers_assigned' => 'No hay soldados asignados a esta escuadra.',
+        'remove_soldier' => 'Eliminar Soldado',
         'service_messages' => [
             'bulk_message_success' => 'Soldados creados correctamente. :count',
             'bulk_skipped_too_long' => 'Omitidos por exceder 32 caracteres (:count): :names.',
