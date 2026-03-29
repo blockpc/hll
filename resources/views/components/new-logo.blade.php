@@ -8,7 +8,7 @@
         <p class="text-xs font-semibold tracking-[0.2em] text-amber-300 uppercase">
             {{ config('app.subname', 'Tactical Roster Planner') }}
         </p>
-        <h1 class="text-base font-bold text-white">
+        <h1 class="text-base font-bold text-black dark:text-white">
             {{ config('app.name', 'HLL Rosters') }}
         </h1>
     </div>

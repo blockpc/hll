@@ -1,9 +1,11 @@
 <?php
 
+use App\Mail\ResendUserEmailVerificationMail;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 
 uses()->group('users', 'system');
@@ -191,4 +193,45 @@ it('al seleccionar un permiso via select2 se refleja inmediatamente en el usuari
         ->assertHasNoErrors();
 
     expect($user->fresh()->hasPermissionTo($permission->name))->toBeTrue();
+});
+
+it('puedo marcar un usuario no verificado como verificado', function () {
+    $user = User::factory()->unverified()->create();
+    $this->user->givePermissionTo('users.edit');
+
+    Livewire::actingAs($this->user)
+        ->test('system::users.edit', ['user' => $user])
+        ->call('markEmailAsVerified')
+        ->assertSet('user_has_verified_email', true)
+        ->assertHasNoErrors();
+
+    expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
+});
+
+it('puedo marcar un usuario como no verificado', function () {
+    $user = User::factory()->create();
+    $this->user->givePermissionTo('users.edit');
+
+    Livewire::actingAs($this->user)
+        ->test('system::users.edit', ['user' => $user])
+        ->call('markEmailAsUnverified')
+        ->assertSet('user_has_verified_email', false)
+        ->assertHasNoErrors();
+
+    expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
+});
+
+it('puedo enviar un correo de verificacion de email', function () {
+    Mail::fake();
+    $user = User::factory()->unverified()->create();
+    $this->user->givePermissionTo('users.edit');
+
+    Livewire::actingAs($this->user)
+        ->test('system::users.edit', ['user' => $user])
+        ->call('resendVerificationEmail')
+        ->assertHasNoErrors();
+
+    Mail::assertSent(ResendUserEmailVerificationMail::class, function ($mail) use ($user) {
+        return $mail->hasTo($user->email);
+    });
 });
