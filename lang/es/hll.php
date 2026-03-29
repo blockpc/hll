@@ -87,6 +87,9 @@ return [
             'description' => 'Descripción del Clan',
             'submit' => 'Actualizar',
             'back_to_list' => 'Volver al listado de clanes',
+            'owner_clan' => 'Administrador del Clan: :name',
+            'helper_clan' => 'Asistente del Clan: :name',
+            'no_helpers' => 'No hay asistentes asignados a este clan.',
         ],
         'delete' => [
             'title' => 'Eliminar Clan',
@@ -258,6 +261,8 @@ return [
                 'title' => 'Plantilla del Roster',
                 'subtitle' => 'Visualiza la plantilla de este roster.',
                 'roster_title' => 'Roster: :name',
+                'template_tab' => 'Plantilla del Roster',
+                'map_tab' => 'Mapa del Roster',
             ],
         ],
     ],
@@ -355,6 +360,7 @@ return [
             'soldier_by_name_placeholder' => 'Ingresa el nombre del soldado que deseas agregar a esta escuadra.',
             'button' => 'Agregar Soldado',
             'current_count' => 'Cantidad actual de soldados en la escuadra: :count',
+            'no_soldiers_found' => 'No se encontraron soldados disponibles para agregar a esta escuadra.',
             'form' => [
                 'soldier_by_id' => 'Soldado',
                 'soldier_by_name' => 'Nombre del soldado',

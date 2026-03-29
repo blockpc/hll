@@ -19,6 +19,9 @@ new class extends Component
 
     public ?string $searchSoldier = null;
 
+    /**
+     * @var array<int, int>
+     */
     public array $selectedSoldiers = [];
 
     public function mount(): void

@@ -21,6 +21,7 @@ new #[Lazy, Title('Plantilla Roster')] class extends Component
 
     public ?string $searchSoldier = null;
 
+    /** @var array<int, int> Soldier IDs selected for squad assignment */
     public array $selectedSoldiers = [];
 
     public function mount(): void

@@ -19,8 +19,8 @@ beforeEach(function () {
 
 // SquadsManagerTest
 
-it('allows a clan owner to create a squad in a roster from their clan', function () {
-    Livewire::actingAs($this->owner)
+it('allows authorized users to create a squad in a roster from their clan', function ($userProperty) {
+    Livewire::actingAs($this->$userProperty)
         ->test('system::squads.squad-create', ['roster' => $this->roster])
         ->set('name', 'Squad 1')
         ->set('alias', 'S1')
@@ -40,30 +40,10 @@ it('allows a clan owner to create a squad in a roster from their clan', function
         'pos_y' => 100,
         'z_index' => 1,
     ]);
-});
-
-it('allows a clan helper to create a squad in a roster from their clan', function () {
-    Livewire::actingAs($this->helper)
-        ->test('system::squads.squad-create', ['roster' => $this->roster])
-        ->set('name', 'Squad 1')
-        ->set('alias', 'S1')
-        ->set('roster_type_squad', RosterTypeSquadEnum::Infantry->value)
-        ->set('pos_x', 100)
-        ->set('pos_y', 100)
-        ->set('z_index', 1)
-        ->call('save')
-        ->assertHasNoErrors();
-
-    $this->assertDatabaseHas('squads', [
-        'roster_id' => $this->roster->id,
-        'name' => 'Squad 1',
-        'alias' => 'S1',
-        'roster_type_squad' => RosterTypeSquadEnum::Infantry->value,
-        'pos_x' => 100,
-        'pos_y' => 100,
-        'z_index' => 1,
-    ]);
-});
+})->with([
+    'clan owner' => ['owner'],
+    'clan helper' => ['helper'],
+]);
 
 it('does not allow creating a squad in a roster from another clan', function () {
     $anotherOwner = new_user(role: 'clan_owner');

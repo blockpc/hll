@@ -14,14 +14,14 @@ class SquadSoldierFactory extends Factory
     /**
      * Define the model's default state.
      *
-     * @return array<string, mixed>
+     * @return array{squad_id: \Illuminate\Database\Eloquent\Factories\Factory|\App\Models\Squad, soldier_id: \Illuminate\Database\Eloquent\Factories\Factory|\App\Models\Soldier, display_name: string, slot_number: int, role_squad_type: null}
      */
     public function definition(): array
     {
         return [
             'squad_id' => Squad::factory(),
             'soldier_id' => Soldier::factory(),
-            'display_name' => $this->faker->word(),
+            'display_name' => $this->faker->userName(),
             'slot_number' => $this->faker->numberBetween(1, 10),
             'role_squad_type' => null,
         ];

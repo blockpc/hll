@@ -38,6 +38,17 @@
                         @error('owner_user_id')
                             <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
                         @enderror
+
+                        <div class="flex flex-col space-y-1">
+                            @if ($clan->owner)
+                                <flux:badge color="blue" size="sm">{{ __('hll.clans.edit.owner_clan', ['name' => $clan->owner->name]) }}</flux:badge>
+                            @endif
+                            @forelse ($clan->helpers as $helper)
+                                <flux:badge color="cyan" size="sm">{{ __('hll.clans.edit.helper_clan', ['name' => $helper->name]) }}</flux:badge>
+                            @empty
+                                <flux:badge color="gray" size="sm">{{ __('hll.clans.edit.no_helpers') }}</flux:badge>
+                            @endforelse
+                        </div>
                     </div>
                     @endif
 

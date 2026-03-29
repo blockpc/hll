@@ -19,7 +19,7 @@ new class extends Component
     {
         $this->roster = $roster;
 
-        $this->infantries = $roster->infantrySquads()->get();
+        $this->infantries = $roster->infantrySquads()->with(['soldiers'])->get();
         $this->hasInfantrySquads = $this->infantries->isNotEmpty();
         $this->countSquads = $this->infantries->count();
     }

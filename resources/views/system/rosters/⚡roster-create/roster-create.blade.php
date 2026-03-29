@@ -31,12 +31,11 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <div class="grid gap-4">
-            <flux:input size="sm" label="{{ __('hll.clans.rosters.form.name') }}" placeholder="{{ __('hll.clans.rosters.form.name') }}" wire:model="name" />
+            <flux:input size="sm" label="{{ __('hll.clans.rosters.form.name') }}" placeholder="{{ __('hll.clans.rosters.form.name') }}" wire:model="name" required />
 
             <flux:textarea label="{{ __('hll.clans.rosters.form.description') }}" placeholder="{{ __('hll.clans.rosters.form.description') }}" wire:model="description" rows="4" />
 
-            <flux:input size="sm" label="{{ __('hll.clans.rosters.form.max_soldiers') }}" placeholder="{{ __('hll.clans.rosters.form.max_soldiers') }}" wire:model="max_soldiers" type="number" min="1" />
-
+            <flux:input size="sm" label="{{ __('hll.clans.rosters.form.max_soldiers') }}" placeholder="{{ __('hll.clans.rosters.form.max_soldiers') }}" wire:model="max_soldiers" type="number" min="1" max="99" required />
             <flux:select label="{{ __('hll.clans.rosters.form.map_id') }}" wire:model.live="map_id" placeholder="{{ __('hll.clans.rosters.form.map_id') }}">
                 <flux:select.option value="">{{ __('hll.commons.select') }}</flux:select.option>
                 @foreach ($this->maps as $mapId => $mapName)

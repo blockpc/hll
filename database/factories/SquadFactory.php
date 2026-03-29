@@ -37,6 +37,9 @@ class SquadFactory extends Factory
         ];
     }
 
+    /**
+     * Set a specific roster for the squad.
+     */
     public function withRoster(Roster $roster): static
     {
         return $this->state(fn () => [
@@ -44,6 +47,9 @@ class SquadFactory extends Factory
         ]);
     }
 
+    /**
+     * Set a specific roster type squad enum value.
+     */
     public function withTypeSquad(RosterTypeSquadEnum $typeSquad): static
     {
         return $this->state(fn () => [

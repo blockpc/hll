@@ -60,7 +60,7 @@ it('resolves roster route binding when clan route parameter is a slug string', f
         $request->setRouteResolver(function (): object {
             return new class
             {
-                public function parameter($key, $default = null): mixed
+                public function parameter(string $key, mixed $default = null): mixed
                 {
                     if ($key === 'clan') {
                         return 'test-clan-slug';

@@ -74,7 +74,6 @@ it('byId: does not allow adding more soldiers than the squad type capacity', fun
         add_soldier_to_squad($this->squad, $soldier);
     }
 
-    // Create one more soldier and try to add
     $extraSoldier = new_soldier($this->clan);
 
     Livewire::actingAs($this->owner)

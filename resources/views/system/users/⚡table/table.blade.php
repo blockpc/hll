@@ -32,17 +32,20 @@
             </x-slot>
             <x-slot name="tbody">
                 @forelse ($this->users as $user)
+                    @php $isVerified = $user->hasVerifiedEmail(); @endphp
                     <tr @class([
                         'tr',
-                        'tr-hover' => $user->hasVerifiedEmail(),
-                        'tr-warning' => !$user->hasVerifiedEmail(),
+                        'tr-hover' => $isVerified,
+                        'tr-warning' => !$isVerified,
                     ])>
                         <td class="td">
                             <flux:icon name="user" @class([
                                 'size-4',
-                                'text-green-400' => $user->hasVerifiedEmail(),
-                                'text-red-500' => !$user->hasVerifiedEmail(),
-                            ]) :title="$user->hasVerifiedEmail() ? __('system.users.table.verified') : __('system.users.table.not_verified')" />
+                                'text-green-400' => $isVerified,
+                                'text-red-500' => !$isVerified,
+                            ])
+                            :aria-label="$isVerified ? __('system.users.table.verified') : __('system.users.table.not_verified')"
+                            :title="$isVerified ? __('system.users.table.verified') : __('system.users.table.not_verified')" />
                         </td>
                         <td class="td">
                             <span class="text-xs italic">{{ $user->name }}</span>

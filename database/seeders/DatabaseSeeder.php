@@ -85,7 +85,7 @@ class DatabaseSeeder extends Seeder
                     ['name' => 'grayskull', 'role' => RoleSquadTypeEnum::Engineer->value],
                 ]);
 
-                $map = Map::inRandomOrder()->first();
+                $map = Map::query()->inRandomOrder()->first();
                 if ($map) {
                     $centralPoint = $map->centralPoints()->inRandomOrder()->first();
 

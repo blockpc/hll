@@ -1,18 +1,8 @@
 <div>
     @placeholder
         <div class="space-y-4">
-            <div class="flex items-start justify-between space-x-6">
-                <x-header-clan :clan="$clan" :title="__('hll.clans.rosters.template.roster_title', ['name' => $roster->name])" :subtitle="__('hll.clans.rosters.template.subtitle')" />
-                <div class="flex items-center space-x-2">
-                    <flux:button variant="ghost" size="sm" href="{{ route('clans.show', $clan->slug) }}">
-                        {{ __('hll.clans.rosters.back_to_clan') }}
-                    </flux:button>
-
-                    <flux:button variant="ghost" size="sm" href="{{ route('rosters.table', $clan->slug) }}">
-                        {{ __('hll.clans.rosters.back_to_rosters') }}
-                    </flux:button>
-                </div>
-            </div>
+            <flux:skeleton class="h-12 w-full" animate="pulse" />
+            <flux:skeleton class="h-6 w-full" animate="pulse" />
 
             <flux:separator variant="subtle" />
 
@@ -24,23 +14,25 @@
 
     <div class="flex items-start justify-between space-x-6">
         <x-header-clan :clan="$clan" :title="__('hll.clans.rosters.template.roster_title', ['name' => $roster->name])" :subtitle="__('hll.clans.rosters.template.subtitle')" />
-        <div class="flex items-center space-x-2">
-            <flux:button variant="ghost" size="sm" href="{{ route('clans.show', $clan->slug) }}">
-                {{ __('hll.clans.rosters.back_to_clan') }}
-            </flux:button>
+        <div class="flex flex-col">
+            <div class="flex items-center space-x-2">
+                <flux:button variant="ghost" size="sm" href="{{ route('clans.show', $clan->slug) }}">
+                    {{ __('hll.clans.rosters.back_to_clan') }}
+                </flux:button>
 
-            <flux:button variant="ghost" size="sm" href="{{ route('rosters.table', $clan->slug) }}">
-                {{ __('hll.clans.rosters.back_to_rosters') }}
-            </flux:button>
+                <flux:button variant="ghost" size="sm" href="{{ route('rosters.table', $clan->slug) }}">
+                    {{ __('hll.clans.rosters.back_to_rosters') }}
+                </flux:button>
+            </div>
+            <flux:spacer size="xs" />
+            <flux:navbar>
+                <flux:navbar.item variant="ghost" class="w-full" href="{{ route('rosters.template.manage', ['clan' => $clan->slug, 'roster' => $roster->uuid]) }}">{{ __('hll.clans.rosters.roster_manage') }}</flux:navbar.item>
+                <flux:navbar.item variant="ghost" class="w-full" href="{{ route('rosters.template.map', ['clan' => $clan->slug, 'roster' => $roster->uuid]) }}">{{ __('hll.clans.rosters.roster_map') }}</flux:navbar.item>
+            </flux:navbar>
         </div>
     </div>
 
     <flux:separator variant="subtle" />
-
-    <flux:navbar>
-        <flux:navbar.item class="w-full" href="{{ route('rosters.template.manage', ['clan' => $clan->slug, 'roster' => $roster->uuid]) }}">{{ __('hll.clans.rosters.roster_manage') }}</flux:navbar.item>
-        <flux:navbar.item class="w-full" href="{{ route('rosters.template.map', ['clan' => $clan->slug, 'roster' => $roster->uuid]) }}">{{ __('hll.clans.rosters.roster_map') }}</flux:navbar.item>
-    </flux:navbar>
 
     <div class="flex flex-col max-h-max mt-4">
         <div class="border-dashed border-gray-300 dark:border-gray-700 flex-1">

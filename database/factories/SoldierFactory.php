@@ -33,4 +33,12 @@ class SoldierFactory extends Factory
     {
         return $this->state(fn () => ['clan_id' => $clan->id]);
     }
+
+    /**
+     * Configure the factory to create a soldier without a role.
+     */
+    public function withoutRole(): static
+    {
+        return $this->state(fn () => ['role' => null]);
+    }
 }

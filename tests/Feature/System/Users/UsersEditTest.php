@@ -212,6 +212,8 @@ it('puedo marcar un usuario como no verificado', function () {
     $user = User::factory()->create();
     $this->user->givePermissionTo('users.edit');
 
+    expect($user->hasVerifiedEmail())->toBeTrue();
+
     Livewire::actingAs($this->user)
         ->test('system::users.edit', ['user' => $user])
         ->call('markEmailAsUnverified')
