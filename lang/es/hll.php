@@ -296,14 +296,19 @@ return [
             'commander_name' => 'Comandante: :name',
             'no_soldiers' => 'No hay soldados disponibles para asignar como comandante. Agrega soldados a tu clan para poder asignar un comandante a este roster.',
             'remove_commander' => 'Eliminar Comandante',
+            'success_message' => 'Comandante creado correctamente. :name',
         ],
         'squad_infantry' => [
             'title' => 'Infantería',
             'no_command_squad' => 'Sin escuadras de infantería agregadas.',
         ],
         'squad_recon' => [
-            'title' => 'Reconocimiento',
-            'no_command_squad' => 'Sin escuadras de reconocimiento agregadas.',
+            'title' => 'Escuadra de Reconocimiento',
+            'modal_subtitle' => 'Agrega escuadras de reconocimiento a tu roster para misiones de exploración y apoyo.',
+            'no_recon_squad' => 'Sin escuadras de reconocimiento agregadas.',
+            'message_limit_squad' => 'Ya has alcanzado el límite de escuadras de reconocimiento para este roster. No puedes agregar más escuadras de este tipo.',
+            'modal_create_title' => 'Crear Escuadra de Reconocimiento',
+            'title_limit_squad' => 'Límite de escuadras de reconocimiento alcanzado',
         ],
         'squad_armor' => [
             'title' => 'Blindados',
@@ -332,6 +337,7 @@ return [
             'button' => 'Crear Escuadra',
             'select_type' => 'Selecciona el tipo de escuadra',
             'message_success' => 'Escuadra creada correctamente. :name',
+            'message_limit_reached' => 'Ya has alcanzado el límite (:max) de escuadras de tipo :name para este roster. No puedes agregar más escuadras de este tipo.',
         ],
     ],
     'squad_soldiers' => [
@@ -387,9 +393,11 @@ return [
         'crewman' => 'Tripulante',
         'spotter' => 'Observador',
         'sniper' => 'Francotirador',
+        'artillery_operator' => 'Operador de artillería',
+        'artillery_gunner' => 'Artillero de artillería',
     ],
     'roster_type_squad' => [
-        'command' => 'Comandante',
+        'commander' => 'Comandante',
         'infantry' => 'Infantería',
         'recon' => 'Reconocimiento',
         'armor' => 'Blindados',

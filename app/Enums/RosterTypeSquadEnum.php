@@ -8,7 +8,7 @@ enum RosterTypeSquadEnum: string
 {
     private const MAX_CUSTOM_SOLDIERS = 99;
 
-    case Command = 'command';
+    case Commander = 'commander';
     case Infantry = 'infantry';
     case Recon = 'recon';
     case Armor = 'armor';
@@ -18,7 +18,7 @@ enum RosterTypeSquadEnum: string
     public function label(): string
     {
         return match ($this) {
-            self::Command => __('hll.roster_type_squad.command'),
+            self::Commander => __('hll.roster_type_squad.commander'),
             self::Infantry => __('hll.roster_type_squad.infantry'),
             self::Recon => __('hll.roster_type_squad.recon'),
             self::Armor => __('hll.roster_type_squad.armor'),
@@ -33,7 +33,7 @@ enum RosterTypeSquadEnum: string
     public function capacity(): int
     {
         return match ($this) {
-            self::Command => 1,
+            self::Commander => 1,
             self::Infantry => 6,
             self::Recon => 2,
             self::Armor => 3,
@@ -48,7 +48,7 @@ enum RosterTypeSquadEnum: string
     public function color(): string
     {
         return match ($this) {
-            self::Command => 'indigo',
+            self::Commander => 'indigo',
             self::Infantry => 'green',
             self::Recon => 'pink',
             self::Armor => 'yellow',
@@ -63,7 +63,7 @@ enum RosterTypeSquadEnum: string
     public function prefix(): string
     {
         return match ($this) {
-            self::Command => 'CMD',
+            self::Commander => 'CMD',
             self::Infantry => 'INF',
             self::Recon => 'REC',
             self::Armor => 'ARM',

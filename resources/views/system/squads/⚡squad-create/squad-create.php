@@ -62,6 +62,10 @@ new class extends Component
             'z_index' => 'required|integer',
         ]);
 
+        if ($this->checkSquadsLimits()) {
+            return;
+        }
+
         $this->roster->squads()->create($data);
 
         $this->dispatch('add-squad', $this->roster_type_squad)->to('system::rosters.roster-template-manage');
@@ -79,5 +83,21 @@ new class extends Component
         $this->resetExcept('roster');
         $this->clearValidation();
         $this->modal('create-squad')->close();
+    }
+
+    private function checkSquadsLimits(): bool
+    {
+        $rosterTypeSquad = RosterTypeSquadEnum::from($this->roster_type_squad);
+        $squadsCount = $this->roster->squads()->where('roster_type_squad', $this->roster_type_squad)->count();
+
+        if ($squadsCount >= $rosterTypeSquad->capacity()) {
+            $this->addError('squad_limit_reached',
+                __('hll.squads.create.message_limit_reached', ['name' => $rosterTypeSquad->label(), 'max' => $rosterTypeSquad->capacity()]),
+            );
+
+            return true;
+        }
+
+        return false;
     }
 };

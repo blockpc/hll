@@ -100,7 +100,8 @@ new class extends Component
 
             $nextSlotNumber = $this->squad->soldiers()->count() + 1;
 
-            $this->squad->soldiers()->attach($soldier->id, [
+            $this->squad->soldiers()->create([
+                'soldier_id' => $soldier->id,
                 'slot_number' => $nextSlotNumber,
                 'display_name' => $soldier->name,
             ]);

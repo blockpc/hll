@@ -24,6 +24,7 @@
                             <div class="text-sm italic">{{ __('hll.clans.rosters.soldiers') }}</div>
                             <div class="text-sm italic">({{ $roster->assignedSoldiersCount() }}/{{ $roster->clan->soldiers()->count() }})</div>
                         </div>
+                        <flux:error name="soldierId" class="text-sm text-red-500" />
                         <div class="border-b pb-1">
                             <flux:input :loading="false" :clearable="true" placeholder="{{ __('hll.clans.rosters.search_soldier') }}" wire:model.live.debounce.500ms="searchSoldier" size="xs" autocomplete="off">
                                 <x-slot name="icon">

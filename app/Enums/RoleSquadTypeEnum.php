@@ -20,6 +20,8 @@ enum RoleSquadTypeEnum: string
     case Crewman = 'crewman';
     case Spotter = 'spotter';
     case Sniper = 'sniper';
+    case ArtilleryOperator = 'artillery_operator';
+    case ArtilleryGunner = 'artillery_gunner';
 
     public function label(): string
     {
@@ -38,6 +40,8 @@ enum RoleSquadTypeEnum: string
             self::Crewman => __('hll.role_squad_type.crewman'),
             self::Spotter => __('hll.role_squad_type.spotter'),
             self::Sniper => __('hll.role_squad_type.sniper'),
+            self::ArtilleryOperator => __('hll.role_squad_type.artillery_operator'),
+            self::ArtilleryGunner => __('hll.role_squad_type.artillery_gunner'),
         };
     }
 }

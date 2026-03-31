@@ -27,21 +27,22 @@ new class extends Component
     public function reRender(): void
     {
         $this->roster->refresh();
-        $this->countSquads = $this->customSquads->count();
+        $this->countSquads = $this->commandSquads ? 1 : 0;
     }
 
     /**
-     * Removes a soldier from the squad commander and re-renders the component.
+     * Removes a soldier from custom squads and re-renders the component.
      */
     public function remove_soldier(int $soldierId): void
     {
-        $squad = $this->roster->customSquads()->whereHas('soldiers', function ($query) use ($soldierId) {
-            $query->where('soldier_id', $soldierId);
-        })->first();
-
-        if ($squad) {
-            $squad->soldiers()->detach($soldierId);
+        if ($this->squadCommander) {
+            $this->squadCommander->soldiers()->delete($soldierId);
             $this->reRender();
         }
+    }
+
+    public function addSoldier(int $squadId): void
+    {
+        $this->dispatch('open-add-soldier', $squadId);
     }
 };

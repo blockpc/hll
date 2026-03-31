@@ -67,6 +67,7 @@ new class extends Component
         match ($squadType) {
             RosterTypeSquadEnum::Custom => $this->dispatch('re-render')->to('system::squads.squad-custom'),
             RosterTypeSquadEnum::Commander => $this->dispatch('re-render')->to('system::squads.squad-commander'),
+            RosterTypeSquadEnum::Recon => $this->dispatch('re-render')->to('system::squads.squad-recon'),
             default => null,
         };
     }

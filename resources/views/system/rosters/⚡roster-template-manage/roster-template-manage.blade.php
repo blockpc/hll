@@ -50,9 +50,9 @@
                         <div class="col-span-2 flex flex-col space-y-1 p-1" id="recon-section">
                             <div class="flex justify-between items-center">
                                 <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.recon') }}</div>
-                                {{-- <flux:button variant="outline" size="xs" icon="plus">(1/2)</flux:button> --}}
+                                <livewire:system::squads.squad-create-recon :roster="$roster" />
                             </div>
-                            {{-- <flux:button variant="outline" size="xs">monty_365</flux:button> --}}
+                            <livewire:system::squads.squad-recon :roster="$roster" />
                         </div>
                     </div>
 

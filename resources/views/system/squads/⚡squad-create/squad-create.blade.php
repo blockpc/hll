@@ -8,6 +8,8 @@
             </div>
 
             <div class="space-y-2">
+                <flux:error name="squad_limit_reached" class="text-sm text-red-500" />
+
                 <flux:input size="sm" label="{{ __('hll.squads.form.name') }}" wire:model="name" />
 
                 <flux:input size="sm" label="{{ __('hll.squads.form.alias') }}" wire:model="alias" />
