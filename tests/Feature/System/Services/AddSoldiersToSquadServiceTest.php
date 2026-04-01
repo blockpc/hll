@@ -119,6 +119,35 @@ it('verifies soldiers already in the squad are ignored case-insensitively', func
         ->and($this->squad->soldiers()->count())->toBe(2);
 });
 
+it('verifies soldiers already assigned in another squad of the same roster are ignored', function () {
+    $otherSquad = new_squad($this->roster, RosterTypeSquadEnum::Armor);
+    add_soldier_to_squad($otherSquad, onlyName: 'alpha');
+    add_soldier_to_squad($otherSquad, onlyName: 'beta');
+
+    $service = new AddSoldiersToSquadService;
+    $service->for($this->squad)->names('alpha, beta, gamma');
+    $result = $service->saveBulk();
+
+    expect($result['created'])->toBe(1)
+        ->and($result['duplicatesIgnored'])->toBe(['alpha', 'beta'])
+        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($this->squad->soldiers()->pluck('display_name')->all())->toBe(['gamma']);
+});
+
+it('verifies soldiers already assigned in another squad of the same roster are ignored case-insensitively', function () {
+    $otherSquad = new_squad($this->roster, RosterTypeSquadEnum::Armor);
+    add_soldier_to_squad($otherSquad, onlyName: 'alpha');
+
+    $service = new AddSoldiersToSquadService;
+    $service->for($this->squad)->names('ALPHA, gamma');
+    $result = $service->saveBulk();
+
+    expect($result['created'])->toBe(1)
+        ->and($result['duplicatesIgnored'])->toBe(['ALPHA'])
+        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($this->squad->soldiers()->pluck('display_name')->all())->toBe(['gamma']);
+});
+
 it('skips soldiers when squad capacity is reached', function () {
     // Recon squad has capacity = 2
     $reconSquad = new_squad($this->roster, RosterTypeSquadEnum::Recon);

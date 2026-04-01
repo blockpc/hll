@@ -55,4 +55,16 @@ class Squad extends Model
             get: fn () => $this->roster_type_squad->capacity()
         );
     }
+
+    /**
+     * Check if the squad has reached its maximum capacity.
+     */
+    public function isFull(): bool
+    {
+        $count = $this->relationLoaded('soldiers')
+            ? $this->soldiers->count()
+            : $this->soldiers()->count();
+
+        return $count >= $this->capacity;
+    }
 }

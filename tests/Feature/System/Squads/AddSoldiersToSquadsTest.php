@@ -166,6 +166,57 @@ it('byName: does not allow assigning the same soldier twice in the same roster',
         ->assertHasErrors(['soldiersByName' => __('hll.squad_soldiers.soldier_already_assigned', ['name' => $this->soldier->name])]);
 });
 
+it('byName: does not add bulk names that are already assigned in another squad of the same roster', function () {
+    $otherSquad = new_squad($this->roster, RosterTypeSquadEnum::Armor);
+    add_soldier_to_squad($otherSquad, onlyName: 'uno');
+    add_soldier_to_squad($otherSquad, onlyName: 'dos');
+
+    Livewire::actingAs($this->owner)
+        ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
+        ->call('openModal', $this->squad->id)
+        ->set('soldiersByName', 'uno,dos')
+        ->call('addSoldier')
+        ->assertHasErrors(['soldiersByName' => __('hll.squad_soldiers.soldier_already_assigned', ['name' => 'uno'])]);
+
+    $this->squad->refresh();
+
+    expect($this->squad->soldiers()->whereIn('display_name', ['uno', 'dos'])->count())->toBe(0);
+});
+
+it('byName: adds only new names when bulk input contains assigned names from the same roster', function () {
+    $otherSquad = new_squad($this->roster, RosterTypeSquadEnum::Armor);
+    add_soldier_to_squad($otherSquad, onlyName: 'uno');
+
+    Livewire::actingAs($this->owner)
+        ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
+        ->call('openModal', $this->squad->id)
+        ->set('soldiersByName', 'uno,tres')
+        ->call('addSoldier')
+        ->assertHasNoErrors();
+
+    $this->squad->refresh();
+
+    expect($this->squad->soldiers()->where('display_name', 'uno')->count())->toBe(0)
+        ->and($this->squad->soldiers()->where('display_name', 'tres')->count())->toBe(1);
+});
+
+it('byName: adds only new names when bulk input contains case-insensitive assigned names from the same roster', function () {
+    $otherSquad = new_squad($this->roster, RosterTypeSquadEnum::Armor);
+    add_soldier_to_squad($otherSquad, onlyName: 'uno');
+
+    Livewire::actingAs($this->owner)
+        ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
+        ->call('openModal', $this->squad->id)
+        ->set('soldiersByName', 'UNO,tres')
+        ->call('addSoldier')
+        ->assertHasNoErrors();
+
+    $this->squad->refresh();
+
+    expect($this->squad->soldiers()->whereRaw('LOWER(display_name) = ?', ['uno'])->count())->toBe(0)
+        ->and($this->squad->soldiers()->where('display_name', 'tres')->count())->toBe(1);
+});
+
 it('byName: does not allow adding more soldiers than the squad type capacity', function () {
     $manualName = fake()->name();
     $capacity = $this->squad->capacity;

@@ -4,7 +4,7 @@
     @else
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             @foreach ($roster->artillerySquads as $artillerySquad)
-            <x-squad :squad="$artillerySquad" :buttons="$buttons" wire:key="artillery-squad-{{ $artillerySquad->id }}" />
+            <x-squad :squad="$artillerySquad" :buttons="$displayControls" wire:key="artillery-squad-{{ $artillerySquad->id }}" />
             @endforeach
         </div>
     @endif

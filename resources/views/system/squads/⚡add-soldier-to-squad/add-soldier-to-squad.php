@@ -138,6 +138,12 @@ new class extends Component
 
             if (! empty($result['skippedFull'])) {
                 $error = __('hll.squad_soldiers.squad_full');
+
+                return;
+            }
+
+            if ($result['created'] === 0 && ! empty($result['duplicatesIgnored'])) {
+                $error = __('hll.squad_soldiers.soldier_already_assigned', ['name' => $result['duplicatesIgnored'][0]]);
             }
         });
 

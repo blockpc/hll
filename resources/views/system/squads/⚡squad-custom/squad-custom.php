@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Roster;
+use App\Models\Squad;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -23,8 +24,18 @@ new class extends Component
         $this->countSquads = $this->customSquads->count();
     }
 
+    /**
+     * Opens the add soldier modal for the specified squad.
+     * Shows a warning alert and returns early if the squad is full.
+     */
     public function addSoldier(int $squadId): void
     {
+        $squad = $this->roster->customSquads()->findOrFail($squadId);
+        if ($squad->isFull()) {
+            $this->alert(__('hll.squads.squad_custom.full_squad'), 'warning', __('hll.squads.squad_custom.title'));
+
+            return;
+        }
         $this->dispatch('open-add-soldier', $squadId);
     }
 

@@ -250,7 +250,7 @@ final class AddSoldiersToSquadService
             $this->nextSlotNumber = ($this->squad->soldiers()->max('slot_number') ?? 0) + 1;
         }
 
-        $existing = $this->squad->soldiers()
+        $existing = $this->roster->squadSoldiers()
             ->whereRaw('LOWER(display_name) = ?', [mb_strtolower($name)])
             ->first();
 
@@ -258,7 +258,8 @@ final class AddSoldiersToSquadService
             return $existing;
         }
 
-        $nextSlot = ($this->squad->soldiers()->max('slot_number') ?? 0) + 1;
+        $nextSlot = $this->nextSlotNumber;
+        $this->nextSlotNumber++;
 
         $soldier = $this->squad->soldiers()->create([
             'display_name' => $name,

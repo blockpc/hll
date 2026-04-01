@@ -40,7 +40,17 @@
             <div class="grid grid-cols-6 gap-4 max-h-max">
                 <div class="col-span-5 border flex flex-col space-y-4 p-1">
 
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="col-span-5 border-b-2 border-amber-300 p-1">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm">{{ $roster->name }}</div>
+                            <div class="text-sm">{{ __('hll.rosters.map') }}: {{ $roster->map->name }}</div>
+                            <div class="text-sm">{{ __('hll.rosters.central_point') }}: {{ $roster->centralPoint->name }}</div>
+                            <div class="text-sm">{{ __('hll.rosters.faction') }}: {{ $roster->faction->label() }}</div>
+                            <div class="text-sm">{{ $roster->assignedSoldiersCount() }}/{{ $roster->max_soldiers }}</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                         <div class="flex flex-col space-y-1 p-1" id="commander-section">
                             <div class="flex justify-between items-center">
                                 <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.commander') }}</div>
@@ -48,12 +58,19 @@
                             </div>
                             <livewire:system::squads.squad-commander :roster="$roster" :key="'commander-'.$roster->uuid" />
                         </div>
-                        <div class="col-span-2 flex flex-col space-y-1 p-1" id="recon-section">
+                        <div class="flex flex-col space-y-1 p-1" id="recon-section">
                             <div class="flex justify-between items-center">
                                 <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.recon') }}</div>
                                 <livewire:system::squads.squad-create-typed :roster="$roster" :type="RosterTypeSquadEnum::Recon" />
                             </div>
-                            <livewire:system::squads.squad-recon :roster="$roster" :key="'recon-'.$roster->uuid" />
+                            <livewire:system::squads.squad-recon :roster="$roster" :key="'recon-'.$roster->uuid" :displayControls="true" />
+                        </div>
+                        <div class="flex flex-col space-y-1 p-1" id="armor-section">
+                            <div class="flex justify-between items-center">
+                                <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.armor') }}</div>
+                                <livewire:system::squads.squad-create-typed :roster="$roster" :type="RosterTypeSquadEnum::Armor" />
+                            </div>
+                            <livewire:system::squads.squad-armor :roster="$roster" :key="'armor-'.$roster->uuid" :displayControls="true" />
                         </div>
                     </div>
 
@@ -62,17 +79,7 @@
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.infantry') }}</div>
                             <livewire:system::squads.squad-create-typed :roster="$roster" :type="RosterTypeSquadEnum::Infantry" />
                         </div>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            <livewire:system::squads.squad-infantry :roster="$roster" :key="'infantry-'.$roster->uuid" />
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col space-y-1 p-1" id="armor-section">
-                        <div class="flex justify-between items-center">
-                            <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.armor') }}</div>
-                            <livewire:system::squads.squad-create-typed :roster="$roster" :type="RosterTypeSquadEnum::Armor" />
-                        </div>
-                        <livewire:system::squads.squad-armor :roster="$roster" :key="'armor-'.$roster->uuid" :buttons="true" />
+                        <livewire:system::squads.squad-infantry :roster="$roster" :key="'infantry-'.$roster->uuid" :displayControls="true" />
                     </div>
 
                     <div class="flex flex-col space-y-1 p-1" id="artillery-section">
@@ -80,7 +87,7 @@
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.artillery') }}</div>
                             <livewire:system::squads.squad-create-typed :roster="$roster" :type="RosterTypeSquadEnum::Artillery" />
                         </div>
-                        <livewire:system::squads.squad-artillery :roster="$roster" :key="'artillery-'.$roster->uuid" :buttons="true" />
+                        <livewire:system::squads.squad-artillery :roster="$roster" :key="'artillery-'.$roster->uuid" :displayControls="true" />
                     </div>
 
                     <div class="flex flex-col space-y-1 p-1" id="custom-section">
@@ -88,7 +95,7 @@
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.custom') }}</div>
                             <flux:button variant="outline" size="xs" icon="plus" />
                         </div>
-                        <livewire:system::squads.squad-custom :roster="$roster" :key="'custom-'.$roster->uuid" :buttons="true" />
+                        <livewire:system::squads.squad-custom :roster="$roster" :key="'custom-'.$roster->uuid" :displayControls="true" />
                     </div>
                 </div>
 

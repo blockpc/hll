@@ -11,6 +11,11 @@ return [
         'success' => 'Éxito',
         'back' => 'Volver',
     ],
+    'rosters' => [
+        'map' => 'Mapa',
+        'central_point' => 'Punto central',
+        'faction' => 'Facción',
+    ],
     'clans' => [
         'menu' => 'Clanes',
         '403' => 'No tienes permiso para gestionar los clanes.',
@@ -298,8 +303,9 @@ return [
             'no_soldiers' => 'No hay soldados disponibles para asignar como comandante. Agrega soldados a tu clan para poder asignar un comandante a este roster.',
             'remove_commander' => 'Eliminar Comandante',
             'success_message' => 'Comandante creado correctamente. :name',
-            'error_message' => 'Error al crear una escuadra de comandante. Comuníquese con el administrador.',
+            'error_message' => 'Error al crear una escuadra de comandante. Comunícate con el administrador.',
             'already_exists' => 'Ya existe una escuadra de comandante para este roster.',
+            'full_squad' => 'Ya hay un comandante asignado a este roster. Elimina el comandante actual para asignar uno nuevo.',
         ],
         'squad_infantry' => [
             'title' => 'Escuadra de Infantería',
@@ -308,6 +314,7 @@ return [
             'message_limit_squad' => 'Ya has alcanzado el límite de escuadras de infantería para este roster. No puedes agregar más escuadras de este tipo.',
             'modal_create_title' => 'Crear Escuadra de Infantería',
             'title_limit_squad' => 'Límite de escuadras de infantería alcanzado',
+            'full_squad' => 'Ya has alcanzado el límite de soldados para esta escuadra de infantería. No puedes agregar más soldados a esta escuadra.',
         ],
         'squad_recon' => [
             'title' => 'Escuadra de Reconocimiento',
@@ -316,6 +323,7 @@ return [
             'message_limit_squad' => 'Ya has alcanzado el límite de escuadras de reconocimiento para este roster. No puedes agregar más escuadras de este tipo.',
             'modal_create_title' => 'Crear Escuadra de Reconocimiento',
             'title_limit_squad' => 'Límite de escuadras de reconocimiento alcanzado',
+            'full_squad' => 'Ya has alcanzado el límite de soldados para esta escuadra de reconocimiento. No puedes agregar más soldados a esta escuadra.',
         ],
         'squad_armor' => [
             'title' => 'Escuadra de Blindados',
@@ -324,6 +332,7 @@ return [
             'message_limit_squad' => 'Ya has alcanzado el límite de escuadras de blindados para este roster. No puedes agregar más escuadras de este tipo.',
             'modal_create_title' => 'Crear Escuadra de Blindados',
             'title_limit_squad' => 'Límite de escuadras de blindados alcanzado',
+            'full_squad' => 'Ya has alcanzado el límite de soldados para esta escuadra de blindados. No puedes agregar más soldados a esta escuadra.',
         ],
         'squad_artillery' => [
             'title' => 'Escuadra de Artillería',
@@ -332,10 +341,12 @@ return [
             'message_limit_squad' => 'Ya has alcanzado el límite de escuadras de artillería para este roster. No puedes agregar más escuadras de este tipo.',
             'modal_create_title' => 'Crear Escuadra de Artillería',
             'title_limit_squad' => 'Límite de escuadras de artillería alcanzado',
+            'full_squad' => 'Ya has alcanzado el límite de soldados para esta escuadra de artillería. No puedes agregar más soldados a esta escuadra.',
         ],
         'squad_custom' => [
-            'title' => 'Personalizada',
+            'title' => 'Escuadra Personalizada',
             'no_command_squad' => 'Sin escuadras personalizadas agregadas.',
+            'full_squad' => 'Ya has alcanzado el límite de soldados para esta escuadra. No puedes agregar más soldados a esta escuadra.',
         ],
         'form' => [
             'name' => 'Nombre de la Escuadra',
