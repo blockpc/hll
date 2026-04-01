@@ -130,6 +130,16 @@ class Roster extends Model
         return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Infantry);
     }
 
+    public function artillerySquads(): HasMany
+    {
+        return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Artillery);
+    }
+
+    public function armorSquads(): HasMany
+    {
+        return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Armor);
+    }
+
     public function customSquads(): HasMany
     {
         return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Custom);

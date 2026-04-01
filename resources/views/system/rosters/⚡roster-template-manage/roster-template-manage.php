@@ -52,6 +52,19 @@ new class extends Component
 
     public function createSquad(string $typeSquad): void
     {
+        $rosterTypeSquad = RosterTypeSquadEnum::tryFrom($typeSquad);
+
+        if (in_array($rosterTypeSquad, [
+            RosterTypeSquadEnum::Infantry,
+            RosterTypeSquadEnum::Recon,
+            RosterTypeSquadEnum::Armor,
+            RosterTypeSquadEnum::Artillery,
+        ], true)) {
+            $this->dispatch('open-create-squad-typed', $typeSquad);
+
+            return;
+        }
+
         $this->dispatch('open-create-squad', $typeSquad);
     }
 
@@ -68,6 +81,9 @@ new class extends Component
             RosterTypeSquadEnum::Custom => $this->dispatch('re-render')->to('system::squads.squad-custom'),
             RosterTypeSquadEnum::Commander => $this->dispatch('re-render')->to('system::squads.squad-commander'),
             RosterTypeSquadEnum::Recon => $this->dispatch('re-render')->to('system::squads.squad-recon'),
+            RosterTypeSquadEnum::Infantry => $this->dispatch('re-render')->to('system::squads.squad-infantry'),
+            RosterTypeSquadEnum::Artillery => $this->dispatch('re-render')->to('system::squads.squad-artillery'),
+            RosterTypeSquadEnum::Armor => $this->dispatch('re-render')->to('system::squads.squad-armor'),
             default => null,
         };
     }

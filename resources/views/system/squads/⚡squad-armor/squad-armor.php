@@ -9,11 +9,11 @@ new class extends Component
 
     public int $countSquads = 0;
 
-    public bool $displayControls = true;
+    public bool $buttons = true;
 
     public function mount(Roster $roster): void
     {
         $this->roster = $roster;
-        $this->countSquads = $this->roster->infantrySquads()->count();
+        $this->countSquads = $this->roster->armorSquads()->count();
     }
 };

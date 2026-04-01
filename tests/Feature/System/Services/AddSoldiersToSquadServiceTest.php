@@ -10,8 +10,9 @@ use App\Enums\RosterTypeSquadEnum;
 use App\Services\AddSoldiersToSquadService;
 use Database\Seeders\MapSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses()->group('hll', 'squads');
+uses(RefreshDatabase::class)->group('hll', 'squads');
 
 beforeEach(function () {
     $this->seed(RolesAndPermissionsSeeder::class);

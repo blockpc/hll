@@ -2,10 +2,8 @@
 
 use App\Enums\RosterTypeSquadEnum;
 use App\Models\Roster;
-use App\Models\Soldier;
-use App\Models\Squad;
+use App\Services\CreateCommanderSquadService;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -56,38 +54,36 @@ new class extends Component
         ]);
 
         $type = 'success';
-        $message = __('hll.squads.squad_command.message_success', ['name' => $this->name]);
-        DB::beginTransaction();
+        $message = __('hll.squads.squad_command.success_message', ['name' => $this->name]);
+
         try {
-            $squad = Squad::create([
-                'roster_id' => $this->roster->id,
-                'name' => $this->name,
-                'alias' => $this->alias,
-                'roster_type_squad' => RosterTypeSquadEnum::Commander,
-            ]);
+            $squad = $this->createCommanderSquadService()->create(
+                $this->roster,
+                (int) $this->selectedSoldierId,
+                $this->name,
+                $this->alias,
+            );
 
-            $soldier = Soldier::find($this->selectedSoldierId);
-
-            $squad->soldiers()->create([
-                'soldier_id' => $soldier->id,
-                'slot_number' => 1,
-                'display_name' => $soldier->name,
-            ]);
-
-            $message = __('hll.squads.squad_command.message_success', ['name' => $soldier->name]);
+            $message = __('hll.squads.squad_command.success_message', ['name' => $squad->soldiers()->first()?->display_name ?? $this->name]);
 
             $this->commandSquads = true;
 
-            DB::commit();
-
             $this->dispatch('add-squad', RosterTypeSquadEnum::Commander)->to('system::rosters.roster-template-manage');
             $this->cancelModal();
+        } catch (\DomainException $exception) {
+            $type = 'error';
+            $message = $exception->getMessage();
         } catch (\Throwable $th) {
             Log::error("Error al crear una escuadra de comandante. {$th->getMessage()} | {$th->getFile()} | {$th->getLine()}");
-            DB::rollback();
             $type = 'error';
-            $message = 'Error al crear una escuadra de comandante. Comuníquese con el administrador';
+            $message = __('hll.squads.squad_command.error_message');
         }
+
+        $this->alert(
+            $message,
+            type: $type,
+            title: __('hll.squads.squad_command.title'),
+        );
     }
 
     public function cancelModal(): void
@@ -95,5 +91,10 @@ new class extends Component
         $this->reset('name', 'alias', 'selectedSoldierId');
         $this->clearValidation();
         $this->modal('create-squad-command')->close();
+    }
+
+    private function createCommanderSquadService(): CreateCommanderSquadService
+    {
+        return app(CreateCommanderSquadService::class);
     }
 };
