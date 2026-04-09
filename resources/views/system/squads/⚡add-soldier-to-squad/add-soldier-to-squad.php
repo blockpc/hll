@@ -24,6 +24,8 @@ new class extends Component
 
     public ?string $soldiersByName = null;
 
+    public bool $squadFull = false;
+
     public function mount(): void
     {
         $this->roster->loadMissing('clan.soldiers');
@@ -43,6 +45,7 @@ new class extends Component
     public function openModal(int $squadId): void
     {
         $this->squad = Squad::findOrFail($squadId);
+        $this->squadFull = $this->squad->isFull();
         $this->modal('add-soldier')->show();
     }
 
@@ -195,5 +198,42 @@ new class extends Component
         }
 
         return null;
+    }
+
+    public function cancelDeleteSquad(): void
+    {
+        $this->clearValidation();
+        $this->modal("delete-squad-{$this->squad->id}")->close();
+    }
+
+    public function deleteSquad(int $squadId): void
+    {
+        if (! $this->squad || $this->squad->id !== $squadId) {
+            $this->addError('squad', __('hll.squads.delete.message_error'));
+
+            return;
+        }
+
+        $squad = $this->roster->squads()->findOrFail($squadId);
+
+        if (! $squad) {
+            $this->addError('squad', __('hll.squads.delete.message_error'));
+
+            return;
+        }
+
+        $squadType = $squad->roster_type_squad;
+
+        $squad->delete();
+
+        $message = __('hll.squads.delete.message_success', ['name' => $squad->name]);
+
+        $this->dispatch('show', $message, 'warning', __('hll.squads.delete.title'))->to('alert');
+
+        $this->clearValidation();
+        $this->modal("delete-squad-{$squadId}")->close();
+        $this->cancelModal();
+
+        $this->dispatch('delete-squad', $squadType)->to('system::rosters.roster-template-manage');
     }
 };

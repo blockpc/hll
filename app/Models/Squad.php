@@ -52,7 +52,7 @@ class Squad extends Model
     protected function capacity(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->roster_type_squad->capacity()
+            get: fn (): int => $this->roster_type_squad->capacity()
         );
     }
 

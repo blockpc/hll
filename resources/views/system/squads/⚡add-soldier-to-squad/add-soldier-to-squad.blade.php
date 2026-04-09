@@ -12,8 +12,21 @@
                 <li>{{ __('hll.squad_soldiers.add.requirements.capacity', ['capacity' => $squad?->capacity ?? 0]) }}</li>
             </ul>
 
-            <p class="text-sm text-gray-500">{{ __('hll.squad_soldiers.add.current_count', ['count' => $squad?->soldiers()->count() ?? 0]) }}</p>
+            <div class="flex flex-col space-y-2 p-1">
+                <div class="flex items-center space-x-4">
+                    <h2>{{ $squad?->name }}</h2>
+                    <span class="text-sm text-gray-500">({{ __('hll.squad_soldiers.add.current_count', ['count' => $squad?->soldiers?->count() ?? 0]) }})</span>
+                </div>
+                <div class="">
+                    @foreach ($squad?->soldiers ?? [] as $soldier)
+                        <flux:badge size="xs" color="gray">
+                            {{ $soldier->display_name }}
+                        </flux:badge>
+                    @endforeach
+                </div>
+            </div>
 
+            @if (!$squadFull)
             <div class="space-y-2">
                 <x-toggle name="adding_many_soldiers" yes="hll.squad_soldiers.add.add_by_id" not="hll.squad_soldiers.add.add_by_name" wire:model.live="singleSelection" />
 
@@ -50,17 +63,52 @@
                     <p class="text-sm text-gray-500">{{ __('hll.squad_soldiers.add.requirements.by_name_requirements') }}</p>
                     <flux:textarea size="sm" label="{{ __('hll.squad_soldiers.add.form.soldier_by_name') }}" wire:model="soldiersByName" />
                 @endif
+            </div>
+            @else
+            <flux:callout variant="warning">
+                {{ __('hll.squads.full_squad', ['name' => $squad?->roster_type_squad->label()]) }}
+            </flux:callout>
+            @endif
 
+            <div class="flex justify-between items-center space-x-2">
+                <div class="flex justify-start items-center space-x-2">
+                    @if ($squad)
+                    <flux:modal.trigger name="delete-squad-{{ $squad?->id }}">
+                        <flux:button variant="danger" size="sm">{{ __('hll.squads.delete.title') }}</flux:button>
+                    </flux:modal.trigger>
+                    @endif
+                </div>
+                <div class="flex justify-end items-center space-x-2">
+                    <flux:button variant="ghost" size="sm" wire:click="cancelModal">
+                        {{ __('hll.commons.cancel') }}
+                    </flux:button>
+                    @if (!$squadFull)
+                    <flux:button variant="primary" color="blue" size="sm" wire:click="addSoldier">
+                        {{ __('hll.squad_soldiers.add.button') }}
+                    </flux:button>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </flux:modal>
+
+    @if ($squad)
+    <flux:modal name="delete-squad-{{ $squad->id }}" @close="$wire.cancelDeleteSquad()" @cancel="$wire.cancelDeleteSquad()" :dismissible="false">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">{{ __('hll.squads.delete.title') }}</flux:heading>
+                <flux:text class="mt-2">{{ __('hll.squads.delete.confirmation_message') }}</flux:text>
             </div>
 
             <div class="flex justify-end items-center space-x-2">
-                <flux:button variant="ghost" size="sm" wire:click="cancelModal">
+                <flux:button variant="ghost" size="sm" wire:click="cancelDeleteSquad">
                     {{ __('hll.commons.cancel') }}
                 </flux:button>
-                <flux:button variant="primary" color="blue" size="sm" wire:click="addSoldier">
-                    {{ __('hll.squad_soldiers.add.button') }}
+                <flux:button variant="danger" size="sm" wire:click="deleteSquad({{ $squad->id }})">
+                    {{ __('hll.squads.delete.button') }}
                 </flux:button>
             </div>
         </div>
     </flux:modal>
+    @endif
 </div>

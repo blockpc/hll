@@ -2,7 +2,7 @@
     @if (!$this->countSquads)
         <div class="text-sm text-gray-500">{{ __('hll.squads.squad_armor.no_armor_squad') }}</div>
     @else
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 lg:grid-cols-6 gap-4">
             @foreach ($roster->armorSquads as $armorSquad)
             <x-squad :squad="$armorSquad" :buttons="$displayControls" wire:key="armor-squad-{{ $armorSquad->id }}" />
             @endforeach

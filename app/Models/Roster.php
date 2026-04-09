@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -100,6 +101,18 @@ class Roster extends Model
     public function squadSoldiers(): HasManyThrough
     {
         return $this->hasManyThrough(SquadSoldier::class, Squad::class);
+    }
+
+    /**
+     * Get soldiers assigned to the roster that belong to the same clan, plucked as [soldier_id => display_name].
+     *
+     * @return Collection<int, string>
+     */
+    public function soldiersFromClan(): Collection
+    {
+        return $this->squadSoldiers()->whereHas('soldier', function (Builder $query) {
+            $query->where('clan_id', $this->clan_id);
+        })->get()->pluck('display_name', 'soldier_id');
     }
 
     /**

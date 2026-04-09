@@ -15,6 +15,7 @@ return [
         'map' => 'Mapa',
         'central_point' => 'Punto central',
         'faction' => 'Facción',
+        'map_alt' => 'Mapa del roster',
     ],
     'clans' => [
         'menu' => 'Clanes',
@@ -277,6 +278,8 @@ return [
         'no_soldiers_assigned' => 'No hay soldados asignados a esta escuadra.',
         'remove_soldier' => 'Eliminar Soldado',
         'invalid_type_squad' => 'Tipo de escuadra inválido proporcionado.',
+        'soldier_removed' => 'Soldado ":name" eliminado correctamente.',
+        'full_squad' => 'Ya has alcanzado el límite de soldados para la escuadra de :name. No puedes agregar más soldados a esta escuadra.',
         'service_messages' => [
             'bulk_message_success' => 'Soldados creados correctamente. :count',
             'bulk_skipped_too_long' => 'Omitidos por exceder 32 caracteres (:count): :names.',
@@ -365,6 +368,13 @@ return [
             'message_success' => 'Escuadra creada correctamente. :name',
             'message_limit_reached' => 'Ya has alcanzado el límite (:max) de escuadras de tipo :name para este roster. No puedes agregar más escuadras de este tipo.',
         ],
+        'delete' => [
+            'title' => 'Eliminar Escuadra',
+            'confirmation_message' => '¿Estás seguro de que quieres eliminar esta escuadra? Esta acción no se puede deshacer.',
+            'button' => 'Eliminar Escuadra',
+            'message_success' => 'Escuadra eliminada correctamente. :name',
+            'message_error' => 'Error al eliminar la escuadra. Por favor intenta de nuevo o contacta al soporte.',
+        ],
     ],
     'squad_soldiers' => [
         '403' => 'No tienes permiso para gestionar los soldados de esta escuadra.',
@@ -393,6 +403,7 @@ return [
             'button' => 'Agregar Soldado',
             'current_count' => 'Cantidad actual de soldados en la escuadra: :count',
             'no_soldiers_found' => 'No se encontraron soldados disponibles para agregar a esta escuadra.',
+            'soldiers_count' => '{0} Sin soldados|{1} :count soldado|[2,*] :count soldados',
             'form' => [
                 'soldier_by_id' => 'Soldado',
                 'soldier_by_name' => 'Nombre del soldado',

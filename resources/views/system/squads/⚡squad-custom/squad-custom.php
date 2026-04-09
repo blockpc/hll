@@ -1,13 +1,16 @@
 <?php
 
 use App\Models\Roster;
-use App\Models\Squad;
+use App\Models\SquadSoldier;
+use Blockpc\Traits\AlertBrowserEvent;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component
 {
+    use AlertBrowserEvent;
+
     public Roster $roster;
 
     public bool $buttons = false;
@@ -52,13 +55,13 @@ new class extends Component
      */
     public function remove_soldier(int $soldierId): void
     {
-        $squad = $this->roster->customSquads()->whereHas('soldiers', function ($query) use ($soldierId) {
-            $query->where('soldier_id', $soldierId);
-        })->first();
+        $sodier = SquadSoldier::findOrFail($soldierId);
+        $name = $sodier->display_name;
 
-        if ($squad) {
-            $squad->soldiers()->detach($soldierId);
+        if ($sodier) {
+            $sodier->delete();
             $this->reRender();
+            $this->alert(__('hll.squads.soldier_removed', ['name' => $name]), 'success', __('hll.squads.squad_custom.title'));
         }
     }
 };

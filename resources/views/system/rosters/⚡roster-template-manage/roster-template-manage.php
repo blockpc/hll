@@ -27,6 +27,8 @@ new class extends Component
     public function mount(): void
     {
         $this->checkAuthorization();
+
+        $this->selectedSoldiers = $this->roster->soldiersFromClan()->keys()->toArray();
     }
 
     /**
@@ -71,8 +73,9 @@ new class extends Component
     /**
      * Re-renders the appropriate squad component based on type.
      *
-     * Listens to: `add-soldiers`, `add-squad`
+     * Listens to: `add-soldiers`, `add-squad`, and `delete-squad` events, which are emitted after adding soldiers, adding a squad, or deleting a squad respectively. The method checks the type of squad that was modified and dispatches a `re-render` event to the corresponding squad component to refresh its data.
      */
+    #[On('delete-squad')]
     #[On('add-soldiers')]
     #[On('add-squad')]
     public function dispatchToTypeSquad(?RosterTypeSquadEnum $squadType = null): void

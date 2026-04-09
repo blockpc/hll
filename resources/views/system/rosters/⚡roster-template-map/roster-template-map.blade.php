@@ -35,43 +35,78 @@
     <flux:separator variant="subtle" />
 
     <div class="flex flex-col max-h-max mt-4">
-        <div class="border border-dashed border-gray-300 dark:border-gray-700 flex-1">
+        <div class="flex-1">
+            <div class="col-span-5 border-b-2 border-amber-300 p-1 mb-2">
+                <div class="flex items-center justify-between text-amber-500">
+                    <div class="text-sm">{{ $roster->name }}</div>
+                    <div class="text-sm">{{ __('hll.rosters.map') }}: {{ $roster->map->name }}</div>
+                    <div class="text-sm">{{ __('hll.rosters.central_point') }}: {{ $roster->centralPoint->name }}</div>
+                    <div class="text-sm">{{ __('hll.rosters.faction') }}: {{ $roster->faction->label() }}</div>
+                    <div class="text-sm">{{ $roster->assignedSoldiersCount() }}/{{ $roster->max_soldiers }}</div>
+                </div>
+            </div>
             <div class="grid grid-cols-6 gap-4 max-h-max">
                 <div class="col-span-2 border flex flex-col space-y-4 p-1">
-                    <div class="flex flex-col space-y-1 p-1" id="commander-section">
-                        <div class="flex justify-between items-center">
-                            <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.commander') }}</div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="grid grid-cols-2 gap-2" id="commander-section-alias">
+                            <div class="col-span-2 flex justify-between items-start">
+                                <div class="flex-1 text-xs italic border-b border-gray-500">{{ __('hll.squads.sections.commander') }}</div>
+                            </div>
+                            @forelse ($roster->commandSquads as $commandSquad)
+                                <x-squad-alias :squad="$commandSquad" />
+                            @empty
+                            @endforelse
+                        </div>
+                        <div class="grid grid-cols-2 gap-2" id="recon-section-alias">
+                            <div class="col-span-2 flex justify-between items-start">
+                                <div class="flex-1 text-xs italic border-b border-gray-500">{{ __('hll.squads.sections.recon') }}</div>
+                            </div>
+                            @forelse ($roster->reconSquads as $reconSquad)
+                                <x-squad-alias :squad="$reconSquad" />
+                            @empty
+                            @endforelse
+                        </div>
+                        <div class="grid grid-cols-2 gap-2" id="artillery-section-alias">
+                            <div class="col-span-2 flex justify-between items-start">
+                                <div class="flex-1 text-xs italic border-b border-gray-500">{{ __('hll.squads.sections.artillery') }}</div>
+                            </div>
+                            @forelse ($roster->artillerySquads as $artillerySquad)
+                                <x-squad-alias :squad="$artillerySquad" />
+                            @empty
+                            @endforelse
                         </div>
                     </div>
-                    <div class="flex flex-col space-y-1 p-1" id="infantry-section">
-                        <div class="flex justify-between items-center">
-                            <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.infantry') }}</div>
+                    <div class="grid grid-cols-6 gap-2" id="infantry-section-alias">
+                        <div class="col-span-6 flex justify-between items-start">
+                            <div class="flex-1 text-xs italic border-b border-gray-500">{{ __('hll.squads.sections.infantry') }}</div>
                         </div>
+                        @forelse ($roster->infantrySquads as $infantrySquad)
+                            <x-squad-alias :squad="$infantrySquad" />
+                        @empty
+                        @endforelse
                     </div>
-                    <div class="flex flex-col space-y-1 p-1" id="armor-section">
-                        <div class="flex justify-between items-center">
-                            <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.armor') }}</div>
+                    <div class="grid grid-cols-6 gap-2" id="armor-section-alias">
+                        <div class="col-span-6 flex justify-between items-start">
+                            <div class="flex-1 text-xs italic border-b border-gray-500">{{ __('hll.squads.sections.armor') }}</div>
                         </div>
+                        @forelse ($roster->armorSquads as $armorSquad)
+                            <x-squad-alias :squad="$armorSquad" />
+                        @empty
+                        @endforelse
                     </div>
-                    <div class="flex flex-col space-y-1 p-1" id="recon-section">
-                        <div class="flex justify-between items-center">
-                            <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.recon') }}</div>
+                    <div class="grid grid-cols-6 gap-2" id="custom-section-alias">
+                        <div class="col-span-6 flex justify-between items-start">
+                            <div class="flex-1 text-xs italic border-b border-gray-500">{{ __('hll.squads.sections.custom') }}</div>
                         </div>
-                    </div>
-                    <div class="flex flex-col space-y-1 p-1" id="artillery-section">
-                        <div class="flex justify-between items-center">
-                            <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.artillery') }}</div>
-                        </div>
+                        @forelse ($roster->customSquads as $customSquad)
+                            <x-squad-alias :squad="$customSquad" />
+                        @empty
+                        @endforelse
                     </div>
                 </div>
                 <div class="col-span-4 border flex flex-col space-y-4 p-1">
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm">{{ $roster->map?->name ?? 'N/A' }}</div>
-                        <div class="text-sm">{{ $roster->centralPoint?->name ?? 'N/A' }}</div>
-                        <div class="text-sm">{{ $roster->faction?->label() ?? __('hll.clans.rosters.template.no_faction') }}</div>
-                    </div>
                     <div>
-                        <img src="{{ asset('images/mapa-hll.png') }}" class="w-full h-auto rounded">
+                        <img src="{{ asset('images/mapa-hll.png') }}" class="w-full h-auto rounded" alt="{{ __('hll.rosters.map_alt') }}">
                     </div>
                 </div>
             </div>

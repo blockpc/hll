@@ -2,6 +2,7 @@
 
 use App\Models\Roster;
 use App\Models\Squad;
+use App\Models\SquadSoldier;
 use Blockpc\Traits\AlertBrowserEvent;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -38,9 +39,13 @@ new class extends Component
      */
     public function remove_soldier(int $soldierId): void
     {
-        if ($this->squadCommander) {
-            $this->squadCommander->soldiers()->delete($soldierId);
+        $sodier = SquadSoldier::findOrFail($soldierId);
+        $name = $sodier->display_name;
+
+        if ($sodier) {
+            $sodier->delete();
             $this->reRender();
+            $this->alert(__('hll.squads.soldier_removed', ['name' => $name]), 'success', __('hll.squads.squad_command.title'));
         }
     }
 
@@ -48,7 +53,7 @@ new class extends Component
      * Opens the add soldier modal for the specified squad.
      * Shows a warning alert and returns early if the squad is full.
      */
-    public function addSoldier(int $squadId): void
+    public function openAddSoldierModal(int $squadId): void
     {
         $squad = $this->roster->commandSquads()->first();
         if (! $squad) {
