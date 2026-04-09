@@ -37,16 +37,14 @@ new class extends Component
     /**
      * Removes a soldier from custom squads and re-renders the component.
      */
-    public function remove_soldier(int $soldierId): void
+    public function removeSoldier(int $soldierId): void
     {
-        $sodier = SquadSoldier::findOrFail($soldierId);
-        $name = $sodier->display_name;
+        $soldier = SquadSoldier::findOrFail($soldierId);
+        $name = $soldier->display_name;
 
-        if ($sodier) {
-            $sodier->delete();
-            $this->reRender();
-            $this->alert(__('hll.squads.soldier_removed', ['name' => $name]), 'success', __('hll.squads.squad_command.title'));
-        }
+        $soldier->delete();
+        $this->reRender();
+        $this->alert(__('hll.squads.soldier_removed', ['name' => $name]), 'success', __('hll.squads.squad_command.title'));
     }
 
     /**

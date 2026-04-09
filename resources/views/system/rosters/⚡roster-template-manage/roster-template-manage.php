@@ -89,5 +89,7 @@ new class extends Component
             RosterTypeSquadEnum::Armor => $this->dispatch('re-render')->to('system::squads.squad-armor'),
             default => null,
         };
+
+        $this->selectedSoldiers = $this->roster->soldiersFromClan()->keys()->toArray();
     }
 };

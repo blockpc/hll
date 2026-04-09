@@ -47,14 +47,20 @@
                         </div>
                         <div class="flex flex-col space-y-1 max-h-64 overflow-y-auto overscroll-y-auto">
                             @foreach ($this->soldiers as $soldierKeyId => $soldierKeyName)
-                                <flux:button variant="outline" size="xs" class="justify-start" wire:click="setSoldierId({{ $soldierKeyId }})">
+                                @if ($soldierId === $soldierKeyId)
+                                <flux:button variant="outline" size="xs" class="btn-success" :loading="false">
                                     <div class="flex justify-between w-full">
                                         <span>{{ $soldierKeyName }}</span>
-                                        @if ($soldierId === $soldierKeyId)
-                                            <flux:icon name="check" class="text-green-500" variant="micro" />
-                                        @endif
+                                        <flux:icon name="check" class="text-green-500" variant="micro" />
                                     </div>
                                 </flux:button>
+                                @else
+                                <flux:button variant="outline" size="xs" class="justify-start" wire:click="setSoldierId({{ $soldierKeyId }})" :loading="false">
+                                    <div class="flex justify-between w-full">
+                                        <span>{{ $soldierKeyName }}</span>
+                                    </div>
+                                </flux:button>
+                                @endif
                             @endforeach
                         </div>
                     </div>
@@ -66,7 +72,7 @@
             </div>
             @else
             <flux:callout variant="warning">
-                {{ __('hll.squads.full_squad', ['name' => $squad?->roster_type_squad->label()]) }}
+                {{ __('hll.squads.full_squad', ['name' => $squad?->roster_type_squad?->label()]) }}
             </flux:callout>
             @endif
 

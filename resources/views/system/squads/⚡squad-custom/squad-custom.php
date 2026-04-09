@@ -33,12 +33,6 @@ new class extends Component
      */
     public function addSoldier(int $squadId): void
     {
-        $squad = $this->roster->customSquads()->findOrFail($squadId);
-        if ($squad->isFull()) {
-            $this->alert(__('hll.squads.squad_custom.full_squad'), 'warning', __('hll.squads.squad_custom.title'));
-
-            return;
-        }
         $this->dispatch('open-add-soldier', $squadId);
     }
 
@@ -53,15 +47,13 @@ new class extends Component
     /**
      * Removes a soldier from the squad commander and re-renders the component.
      */
-    public function remove_soldier(int $soldierId): void
+    public function removeSoldier(int $soldierId): void
     {
-        $sodier = SquadSoldier::findOrFail($soldierId);
-        $name = $sodier->display_name;
+        $soldier = SquadSoldier::findOrFail($soldierId);
+        $name = $soldier->display_name;
 
-        if ($sodier) {
-            $sodier->delete();
-            $this->reRender();
-            $this->alert(__('hll.squads.soldier_removed', ['name' => $name]), 'success', __('hll.squads.squad_custom.title'));
-        }
+        $soldier->delete();
+        $this->reRender();
+        $this->alert(__('hll.squads.soldier_removed', ['name' => $name]), 'success', __('hll.squads.squad_custom.title'));
     }
 };

@@ -21,7 +21,7 @@
             <div class="flex justify-between items-center rounded-md border border-white/10 bg-black/20 p-1">
                 <div class="text-xs">{{ $soldier->display_name }}</div>
                 @if ($buttons)
-                    <flux:button type="button" variant="outline" size="xs" wire:click="remove_soldier({{ $soldier->id }})" aria-label="{{ __('hll.squads.remove_soldier') }}" class="rounded border border-red-500/30! bg-red-500/30! text-[10px] p-1!">
+                    <flux:button type="button" variant="outline" size="xs" wire:click="removeSoldier({{ $soldier->id }})" aria-label="{{ __('hll.squads.remove_soldier') }}" class="rounded border border-red-500/30! bg-red-500/30! text-[10px] p-1!">
                         <flux:icon name="x-mark" class="w-3 h-3" />
                     </flux:button>
                 @endif

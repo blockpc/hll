@@ -73,7 +73,7 @@
                     </x-input-file-single>
 
                     <x-input-file-single name="image" title="{{ __('hll.clans.form_fields.image') }}" wire:model.live="image" stacked>
-                        <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 h-32 w-72">
+                        <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 h-36 w-72">
                             @if ($image)
                                 <img src="{{ $image->temporaryUrl() }}" alt="{{ __('hll.clans.form_fields.image') }}" class="h-full w-full object-cover">
                             @elseif ($clan->image_url)

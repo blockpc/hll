@@ -50,7 +50,7 @@
                 </div>
                 <div class="space-y-6">
                     <x-input-file-single name="logo" title="{{ __('hll.clans.form_fields.logo') }}" wire:model.live="logo" stacked>
-                        <div class="relative overflow-hidden rounded-full border border-neutral-200 dark:border-neutral-700 h-16 w-16">
+                        <div class="relative overflow-hidden rounded-full border border-neutral-200 dark:border-neutral-700 h-32 w-32">
                             @if ($logo)
                             <img src="{{ $logo->temporaryUrl() }}" alt="{{ __('hll.clans.form_fields.logo') }}" class="h-full w-full object-cover">
                             @else
@@ -60,7 +60,7 @@
                     </x-input-file-single>
 
                     <x-input-file-single name="image" title="{{ __('hll.clans.form_fields.image') }}" wire:model.live="image" stacked>
-                        <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 h-16 w-16">
+                        <div class="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 h-36 w-72">
                             @if ($image)
                                 <img src="{{ $image->temporaryUrl() }}" alt="{{ __('hll.clans.form_fields.image') }}" class="h-full w-full object-cover">
                             @else

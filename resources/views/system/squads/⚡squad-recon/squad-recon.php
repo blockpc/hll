@@ -41,11 +41,11 @@ new class extends Component
 
     public function remove_soldier(int $soldierId): void
     {
-        $sodier = SquadSoldier::findOrFail($soldierId);
-        $name = $sodier->display_name;
+        $soldier = SquadSoldier::findOrFail($soldierId);
+        $name = $soldier->display_name;
 
-        if ($sodier) {
-            $sodier->delete();
+        if ($soldier) {
+            $soldier->delete();
             $this->reRender();
             $this->alert(__('hll.squads.soldier_removed', ['name' => $name]), 'success', __('hll.squads.squad_recon.title'));
         }
