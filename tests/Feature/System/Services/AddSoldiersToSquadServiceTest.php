@@ -34,7 +34,8 @@ it('can add one soldier to squad', function () {
         ->and($result['skippedEmpty'])->toBe(0)
         ->and($result['skippedTooLong'])->toBeEmpty()
         ->and($result['duplicatesIgnored'])->toBeEmpty()
-        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($result['skippedSquadFull'])->toBeEmpty()
+        ->and($result['skippedRosterFull'])->toBeEmpty()
         ->and($this->squad->soldiers()->count())->toBe(1);
 });
 
@@ -47,7 +48,8 @@ it('can add multiple soldiers to squad', function () {
         ->and($result['skippedEmpty'])->toBe(0)
         ->and($result['skippedTooLong'])->toBeEmpty()
         ->and($result['duplicatesIgnored'])->toBeEmpty()
-        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($result['skippedSquadFull'])->toBeEmpty()
+        ->and($result['skippedRosterFull'])->toBeEmpty()
         ->and($this->squad->soldiers()->count())->toBe(3);
 });
 
@@ -60,7 +62,8 @@ it('verifies skipped empty names', function () {
         ->and($result['skippedEmpty'])->toBe(1)
         ->and($result['skippedTooLong'])->toBeEmpty()
         ->and($result['duplicatesIgnored'])->toBeEmpty()
-        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($result['skippedSquadFull'])->toBeEmpty()
+        ->and($result['skippedRosterFull'])->toBeEmpty()
         ->and($this->squad->soldiers()->count())->toBe(3);
 });
 
@@ -76,7 +79,8 @@ it('verifies skipped too long names', function () {
             'anotherextremelylongnameexceedingthelimit',
         ])
         ->and($result['duplicatesIgnored'])->toBeEmpty()
-        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($result['skippedSquadFull'])->toBeEmpty()
+        ->and($result['skippedRosterFull'])->toBeEmpty()
         ->and($this->squad->soldiers()->count())->toBe(3);
 });
 
@@ -89,7 +93,8 @@ it('verifies duplicates in the input are skipped', function () {
         ->and($result['skippedEmpty'])->toBe(0)
         ->and($result['skippedTooLong'])->toBeEmpty()
         ->and($result['skippedDuplicates'])->toBe(['alpha', 'beta'])
-        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($result['skippedSquadFull'])->toBeEmpty()
+        ->and($result['skippedRosterFull'])->toBeEmpty()
         ->and($this->squad->soldiers()->count())->toBe(3);
 });
 
@@ -102,7 +107,8 @@ it('verifies soldiers already in the squad are ignored', function () {
 
     expect($result['created'])->toBe(2)
         ->and($result['duplicatesIgnored'])->toBe(['beta'])
-        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($result['skippedSquadFull'])->toBeEmpty()
+        ->and($result['skippedRosterFull'])->toBeEmpty()
         ->and($this->squad->soldiers()->count())->toBe(3);
 });
 
@@ -115,7 +121,7 @@ it('verifies soldiers already in the squad are ignored case-insensitively', func
 
     expect($result['created'])->toBe(1)
         ->and($result['duplicatesIgnored'])->toBe(['Beta'])
-        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($result['skippedSquadFull'])->toBeEmpty()
         ->and($this->squad->soldiers()->count())->toBe(2);
 });
 
@@ -130,7 +136,8 @@ it('verifies soldiers already assigned in another squad of the same roster are i
 
     expect($result['created'])->toBe(1)
         ->and($result['duplicatesIgnored'])->toBe(['alpha', 'beta'])
-        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($result['skippedSquadFull'])->toBeEmpty()
+        ->and($result['skippedRosterFull'])->toBeEmpty()
         ->and($this->squad->soldiers()->pluck('display_name')->all())->toBe(['gamma']);
 });
 
@@ -144,7 +151,8 @@ it('verifies soldiers already assigned in another squad of the same roster are i
 
     expect($result['created'])->toBe(1)
         ->and($result['duplicatesIgnored'])->toBe(['ALPHA'])
-        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($result['skippedSquadFull'])->toBeEmpty()
+        ->and($result['skippedRosterFull'])->toBeEmpty()
         ->and($this->squad->soldiers()->pluck('display_name')->all())->toBe(['gamma']);
 });
 
@@ -159,7 +167,8 @@ it('skips soldiers when squad capacity is reached', function () {
     $result = $service->saveBulk();
 
     expect($result['created'])->toBe(0)
-        ->and($result['skippedFull'])->toBe(['alpha', 'beta', 'gamma'])
+        ->and($result['skippedSquadFull'])->toBe(['alpha', 'beta', 'gamma'])
+        ->and($result['skippedRosterFull'])->toBeEmpty()
         ->and($reconSquad->soldiers()->count())->toBe(2);
 });
 
@@ -173,7 +182,8 @@ it('partially fills squad up to its capacity and skips the rest', function () {
     $result = $service->saveBulk();
 
     expect($result['created'])->toBe(1)
-        ->and($result['skippedFull'])->toBe(['beta', 'gamma'])
+        ->and($result['skippedSquadFull'])->toBe(['beta', 'gamma'])
+        ->and($result['skippedRosterFull'])->toBeEmpty()
         ->and($reconSquad->soldiers()->count())->toBe(2);
 });
 
@@ -188,7 +198,8 @@ it('skips soldiers when roster max_soldiers is reached', function () {
     $result = $service->saveBulk();
 
     expect($result['created'])->toBe(0)
-        ->and($result['skippedFull'])->toBe(['alpha', 'beta', 'gamma'])
+        ->and($result['skippedSquadFull'])->toBeEmpty()
+        ->and($result['skippedRosterFull'])->toBe(['alpha', 'beta', 'gamma'])
         ->and($squad->soldiers()->count())->toBe(2);
 });
 
@@ -202,7 +213,25 @@ it('partially fills roster up to max_soldiers and skips the rest', function () {
     $result = $service->saveBulk();
 
     expect($result['created'])->toBe(2)
-        ->and($result['skippedFull'])->toBe(['gamma', 'delta'])
+        ->and($result['skippedSquadFull'])->toBeEmpty()
+        ->and($result['skippedRosterFull'])->toBe(['gamma', 'delta'])
+        ->and($squad->soldiers()->count())->toBe(3);
+});
+
+it('partially fills roster up to max_soldiers and skips the rest. check skippedRosterFull', function () {
+    $roster = new_roster($this->clan, ['max_soldiers' => 3]);
+    $squad = new_squad($roster, RosterTypeSquadEnum::Infantry);
+    add_soldier_to_squad($squad, onlyName: 'existing one');
+    add_soldier_to_squad($squad, onlyName: 'alpha');
+    add_soldier_to_squad($squad, onlyName: 'beta');
+
+    $service = new AddSoldiersToSquadService;
+    $service->for($squad)->names('delta');
+    $result = $service->saveBulk();
+
+    expect($result['created'])->toBe(0)
+        ->and($result['skippedSquadFull'])->toBeEmpty()
+        ->and($result['skippedRosterFull'])->toBe(['delta'])
         ->and($squad->soldiers()->count())->toBe(3);
 });
 
@@ -211,7 +240,7 @@ it('can add one soldier with saveSingle', function () {
     $result = $service->for($this->squad)->saveSingle('John Doe');
 
     expect($result['created'])->toBe(1)
-        ->and($result['skippedFull'])->toBeEmpty()
+        ->and($result['skippedSquadFull'])->toBeEmpty()
         ->and($this->squad->soldiers()->count())->toBe(1);
 });
 
@@ -224,6 +253,6 @@ it('saveSingle skips when squad is full', function () {
     $result = $service->for($reconSquad)->saveSingle('alpha');
 
     expect($result['created'])->toBe(0)
-        ->and($result['skippedFull'])->toBe(['alpha'])
+        ->and($result['skippedSquadFull'])->toBe(['alpha'])
         ->and($reconSquad->soldiers()->count())->toBe(2);
 });

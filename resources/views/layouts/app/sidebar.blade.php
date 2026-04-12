@@ -35,6 +35,25 @@
             </flux:sidebar.nav>
             @endcanany
 
+            @if ($ownedClan)
+            <flux:sidebar.nav>
+                <flux:sidebar.group :heading="__('hll.clan.your_clan')" class="grid">
+                    <flux:sidebar.item icon="home" :href="route('clan.show', ['clan' => $ownedClan->slug])" :current="request()->routeIs('clan.show')" wire:navigate>
+                        {{ __('hll.clan.home') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="users" :href="route('clan.helpers', ['clan' => $ownedClan->slug])" :current="request()->routeIs('clan.helpers')" wire:navigate>
+                        {{ __('hll.clan.manage_helpers') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="user-group" :href="route('clan.soldiers', ['clan' => $ownedClan->slug])" :current="request()->routeIs('clan.soldiers')" wire:navigate>
+                        {{ __('hll.clan.manage_soldiers') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="clipboard-document-list" :href="route('clan.rosters', ['clan' => $ownedClan->slug])" :current="request()->routeIs('clan.rosters')" wire:navigate>
+                        {{ __('hll.clan.manage_rosters') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
+            </flux:sidebar.nav>
+            @endif
+
             <flux:spacer />
 
             @canany(['users.index', 'roles.index', 'permissions.index'])

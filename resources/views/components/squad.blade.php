@@ -16,7 +16,7 @@
             @endif
         </div>
     </div>
-    <div class="flex flex-col space-y-1">
+    <div class="flex flex-col">
         @forelse ($squad->soldiers as $soldier)
             <div class="flex justify-between items-center rounded-md border border-white/10 bg-black/20 p-1">
                 <div class="text-xs">{{ $soldier->display_name }}</div>

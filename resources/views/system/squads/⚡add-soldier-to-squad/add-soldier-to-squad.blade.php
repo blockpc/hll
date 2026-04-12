@@ -35,7 +35,7 @@
                     <div class="flex flex-col space-y-1 p-1">
                         <div class="flex items-center justify-between">
                             <div class="text-sm italic">{{ __('hll.clans.rosters.soldiers') }}</div>
-                            <div class="text-sm italic">({{ $roster->assignedSoldiersCount() }}/{{ $roster->clan->soldiers()->count() }})</div>
+                            <div class="text-sm italic">({{ $roster?->assignedSoldiersFromClanCount() ?? 0 }}/{{ $roster?->clan?->soldiers()->count() ?? 0 }})</div>
                         </div>
                         <flux:error name="soldierId" class="text-sm text-red-500" />
                         <div class="border-b pb-1">
@@ -58,6 +58,9 @@
                                 <flux:button variant="outline" size="xs" class="justify-start" wire:click="setSoldierId({{ $soldierKeyId }})" :loading="false">
                                     <div class="flex justify-between w-full">
                                         <span>{{ $soldierKeyName }}</span>
+                                        @if (in_array($soldierKeyId, $soldiersFromClanIds, true))
+                                            <flux:icon name="check" class="text-green-500" variant="micro" />
+                                        @endif
                                     </div>
                                 </flux:button>
                                 @endif

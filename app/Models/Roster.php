@@ -123,6 +123,16 @@ class Roster extends Model
         return $this->squadSoldiers()->count();
     }
 
+    /**
+     * Count soldiers assigned to the roster across all squads that belong to the same clan.
+     */
+    public function assignedSoldiersFromClanCount(): int
+    {
+        return $this->squadSoldiers()->whereHas('soldier', function (Builder $query) {
+            $query->where('clan_id', $this->clan_id);
+        })->count();
+    }
+
     public function squads(): HasMany
     {
         return $this->hasMany(Squad::class);

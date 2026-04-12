@@ -69,4 +69,13 @@ Route::prefix('sistema')
             Route::livewire('/{clan}/plantilla/{roster}/mapa', 'system::rosters.roster-template-map')->name('rosters.template.map');
             Route::livewire('/{clan?}', 'system::rosters.roster-table')->name('rosters.table');
         });
+
+        Route::prefix('tu-clan/{clan}')
+            ->middleware(['clan.owner'])->group(function () {
+                Route::livewire('/', 'system::clans.clan-show')->name('clan.show');
+                Route::livewire('/editar', 'system::clans.clan-edit')->name('clan.edit');
+                Route::livewire('/gestionar-ayudantes', 'system::clans.helpers-manager')->name('clan.helpers');
+                Route::livewire('/gestionar-soldados', 'system::clans.soldiers-manager')->name('clan.soldiers');
+                Route::livewire('/rosters', 'system::rosters.roster-table')->name('clan.rosters');
+            });
     });

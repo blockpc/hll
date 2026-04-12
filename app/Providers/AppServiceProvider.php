@@ -5,6 +5,7 @@ namespace App\Providers;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -24,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureOwnClan();
     }
 
     /**
@@ -46,5 +48,17 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null
         );
+    }
+
+    /**
+     * Configure a view composer to share the user's owned clan with all views.
+     */
+    protected function configureOwnClan(): void
+    {
+        View::composer('*', function ($view): void {
+            $user = auth()->user();
+
+            $view->with('ownedClan', $user?->ownedClan);
+        });
     }
 }

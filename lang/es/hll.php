@@ -17,6 +17,14 @@ return [
         'faction' => 'Facción',
         'map_alt' => 'Mapa del roster',
     ],
+    'clan' => [
+        'home' => 'Tu Clan',
+        'create_clan' => 'Crear Clan',
+        'edit_clan' => 'Editar Clan',
+        'manage_helpers' => 'Gestionar Asistentes',
+        'manage_soldiers' => 'Gestionar Soldados',
+        'manage_rosters' => 'Gestionar Rosters',
+    ],
     'clans' => [
         'menu' => 'Clanes',
         '403' => 'No tienes permiso para gestionar los clanes.',
@@ -383,6 +391,7 @@ return [
         'soldier_not_in_clan_from_roster' => 'El soldado seleccionado no pertenece al mismo clan que la escuadra.',
         'soldier_already_assigned' => 'El soldado ":name" ya está asignado a una escuadra en este roster.',
         'squad_full' => 'La escuadra ha alcanzado su capacidad máxima.',
+        'roster_full' => 'El roster ha alcanzado su capacidad máxima.',
         'add' => [
             'requirements' => [
                 'same_clan' => 'El soldado puede o no pertenecer al mismo clan que la escuadra.',

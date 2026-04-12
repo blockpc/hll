@@ -26,6 +26,9 @@ new class extends Component
 
     public bool $squadFull = false;
 
+    /** @var int[] */
+    public array $soldiersFromClanIds = [];
+
     public function mount(): void
     {
         $this->roster->loadMissing('clan.soldiers');
@@ -46,6 +49,13 @@ new class extends Component
     {
         $this->squad = Squad::findOrFail($squadId);
         $this->squadFull = $this->squad->isFull();
+        $this->soldiersFromClanIds = $this->roster->soldiersFromClan()->keys()->toArray();
+
+        if ($checkCapacitiesError = $this->chekCapatities()) {
+            $this->dispatch('show', $checkCapacitiesError, 'warning', __('hll.squad_soldiers.add.title'))->to('alert');
+            return;
+        }
+
         $this->modal('add-soldier')->show();
     }
 
@@ -139,8 +149,14 @@ new class extends Component
                 ->names((string) $this->soldiersByName)
                 ->saveBulk();
 
-            if (! empty($result['skippedFull'])) {
+            if (! empty($result['skippedSquadFull'])) {
                 $error = __('hll.squad_soldiers.squad_full');
+
+                return;
+            }
+
+            if (! empty($result['skippedRosterFull'])) {
+                $error = __('hll.squad_soldiers.roster_full');
 
                 return;
             }
@@ -180,8 +196,8 @@ new class extends Component
             return __('hll.squad_soldiers.soldier_already_assigned', ['name' => $soldier->name]);
         }
 
-        if ($this->squad->soldiers()->count() >= $this->squad->capacity) {
-            return __('hll.squad_soldiers.squad_full');
+        if ($validationError = $this->chekCapatities()) {
+            return $validationError;
         }
 
         return null;
@@ -193,8 +209,8 @@ new class extends Component
             return __('hll.squad_soldiers.soldier_already_assigned', ['name' => $this->soldiersByName]);
         }
 
-        if ($this->squad->soldiers()->count() >= $this->squad->capacity) {
-            return __('hll.squad_soldiers.squad_full');
+        if ($validationError = $this->chekCapatities()) {
+            return $validationError;
         }
 
         return null;
@@ -235,5 +251,18 @@ new class extends Component
         $this->cancelModal();
 
         $this->dispatch('delete-squad', $squadType)->to('system::rosters.roster-template-manage');
+    }
+
+    private function chekCapatities(): ?string
+    {
+        if ($this->squad->soldiers()->count() >= $this->squad->capacity) {
+            return __('hll.squad_soldiers.squad_full');
+        }
+
+        if ($this->roster->assignedSoldiersCount() >= $this->roster->max_soldiers) {
+            return __('hll.squad_soldiers.roster_full');
+        }
+
+        return null;
     }
 };

@@ -29,7 +29,7 @@ class SquadFactory extends Factory
         return [
             'roster_id' => Roster::factory(),
             'name' => $this->faker->word(),
-            'alias' => $this->faker->word(),
+            'alias' => $this->faker->word().'-'.$this->faker->numerify('##'),
             'roster_type_squad' => $this->faker->randomElement(RosterTypeSquadEnum::cases()),
             'pos_x' => $this->faker->numberBetween(0, 100),
             'pos_y' => $this->faker->numberBetween(0, 100),

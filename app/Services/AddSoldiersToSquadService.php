@@ -41,7 +41,8 @@ final class AddSoldiersToSquadService
      *     skippedDuplicates: list<string>,
      *     duplicatesIgnored: list<string>,
      *     skippedEmpty: int,
-     *     skippedFull: list<string>
+     *     skippedSquadFull: list<string>
+     *     skippedRosterFull: list<string>
      * }
      */
     public function saveSingle(string $name): array
@@ -52,63 +53,54 @@ final class AddSoldiersToSquadService
 
         $name = $this->normalizeName($name);
 
+        $result = [
+            'created' => 0,
+            'skippedTooLong' => [],
+            'skippedDuplicates' => [],
+            'duplicatesIgnored' => [],
+            'skippedEmpty' => 0,
+            'skippedSquadFull' => [],
+            'skippedRosterFull' => [],
+        ];
+
         if ($name === '') {
-            return [
-                'created' => 0,
-                'skippedTooLong' => [],
-                'skippedDuplicates' => [],
-                'duplicatesIgnored' => [],
-                'skippedEmpty' => 1,
-                'skippedFull' => [],
-            ];
+            $result['skippedEmpty'] = 1;
+
+            return $result;
         }
 
         if (mb_strlen($name) > 32) {
-            return [
-                'created' => 0,
-                'skippedTooLong' => [$name],
-                'skippedDuplicates' => [],
-                'duplicatesIgnored' => [],
-                'skippedEmpty' => 0,
-                'skippedFull' => [],
-            ];
+            $result['skippedTooLong'][] = $name;
+
+            return $result;
         }
 
         $squadAvailable = $this->squad->capacity - $this->squad->soldiers()->count();
         $rosterAvailable = $this->roster->max_soldiers - $this->roster->assignedSoldiersCount();
 
-        if ($squadAvailable <= 0 || $rosterAvailable <= 0) {
-            return [
-                'created' => 0,
-                'skippedTooLong' => [],
-                'skippedDuplicates' => [],
-                'duplicatesIgnored' => [],
-                'skippedEmpty' => 0,
-                'skippedFull' => [$name],
-            ];
+        if ($rosterAvailable <= 0) {
+            $result['skippedRosterFull'][] = $name;
+
+            return $result;
+        }
+
+        if ($squadAvailable <= 0) {
+            $result['skippedSquadFull'][] = $name;
+
+            return $result;
         }
 
         $soldier = $this->addSoldierToSquad($name);
 
         if ($soldier->wasRecentlyCreated) {
-            return [
-                'created' => 1,
-                'skippedTooLong' => [],
-                'skippedDuplicates' => [],
-                'duplicatesIgnored' => [],
-                'skippedEmpty' => 0,
-                'skippedFull' => [],
-            ];
+            $result['created'] = 1;
+
+            return $result;
         }
 
-        return [
-            'created' => 0,
-            'skippedTooLong' => [],
-            'skippedDuplicates' => [],
-            'duplicatesIgnored' => [$name],
-            'skippedEmpty' => 0,
-            'skippedFull' => [],
-        ];
+        $result['duplicatesIgnored'][] = $name;
+
+        return $result;
     }
 
     /**
@@ -118,7 +110,8 @@ final class AddSoldiersToSquadService
      *     skippedDuplicates: list<string>,
      *     duplicatesIgnored: list<string>,
      *     skippedEmpty: int,
-     *     skippedFull: list<string>
+     *     skippedSquadFull: list<string>
+     *     skippedRosterFull: list<string>
      * }
      */
     public function saveBulk(): array
@@ -160,14 +153,21 @@ final class AddSoldiersToSquadService
 
         $created = 0;
         $duplicatesIgnored = [];
-        $skippedFull = [];
+        $skippedSquadFull = [];
+        $skippedRosterFull = [];
 
         $squadAvailable = $this->squad->capacity - $this->squad->soldiers()->count();
         $rosterAvailable = $this->roster->max_soldiers - $this->roster->assignedSoldiersCount();
 
         foreach ($validNames as $name) {
-            if ($squadAvailable <= 0 || $rosterAvailable <= 0) {
-                $skippedFull[] = $name;
+            if ($rosterAvailable <= 0) {
+                $skippedRosterFull[] = $name;
+
+                continue;
+            }
+
+            if ($squadAvailable <= 0) {
+                $skippedSquadFull[] = $name;
 
                 continue;
             }
@@ -189,7 +189,8 @@ final class AddSoldiersToSquadService
             'skippedDuplicates' => $skippedDuplicates,
             'duplicatesIgnored' => $duplicatesIgnored,
             'skippedEmpty' => $skippedEmpty,
-            'skippedFull' => $skippedFull,
+            'skippedSquadFull' => $skippedSquadFull,
+            'skippedRosterFull' => $skippedRosterFull,
         ];
     }
 
