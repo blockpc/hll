@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Roster;
+use App\Models\Soldier;
 use App\Models\Squad;
 use App\Models\SquadSoldier;
 use Illuminate\Support\Str;
@@ -251,9 +252,7 @@ final class AddSoldiersToSquadService
             $this->nextSlotNumber = ($this->squad->soldiers()->max('slot_number') ?? 0) + 1;
         }
 
-        $existing = $this->roster->squadSoldiers()
-            ->whereRaw('LOWER(display_name) = ?', [mb_strtolower($name)])
-            ->first();
+        $existing = $this->checkExistsOnRoster($name);
 
         if ($existing !== null) {
             return $existing;
@@ -262,10 +261,19 @@ final class AddSoldiersToSquadService
         $nextSlot = $this->nextSlotNumber;
         $this->nextSlotNumber++;
 
-        $soldier = $this->squad->soldiers()->create([
+        $clanSoldier = $this->checkExistsOnClan($name);
+
+        $data = [
             'display_name' => $name,
             'slot_number' => $nextSlot,
-        ]);
+        ];
+
+        if ($clanSoldier !== null) {
+            $data['display_name'] = $clanSoldier->name;
+            $data['soldier_id'] = $clanSoldier->id;
+        }
+
+        $soldier = $this->squad->soldiers()->create($data);
 
         return $soldier;
     }
@@ -273,5 +281,25 @@ final class AddSoldiersToSquadService
     private function normalizeName(string $name): string
     {
         return Str::transliterate(trim($name));
+    }
+
+    /**
+     * Check if the soldier already exist on the squad roster, this will prevent to create duplicate soldiers on the squad roster and also to create duplicate soldiers on the clan roster if the soldier belong to the clan roster
+     */
+    private function checkExistsOnRoster(string $name): ?SquadSoldier
+    {
+        return $this->roster->squadSoldiers()
+            ->whereRaw('LOWER(display_name) = ?', [mb_strtolower($name)])
+            ->first();
+    }
+
+    /**
+     * Check if the soldier already exist on the clan roster, if so, return the existing soldier, this will allow to create the soldier roster with the soldier clan id, this will allow the soldier to be listed in the clan roster and not only in the squad roster
+     */
+    private function checkExistsOnClan(string $name): ?Soldier
+    {
+        return $this->roster->clan->soldiers()
+            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->first();
     }
 }

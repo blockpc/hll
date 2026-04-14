@@ -92,7 +92,7 @@
                     <div class="flex flex-col space-y-1 p-1" id="custom-section">
                         <div class="flex justify-between items-center">
                             <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.custom') }}</div>
-                            <flux:button variant="outline" size="xs" icon="plus" />
+                            <livewire:system::squads.squad-create-typed :roster="$roster" :type="RosterTypeSquadEnum::Custom" />
                         </div>
                         <livewire:system::squads.squad-custom :roster="$roster" :key="'custom-'.$roster->uuid" :displayControls="true" />
                     </div>
@@ -107,7 +107,7 @@
                     </div>
                     <div class="flex flex-col space-y-1 p-1">
                         <div class="flex items-center justify-between">
-                            <div class="text-sm italic">{{ __('hll.clans.rosters.soldiers') }}</div>
+                            <div class="text-sm italic">{{ __('hll.clans.rosters.soldiers_clan') }}</div>
                             <div class="text-sm italic">({{ count($selectedSoldiers) }}/{{ $clan->soldiers->count() }})</div>
                         </div>
                         <div class="border-b pb-1">
@@ -117,7 +117,7 @@
                                 </x-slot>
                             </flux:input>
                         </div>
-                        <div class="flex flex-col space-y-1 max-h-64 overflow-y-auto overscroll-y-auto">
+                        <div class="flex flex-col space-y-1 max-h-64 scrollbar-always overflow-y-auto p-1">
                             @foreach ($this->soldiers as $soldierId => $soldierName)
                                 @if (in_array($soldierId, $selectedSoldiers))
                                     <flux:button variant="outline" size="xs" class="btn-success">

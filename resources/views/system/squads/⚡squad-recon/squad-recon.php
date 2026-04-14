@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RosterTypeSquadEnum;
 use App\Models\Roster;
 use App\Models\SquadSoldier;
 use Blockpc\Traits\AlertBrowserEvent;
@@ -39,7 +40,10 @@ new class extends Component
         $this->countSquads = $this->roster->reconSquads()->count();
     }
 
-    public function remove_soldier(int $soldierId): void
+    /**
+     * Removes a soldier from the squad recon and re-renders the component.
+     */
+    public function removeSoldier(int $soldierId): void
     {
         $soldier = SquadSoldier::findOrFail($soldierId);
         $name = $soldier->display_name;
@@ -47,6 +51,7 @@ new class extends Component
         if ($soldier) {
             $soldier->delete();
             $this->reRender();
+            $this->dispatch('soldier-removed', RosterTypeSquadEnum::Recon);
             $this->alert(__('hll.squads.soldier_removed', ['name' => $name]), 'success', __('hll.squads.squad_recon.title'));
         }
     }

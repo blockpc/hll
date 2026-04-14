@@ -19,6 +19,11 @@ new class extends Component
 
     public ?Squad $squadCommander = null;
 
+    /**
+     * Controls whether squad management controls (add/remove soldiers) are displayed.
+     */
+    public bool $displayControls = true;
+
     public function mount(Roster $roster): void
     {
         $this->roster = $roster;

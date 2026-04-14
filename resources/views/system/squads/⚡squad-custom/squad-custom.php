@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RosterTypeSquadEnum;
 use App\Models\Roster;
 use App\Models\SquadSoldier;
 use Blockpc\Traits\AlertBrowserEvent;
@@ -13,7 +14,7 @@ new class extends Component
 
     public Roster $roster;
 
-    public bool $buttons = false;
+    public bool $displayControls = false;
 
     /** @var Collection<int, \App\Models\Squad>|null */
     public ?Collection $customSquads = null;
@@ -31,7 +32,7 @@ new class extends Component
      * Opens the add soldier modal for the specified squad.
      * Shows a warning alert and returns early if the squad is full.
      */
-    public function addSoldier(int $squadId): void
+    public function openAddSoldierModal(int $squadId): void
     {
         $this->dispatch('open-add-soldier', $squadId);
     }
@@ -45,7 +46,7 @@ new class extends Component
     }
 
     /**
-     * Removes a soldier from the squad commander and re-renders the component.
+     * Removes a soldier from the squad custom and re-renders the component.
      */
     public function removeSoldier(int $soldierId): void
     {
@@ -54,6 +55,7 @@ new class extends Component
 
         $soldier->delete();
         $this->reRender();
+        $this->dispatch('soldier-removed', RosterTypeSquadEnum::Custom);
         $this->alert(__('hll.squads.soldier_removed', ['name' => $name]), 'success', __('hll.squads.squad_custom.title'));
     }
 };

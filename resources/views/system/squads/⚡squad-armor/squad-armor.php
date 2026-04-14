@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RosterTypeSquadEnum;
 use App\Models\Roster;
 use App\Models\SquadSoldier;
 use Blockpc\Traits\AlertBrowserEvent;
@@ -44,15 +45,16 @@ new class extends Component
     }
 
     /**
-     * Removes a soldier from the squad commander and re-renders the component.
+     * Removes a soldier from the squad armor and re-renders the component.
      */
-    public function remove_soldier(int $soldierId): void
+    public function removeSoldier(int $soldierId): void
     {
         $soldier = SquadSoldier::findOrFail($soldierId);
         $name = $soldier->display_name;
 
         $soldier->delete();
         $this->reRender();
+        $this->dispatch('soldier-removed', RosterTypeSquadEnum::Armor);
         $this->alert(__('hll.squads.soldier_removed', ['name' => $name]), 'success', __('hll.squads.squad_armor.title'));
     }
 };

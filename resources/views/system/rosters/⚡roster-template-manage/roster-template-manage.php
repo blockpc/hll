@@ -75,6 +75,7 @@ new class extends Component
      *
      * Listens to: `add-soldiers`, `add-squad`, and `delete-squad` events, which are emitted after adding soldiers, adding a squad, or deleting a squad respectively. The method checks the type of squad that was modified and dispatches a `re-render` event to the corresponding squad component to refresh its data.
      */
+    #[On('soldier-removed')]
     #[On('delete-squad')]
     #[On('add-soldiers')]
     #[On('add-squad')]

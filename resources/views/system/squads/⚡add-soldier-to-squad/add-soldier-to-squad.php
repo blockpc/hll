@@ -53,6 +53,7 @@ new class extends Component
 
         if ($checkCapacitiesError = $this->chekCapatities()) {
             $this->dispatch('show', $checkCapacitiesError, 'warning', __('hll.squad_soldiers.add.title'))->to('alert');
+
             return;
         }
 
