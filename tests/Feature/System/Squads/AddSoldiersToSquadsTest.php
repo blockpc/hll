@@ -30,17 +30,20 @@ it('verifies the roster is_multiclan property is false', function () {
 });
 
 it('byId: allows adding a clan soldier to a squad', function () {
+    $soldierToAdd = new_soldier($this->clan);
+
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
-        ->set('soldierId', $this->soldier->id)
+        ->set('singleSelection', true)
+        ->call('setSoldierId', $soldierToAdd->id)
         ->call('addSoldier');
 
     $this->assertDatabaseHas('squad_soldiers', [
         'squad_id' => $this->squad->id,
-        'soldier_id' => $this->soldier->id,
-        'slot_number' => 1,
-        'display_name' => $this->soldier->name,
+        'soldier_id' => $soldierToAdd->id,
+        'slot_number' => 2,
+        'display_name' => $soldierToAdd->name,
     ]);
 });
 
@@ -51,19 +54,17 @@ it('byId: does not allow adding a soldier from another clan', function () {
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
-        ->set('soldierId', $otherSoldier->id)
-        ->call('addSoldier')
+        ->set('singleSelection', true)
+        ->call('setSoldierId', $otherSoldier->id)
         ->assertHasErrors(['soldierId' => __('hll.squad_soldiers.soldier_not_in_clan_from_roster')]);
 });
 
 it('byId: does not allow adding a soldier already assigned to the roster', function () {
-    add_soldier_to_squad($this->squad, $this->soldier);
-
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
-        ->set('soldierId', $this->soldier->id)
-        ->call('addSoldier')
+        ->set('singleSelection', true)
+        ->call('setSoldierId', $this->soldier->id)
         ->assertHasErrors(['soldierId' => __('hll.squad_soldiers.soldier_already_assigned', ['name' => $this->soldier->name])]);
 });
 
@@ -79,7 +80,8 @@ it('byId: does not allow adding more soldiers than the squad type capacity', fun
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
-        ->set('soldierId', $extraSoldier->id)
+        ->set('singleSelection', true)
+        ->call('setSoldierId', $extraSoldier->id)
         ->call('addSoldier')
         ->assertHasErrors(['soldierId' => __('hll.squad_soldiers.squad_full')]);
 });
@@ -90,6 +92,7 @@ it('byName: allows adding a manual soldier to a squad', function () {
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
+        ->set('singleSelection', false)
         ->set('soldiersByName', $manualName)
         ->call('addSoldier');
 
@@ -107,6 +110,7 @@ it('byName: allows adding many manual soldiers separated by comma', function () 
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
+        ->set('singleSelection', false)
         ->set('soldiersByName', implode(', ', $soldierNames))
         ->call('addSoldier');
 
@@ -130,6 +134,7 @@ it('byName: ignores empty entries and trims names when adding many soldiers sepa
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
+        ->set('singleSelection', false)
         ->set('soldiersByName', $rawInput)
         ->call('addSoldier');
 
@@ -161,6 +166,7 @@ it('byName: does not allow assigning the same soldier twice in the same roster',
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
+        ->set('singleSelection', false)
         ->set('soldiersByName', $this->soldier->name)
         ->call('addSoldier')
         ->assertHasErrors(['soldiersByName' => __('hll.squad_soldiers.soldier_already_assigned', ['name' => $this->soldier->name])]);
@@ -174,6 +180,7 @@ it('byName: does not add bulk names that are already assigned in another squad o
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
+        ->set('singleSelection', false)
         ->set('soldiersByName', 'uno,dos')
         ->call('addSoldier')
         ->assertHasErrors(['soldiersByName' => __('hll.squad_soldiers.soldier_already_assigned', ['name' => 'uno'])]);
@@ -190,6 +197,7 @@ it('byName: adds only new names when bulk input contains assigned names from the
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
+        ->set('singleSelection', false)
         ->set('soldiersByName', 'uno,tres')
         ->call('addSoldier')
         ->assertHasNoErrors();
@@ -207,6 +215,7 @@ it('byName: adds only new names when bulk input contains case-insensitive assign
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
+        ->set('singleSelection', false)
         ->set('soldiersByName', 'UNO,tres')
         ->call('addSoldier')
         ->assertHasNoErrors();
@@ -228,6 +237,7 @@ it('byName: does not allow adding more soldiers than the squad type capacity', f
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
+        ->set('singleSelection', false)
         ->set('soldiersByName', $manualName)
         ->call('addSoldier')
         ->assertHasErrors(['soldiersByName' => __('hll.squad_soldiers.squad_full')]);
@@ -241,6 +251,7 @@ it('assigns the next available slot number when adding a squad soldier', functio
     Livewire::actingAs($this->owner)
         ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
         ->call('openModal', $this->squad->id)
+        ->set('singleSelection', false)
         ->set('soldiersByName', $manualName)
         ->call('addSoldier');
 
@@ -272,4 +283,81 @@ it('reorders slot numbers after deleting a squad soldier', function () {
         ->toBe([$this->soldier->name, 'tres', 'cuatro']);
     expect($this->squad->soldiers()->orderBy('slot_number')->pluck('slot_number')->all())
         ->toBe([1, 2, 3]);
+});
+
+it('byIds: allows adding multiple clan soldiers to a squad', function () {
+    $soldier2 = new_soldier($this->clan);
+    $soldier3 = new_soldier($this->clan);
+
+    Livewire::actingAs($this->owner)
+        ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
+        ->call('openModal', $this->squad->id)
+        ->set('singleSelection', true)
+        ->call('setSoldierId', $soldier2->id)
+        ->call('setSoldierId', $soldier3->id)
+        ->call('addSoldier');
+
+    $this->assertDatabaseHas('squad_soldiers', [
+        'squad_id' => $this->squad->id,
+        'soldier_id' => $soldier2->id,
+        'slot_number' => 2,
+        'display_name' => $soldier2->name,
+    ]);
+
+    $this->assertDatabaseHas('squad_soldiers', [
+        'squad_id' => $this->squad->id,
+        'soldier_id' => $soldier3->id,
+        'slot_number' => 3,
+        'display_name' => $soldier3->name,
+    ]);
+
+    $this->squad->refresh();
+
+    expect($this->squad->soldiers()->count())->toBe(3);
+});
+
+it('byIds: adds only valid soldiers when one is from another clan', function () {
+    $otherClan = new_clan();
+    $soldier2 = new_soldier($this->clan);
+    $soldierFromOtherClan = new_soldier($otherClan);
+
+    Livewire::actingAs($this->owner)
+        ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
+        ->call('openModal', $this->squad->id)
+        ->set('singleSelection', true)
+        ->call('setSoldierId', $soldier2->id)
+        ->call('setSoldierId', $soldierFromOtherClan->id)
+        ->call('addSoldier')
+        ->assertHasNoErrors();
+
+    $this->squad->refresh();
+
+    expect($this->squad->soldiers()->count())->toBe(2)
+        ->and($this->squad->soldiers()->where('soldier_id', $soldier2->id)->count())->toBe(1)
+        ->and($this->squad->soldiers()->where('soldier_id', $soldierFromOtherClan->id)->count())->toBe(0);
+});
+
+it('byIds: does not allow adding soldiers when one exceeds squad capacity', function () {
+    $capacity = $this->squad->capacity;
+    $soldiers = [];
+
+    for ($i = 0; $i < ($capacity + 1); $i++) {
+        $soldiers[] = new_soldier($this->clan);
+    }
+
+    $component = Livewire::actingAs($this->owner)
+        ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
+        ->call('openModal', $this->squad->id)
+        ->set('singleSelection', true);
+
+    foreach ($soldiers as $soldier) {
+        $component->call('setSoldierId', $soldier->id);
+    }
+
+    $component->call('addSoldier')
+        ->assertHasErrors(['soldierId' => __('hll.squad_soldiers.squad_full')]);
+
+    $this->squad->refresh();
+
+    expect($this->squad->soldiers()->count())->toBe(1);
 });

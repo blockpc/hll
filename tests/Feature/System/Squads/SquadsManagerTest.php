@@ -5,6 +5,8 @@ use Database\Seeders\MapSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Livewire\Livewire;
 
+use function Pest\Laravel\assertDatabaseHas;
+
 uses()->group('hll', 'squads');
 
 beforeEach(function () {
@@ -31,7 +33,7 @@ it('allows authorized users to create a squad in a roster from their clan', func
         ->call('save')
         ->assertHasNoErrors();
 
-    $this->assertDatabaseHas('squads', [
+    assertDatabaseHas('squads', [
         'roster_id' => $this->roster->id,
         'name' => 'Squad 1',
         'alias' => 'S1',
@@ -64,7 +66,7 @@ it('uses default values for pos_x, pos_y, and z_index when not provided', functi
         ->call('save')
         ->assertHasNoErrors();
 
-    $this->assertDatabaseHas('squads', [
+    assertDatabaseHas('squads', [
         'roster_id' => $this->roster->id,
         'name' => 'Squad 1',
         'alias' => 'S1',
@@ -99,4 +101,36 @@ it('does not allow duplicate alias within the same roster', function () {
         ->set('roster_type_squad', RosterTypeSquadEnum::Infantry->value)
         ->call('save')
         ->assertHasErrors(['alias']);
+});
+
+it('allows duplicate alias for different rosters', function () {
+    new_squad($this->roster, attributes: [
+        'name' => 'Squad 1',
+        'alias' => 'S1',
+        'roster_type_squad' => RosterTypeSquadEnum::Infantry->value,
+    ]);
+
+    $anotherRoster = new_roster($this->clan);
+
+    Livewire::actingAs($this->helper)
+        ->test('system::squads.squad-create', ['roster' => $anotherRoster])
+        ->set('name', 'Squad 2')
+        ->set('alias', 'S1')
+        ->set('roster_type_squad', RosterTypeSquadEnum::Infantry->value)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    assertDatabaseHas('squads', [
+        'roster_id' => $anotherRoster->id,
+        'name' => 'Squad 2',
+        'alias' => 'S1',
+        'roster_type_squad' => RosterTypeSquadEnum::Infantry->value,
+    ]);
+
+    assertDatabaseHas('squads', [
+        'roster_id' => $this->roster->id,
+        'name' => 'Squad 1',
+        'alias' => 'S1',
+        'roster_type_squad' => RosterTypeSquadEnum::Infantry->value,
+    ]);
 });

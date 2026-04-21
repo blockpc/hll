@@ -16,11 +16,16 @@ new class extends Component
 
     public Squad $squad;
 
+    /**
+     * True for selection by ID, false for manual entry by name.
+     */
     public bool $singleSelection = false;
 
     public ?string $searchSoldier = null;
 
-    public ?int $soldierId = null;
+    // public ?int $soldierId = null;
+
+    public array $selectedSoldiers = [];
 
     public ?string $soldiersByName = null;
 
@@ -28,6 +33,9 @@ new class extends Component
 
     /** @var int[] */
     public array $soldiersFromClanIds = [];
+
+    /** @var int[] */
+    public array $soldiersAddedRoster = [];
 
     public function mount(): void
     {
@@ -49,7 +57,8 @@ new class extends Component
     {
         $this->squad = Squad::findOrFail($squadId);
         $this->squadFull = $this->squad->isFull();
-        $this->soldiersFromClanIds = $this->roster->soldiersFromClan()->keys()->toArray();
+        $this->soldiersFromClanIds = $this->roster->clan->soldiers->pluck('id')->toArray();
+        $this->soldiersAddedRoster = $this->roster->soldiersFromClan()->keys()->toArray();
 
         if ($checkCapacitiesError = $this->chekCapatities()) {
             $this->dispatch('show', $checkCapacitiesError, 'warning', __('hll.squad_soldiers.add.title'))->to('alert');
@@ -62,14 +71,35 @@ new class extends Component
 
     public function setSoldierId(int $soldierId): void
     {
-        $this->soldierId = $soldierId;
+        if ( ! in_array($soldierId, $this->soldiersFromClanIds, true) ) {
+            $this->addError('soldierId', __('hll.squad_soldiers.soldier_not_in_clan_from_roster'));
+
+            return;
+        }
+
+        $soldier = Soldier::find($soldierId);
+
+        if ($this->squad->soldiers()->where('soldier_id', $soldierId)->exists()) {
+            $this->addError('soldierId', __('hll.squad_soldiers.soldier_already_assigned', ['name' => $soldier ? $soldier->name : 'ID ' . $soldierId]));
+
+            return;
+        }
+
+        if (!in_array($soldierId, $this->selectedSoldiers, true)) {
+            $this->selectedSoldiers[] = $soldierId;
+        } else {
+            $this->selectedSoldiers = array_values(
+                array_filter($this->selectedSoldiers, fn($id) => $id !== $soldierId)
+            );
+        }
+
         $this->soldiersByName = null;
     }
 
-    public function updatedManySoldiers(bool $value): void
+    public function updatedSingleSelection(bool $value): void
     {
         if (! $value) {
-            $this->soldierId = null;
+            $this->selectedSoldiers = [];
         } else {
             $this->soldiersByName = null;
         }
@@ -78,15 +108,17 @@ new class extends Component
     public function addSoldier(): void
     {
         $this->validate([
-            'soldierId' => 'nullable|exists:soldiers,id',
-            'soldiersByName' => 'required_without:soldierId|nullable|string',
+            'singleSelection' => 'required|boolean',
+            'selectedSoldiers' => 'exclude_unless:singleSelection,true|array|min:1',
+            'selectedSoldiers.*' => 'exists:soldiers,id',
+            'soldiersByName' => 'exclude_unless:singleSelection,false|required|string',
         ], [], [
-            'soldierId' => __('hll.squad_soldiers.add.form.soldier_by_id'),
+            'selectedSoldiers' => __('hll.squad_soldiers.add.form.soldier_by_ids'),
             'soldiersByName' => __('hll.squad_soldiers.add.form.soldier_by_name'),
         ]);
 
-        $added = $this->soldierId
-            ? $this->addSoldierById()
+        $added = $this->singleSelection
+            ? $this->addSoldierByIds()
             : $this->addSoldiersManually();
 
         if (! $added) {
@@ -97,9 +129,49 @@ new class extends Component
         $this->cancelModal();
     }
 
-    public function addSoldierById(): bool
+    public function addSoldierByIds(): bool
     {
-        $soldier = Soldier::findOrFail($this->soldierId);
+        $initialSquadCount = $this->squad->soldiers()->count();
+        $soldiersCount = $initialSquadCount;
+
+        // Primero validar todos los soldados antes de agregar ninguno
+        foreach ($this->selectedSoldiers as $soldierId) {
+            $soldier = Soldier::findOrFail($soldierId);
+
+            if ($validationError = $this->extraValidationsSoldierId($soldier)) {
+                $this->addError('soldierId', $validationError);
+
+                return false;
+            }
+
+            // Verificar capacidad considerando los soldados que se van a agregar
+            $soldiersCount++;
+            if ($soldiersCount > $this->squad->capacity) {
+                $this->addError('soldierId', __('hll.squad_soldiers.squad_full'));
+
+                return false;
+            }
+
+            if ($this->roster->assignedSoldiersCount() + ($soldiersCount - $initialSquadCount) > $this->roster->max_soldiers) {
+                $this->addError('soldierId', __('hll.squad_soldiers.roster_full'));
+
+                return false;
+            }
+        }
+
+        // Si todas las validaciones pasaron, agregar todos los soldados
+        foreach ($this->selectedSoldiers as $soldierId) {
+            if (! $this->addSoldierById($soldierId)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function addSoldierById(int $soldierId): bool
+    {
+        $soldier = Soldier::findOrFail($soldierId);
 
         $error = null;
 

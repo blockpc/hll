@@ -5,9 +5,13 @@ use App\Models\Roster;
 use App\Services\CreateRosterSquadService;
 use App\Traits\CheckAuthorizationSquadsTrait;
 use Blockpc\Traits\AlertBrowserEvent;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
+/**
+ * system::squads.squad-create-typed
+ */
 new class extends Component
 {
     use AlertBrowserEvent;
@@ -52,7 +56,7 @@ new class extends Component
         /** @var array{name: string, alias: string} $data */
         $data = $this->validate([
             'name' => 'required|string|max:255',
-            'alias' => 'required|string|max:255|unique:squads,alias',
+            'alias' => ['required', 'string', 'max:50', Rule::unique('squads', 'alias')->where('roster_id', $this->roster->id)],
         ]);
 
         if (! $this->checkCapacity()) {

@@ -34,7 +34,7 @@
                     <p class="text-sm text-gray-500">{{ __('hll.squad_soldiers.add.requirements.by_id') }}</p>
                     <div class="flex flex-col space-y-1 p-1">
                         <div class="flex items-center justify-between">
-                            <div class="text-sm italic">{{ __('hll.clans.rosters.soldiers') }}</div>
+                            <div class="text-sm italic">{{ __('hll.clans.soldiers.list') }}</div>
                             <div class="text-sm italic">({{ $roster?->assignedSoldiersFromClanCount() ?? 0 }}/{{ $roster?->clan?->soldiers()->count() ?? 0 }})</div>
                         </div>
                         <flux:error name="soldierId" class="text-sm text-red-500" />
@@ -45,22 +45,26 @@
                                 </x-slot>
                             </flux:input>
                         </div>
-                        <div class="flex flex-col space-y-1 max-h-64 overflow-y-auto overscroll-y-auto">
+                        <div class="grid gap-1 max-h-64 scrollbar-always overflow-y-auto p-1">
                             @foreach ($this->soldiers as $soldierKeyId => $soldierKeyName)
-                                @if ($soldierId === $soldierKeyId)
-                                <flux:button variant="outline" size="xs" class="btn-success" :loading="false">
+                                @if (in_array($soldierKeyId, $selectedSoldiers, true))
+                                <flux:button variant="outline" size="xs" class="btn-success" wire:click="setSoldierId({{ $soldierKeyId }})" :loading="false">
                                     <div class="flex justify-between w-full">
                                         <span>{{ $soldierKeyName }}</span>
                                         <flux:icon name="check" class="text-green-500" variant="micro" />
                                     </div>
                                 </flux:button>
+                                @elseif (in_array($soldierKeyId, $soldiersAddedRoster, true))
+                                <flux:badge variant="primary" size="xs" class="justify-start btn-secondary">
+                                    <div class="flex justify-between w-full">
+                                        <span class="text-xs">{{ $soldierKeyName }}</span>
+                                        <flux:icon name="check" class="text-green-500" variant="micro" />
+                                    </div>
+                                </flux:badge>
                                 @else
                                 <flux:button variant="outline" size="xs" class="justify-start" wire:click="setSoldierId({{ $soldierKeyId }})" :loading="false">
                                     <div class="flex justify-between w-full">
                                         <span>{{ $soldierKeyName }}</span>
-                                        @if (in_array($soldierKeyId, $soldiersFromClanIds, true))
-                                            <flux:icon name="check" class="text-green-500" variant="micro" />
-                                        @endif
                                     </div>
                                 </flux:button>
                                 @endif

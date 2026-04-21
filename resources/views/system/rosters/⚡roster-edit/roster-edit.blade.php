@@ -1,31 +1,5 @@
 <div class="relative mb-6 w-full">
-    <div class="flex items-start justify-between space-x-6">
-        <div class="flex space-x-6">
-            <div>
-                @if ($clan->logo)
-                    <img src="{{ $clan->logo_url }}" alt="{{ $clan->name }}" class="h-16 w-16 rounded-full object-cover">
-                @else
-                    <x-placeholder-pattern class="h-16 w-16 rounded-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-                @endif
-            </div>
-            <div>
-                <flux:heading size="xl" level="1">{{ __('hll.clans.rosters.edit.title') }}</flux:heading>
-                <flux:heading size="lg" level="2">{{ $clan->alias }} | {{ $clan->name }}</flux:heading>
-                <flux:subheading size="base" class="mb-6">{{ $clan->description ?? __('hll.clans.show.no_description') }}</flux:subheading>
-            </div>
-        </div>
-        <div class="flex items-center space-x-2">
-            @can('update', $clan)
-                <flux:button variant="ghost" href="{{ route('clans.show', $clan->slug) }}">
-                    {{ __('hll.clans.rosters.back_to_clan') }}
-                </flux:button>
-
-                <flux:button variant="ghost" href="{{ route('rosters.table', $clan->slug) }}">
-                    {{ __('hll.clans.rosters.back_to_rosters') }}
-                </flux:button>
-            @endcan
-        </div>
-    </div>
+    @include('partials.rosters-header')
 
     <flux:separator variant="subtle" />
 

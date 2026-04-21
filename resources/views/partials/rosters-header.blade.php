@@ -1,12 +1,29 @@
-<div class="flex items-start justify-between space-x-6">
+<div class="flex items-start justify-between mb-4">
     <x-header-clan :clan="$clan" :title="__('hll.clans.rosters.template.roster_title', ['name' => $roster->name])" :subtitle="__('hll.clans.rosters.template.subtitle')" />
-    <div class="flex items-center space-x-2">
-        <flux:button variant="ghost" size="sm" href="{{ route('clans.show', $clan->slug) }}">
-            {{ __('hll.clans.rosters.back_to_clan') }}
-        </flux:button>
+    <div class="flex flex-col justify-between h-24">
+        <div class="flex justify-end items-center space-x-2">
+            <flux:button variant="ghost" size="sm" href="{{ route('clans.show', $clan->slug) }}" wire:navigate>
+                {{ __('hll.clans.rosters.back_to_clan') }}
+            </flux:button>
 
-        <flux:button variant="ghost" size="sm" href="{{ route('rosters.table', $clan->slug) }}">
-            {{ __('hll.clans.rosters.back_to_rosters') }}
-        </flux:button>
+            <flux:button variant="ghost" size="sm" href="{{ route('rosters.table', $clan->slug) }}" wire:navigate>
+                {{ __('hll.clans.rosters.back_to_rosters') }}
+            </flux:button>
+        </div>
+        <div class="flex justify-end items-center space-x-2 mt-auto">
+            @can('update', $roster)
+                <x-nav-button-navigate :route="'rosters.edit'" :route-params="[$clan->slug, $roster->uuid]">
+                    {{ __('hll.clans.rosters.edit_button') }}
+                </x-nav-button-navigate>
+
+                <x-nav-button-navigate :route="'rosters.template.manage'" :route-params="[$clan->slug, $roster->uuid]">
+                    {{ __('hll.clans.rosters.roster_manage') }}
+                </x-nav-button-navigate>
+
+                <x-nav-button-navigate :route="'rosters.template.map'" :route-params="[$clan->slug, $roster->uuid]">
+                    {{ __('hll.clans.rosters.roster_map') }}
+                </x-nav-button-navigate>
+            @endcan
+        </div>
     </div>
 </div>

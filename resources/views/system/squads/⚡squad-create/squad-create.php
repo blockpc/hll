@@ -4,11 +4,15 @@ use App\Enums\RosterTypeSquadEnum;
 use App\Models\Roster;
 use App\Traits\CheckAuthorizationSquadsTrait;
 use Blockpc\Traits\AlertBrowserEvent;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
+/**
+ * system::squads.squad-create
+ */
 new class extends Component
 {
     use AlertBrowserEvent;
@@ -55,7 +59,7 @@ new class extends Component
 
         $data = $this->validate([
             'name' => 'required|string|max:255',
-            'alias' => 'required|string|max:255|unique:squads,alias',
+            'alias' => ['required', 'string', 'max:50', Rule::unique('squads', 'alias')->where('roster_id', $this->roster->id)],
             'roster_type_squad' => ['required', new Enum(RosterTypeSquadEnum::class)],
             'pos_x' => 'required|integer',
             'pos_y' => 'required|integer',

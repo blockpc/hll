@@ -13,25 +13,7 @@
         </div>
     @endplaceholder
 
-    <div class="flex items-start justify-between space-x-6">
-        <x-header-clan :clan="$clan" :title="__('hll.clans.rosters.template.roster_title', ['name' => $roster->name])" :subtitle="__('hll.clans.rosters.template.subtitle')" />
-        <div class="flex flex-col">
-            <div class="flex items-center space-x-2">
-                <flux:button variant="ghost" size="sm" href="{{ route('clans.show', $clan->slug) }}">
-                    {{ __('hll.clans.rosters.back_to_clan') }}
-                </flux:button>
-
-                <flux:button variant="ghost" size="sm" href="{{ route('rosters.table', $clan->slug) }}">
-                    {{ __('hll.clans.rosters.back_to_rosters') }}
-                </flux:button>
-            </div>
-            <flux:spacer size="xs" />
-            <flux:navbar>
-                <flux:navbar.item variant="ghost" class="w-full" href="{{ route('rosters.template.manage', ['clan' => $clan->slug, 'roster' => $roster->uuid]) }}">{{ __('hll.clans.rosters.roster_manage') }}</flux:navbar.item>
-                <flux:navbar.item variant="ghost" class="w-full" href="{{ route('rosters.template.map', ['clan' => $clan->slug, 'roster' => $roster->uuid]) }}">{{ __('hll.clans.rosters.roster_map') }}</flux:navbar.item>
-            </flux:navbar>
-        </div>
-    </div>
+    @include('partials.rosters-header')
 
     <flux:separator variant="subtle" />
 
@@ -117,7 +99,7 @@
                                 </x-slot>
                             </flux:input>
                         </div>
-                        <div class="flex flex-col space-y-1 max-h-64 scrollbar-always overflow-y-auto p-1">
+                        <div class="grid gap-1 max-h-64 scrollbar-always overflow-y-auto p-1">
                             @foreach ($this->soldiers as $soldierId => $soldierName)
                                 @if (in_array($soldierId, $selectedSoldiers))
                                     <flux:button variant="outline" size="xs" class="btn-success">
