@@ -11,26 +11,34 @@
 
             <flux:input type="number" size="sm" min="0" label="{{ __('hll.clans.rosters.form.max_soldiers') }}" placeholder="{{ __('hll.clans.rosters.form.max_soldiers') }}" wire:model="max_soldiers" />
 
-            <flux:select label="{{ __('hll.clans.rosters.form.map_id') }}" wire:model.live="map_id" placeholder="{{ __('hll.clans.rosters.form.map_id') }}">
-                <flux:select.option value="">{{ __('hll.commons.select') }}</flux:select.option>
-                @foreach ($this->maps as $mapId => $mapName)
-                    <flux:select.option value="{{ $mapId }}">{{ $mapName }}</flux:select.option>
-                @endforeach
-            </flux:select>
+            <div class="grid grid-cols-3 gap-4">
+                <flux:select label="{{ __('hll.clans.rosters.form.map_id') }}" wire:model.live="map_id" placeholder="{{ __('hll.clans.rosters.form.map_id') }}">
+                    <flux:select.option value="">{{ __('hll.commons.select') }}</flux:select.option>
+                    @foreach ($this->maps as $mapId => $mapName)
+                        <flux:select.option value="{{ $mapId }}">{{ $mapName }}</flux:select.option>
+                    @endforeach
+                </flux:select>
 
-            <flux:select label="{{ __('hll.clans.rosters.form.central_point_id') }}" wire:model.live="central_point_id" placeholder="{{ __('hll.clans.rosters.form.central_point_id') }}">
-                <flux:select.option value="">{{ __('hll.commons.select') }}</flux:select.option>
-                @foreach ($this->centralPoints as $centralPointId => $centralPointName)
-                    <flux:select.option value="{{ $centralPointId }}">{{ $centralPointName }}</flux:select.option>
-                @endforeach
-            </flux:select>
+                <flux:select label="{{ __('hll.clans.rosters.form.central_point_id') }}" wire:model.live="central_point_id" placeholder="{{ __('hll.clans.rosters.form.central_point_id') }}">
+                    <flux:select.option value="">{{ __('hll.commons.select') }}</flux:select.option>
+                    @foreach ($this->centralPoints as $centralPointId => $centralPointName)
+                        <flux:select.option value="{{ $centralPointId }}">{{ $centralPointName }}</flux:select.option>
+                    @endforeach
+                </flux:select>
 
-            <flux:select label="{{ __('hll.clans.rosters.form.faction') }}" wire:model.live="faction" placeholder="{{ __('hll.clans.rosters.form.faction') }}">
-                <flux:select.option value="">{{ __('hll.commons.select') }}</flux:select.option>
-                @foreach ($this->factions as $factionType)
-                    <flux:select.option value="{{ $factionType->value }}">{{ $factionType->label() }}</flux:select.option>
-                @endforeach
-            </flux:select>
+                <flux:select label="{{ __('hll.clans.rosters.form.faction') }}" wire:model.live="faction" placeholder="{{ __('hll.clans.rosters.form.faction') }}">
+                    <flux:select.option value="">{{ __('hll.commons.select') }}</flux:select.option>
+                    @foreach ($this->factions as $factionType)
+                        <flux:select.option value="{{ $factionType->value }}">{{ $factionType->label() }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+            </div>
+
+            <flux:separator variant="subtle" />
+
+            <flux:checkbox label="{{ __('hll.clans.rosters.form.is_public') }}" wire:model="is_public" />
+            {{-- <flux:checkbox label="{{ __('hll.clans.rosters.form.is_multiclan') }}" wire:model="is_multiclan" disabled /> --}}
+            {{-- <flux:checkbox label="{{ __('hll.clans.rosters.form.is_multifaction') }}" wire:model="is_multifaction" disabled /> --}}
 
             <flux:separator variant="subtle" />
 

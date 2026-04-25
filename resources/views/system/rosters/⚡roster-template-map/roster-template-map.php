@@ -18,8 +18,12 @@ new class extends Component
     /** @var array<int, int> */
     public array $selectedSoldiers = [];
 
+    public ?string $link = null;
+
     public function mount(): void
     {
         $this->checkAuthorization();
+
+        $this->link = route('public.rosters.show', $this->roster->uuid);
     }
 };

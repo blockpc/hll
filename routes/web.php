@@ -12,6 +12,15 @@ Route::get('/', function (): View {
     return view('home');
 })->name('home');
 
+Route::prefix('rosters')
+    ->name('public.')
+    ->group(
+        function () {
+            Route::livewire('/', 'public::rosters')->name('rosters.index');
+            Route::livewire('/{roster}', 'public::roster')->name('rosters.show');
+        }
+    );
+
 Route::get('/email/verify/invitation/{id}/{hash}', function (Request $request, int $id, string $hash) {
     $user = User::query()->findOrFail($id);
 

@@ -24,11 +24,15 @@ new class extends Component
      */
     public array $selectedSoldiers = [];
 
+    public ?string $link = null;
+
     public function mount(): void
     {
         $this->checkAuthorization();
 
         $this->selectedSoldiers = $this->roster->soldiersFromClan()->keys()->toArray();
+
+        $this->link = route('public.rosters.show', $this->roster->uuid);
     }
 
     /**

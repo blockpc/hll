@@ -20,18 +20,20 @@
             @endif
         </div>
     </div>
-    <div class="flex flex-col">
+    <ul class="flex flex-col">
         @forelse ($squad->soldiers as $soldier)
-            <div class="flex justify-between items-center rounded-md border border-white/10 bg-black/20 p-1">
-                <div class="text-xs">{{ $soldier->display_name }}</div>
+            <li class="flex justify-between items-center p-1 hover:bg-amber-500/10 h-8 transition group {{ $loop->first ? 'border border-white/10 bg-amber-400/20' : 'bg-black/20' }}">
+                <div class="text-xs" title="{{ $soldier->display_name }}">{{ Str::limit($soldier->display_name, 15, '...') }}</div>
                 @if ($buttons)
+                <div class="group-hover:block hidden">
                     <flux:button type="button" variant="outline" size="xs" wire:click="removeSoldier({{ $soldier->id }})" aria-label="{{ __('hll.squads.remove_soldier') }}" class="rounded border border-red-500/30! bg-red-500/30! text-[10px] p-1!">
                         <flux:icon name="x-mark" class="w-3 h-3" />
                     </flux:button>
+                </div>
                 @endif
-            </div>
+            </li>
         @empty
-            <div class="text-sm text-gray-400">{{ __('hll.squads.no_soldiers_assigned') }}</div>
+            <li class="text-sm text-gray-400">{{ __('hll.squads.no_soldiers_assigned') }}</li>
         @endforelse
-    </div>
+    </ul>
 </div>
