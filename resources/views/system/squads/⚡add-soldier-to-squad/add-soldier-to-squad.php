@@ -71,25 +71,25 @@ new class extends Component
 
     public function setSoldierId(int $soldierId): void
     {
-        if ( ! in_array($soldierId, $this->soldiersFromClanIds, true) ) {
+        if (! in_array($soldierId, $this->soldiersFromClanIds, true)) {
             $this->addError('soldierId', __('hll.squad_soldiers.soldier_not_in_clan_from_roster'));
 
             return;
         }
 
-        $soldier = Soldier::find($soldierId);
+        $soldier = Soldier::findOrFail($soldierId);
 
         if ($this->squad->soldiers()->where('soldier_id', $soldierId)->exists()) {
-            $this->addError('soldierId', __('hll.squad_soldiers.soldier_already_assigned', ['name' => $soldier ? $soldier->name : 'ID ' . $soldierId]));
+            $this->addError('soldierId', __('hll.squad_soldiers.soldier_already_assigned', ['name' => $soldier ? $soldier->name : 'ID '.$soldierId]));
 
             return;
         }
 
-        if (!in_array($soldierId, $this->selectedSoldiers, true)) {
+        if (! in_array($soldierId, $this->selectedSoldiers, true)) {
             $this->selectedSoldiers[] = $soldierId;
         } else {
             $this->selectedSoldiers = array_values(
-                array_filter($this->selectedSoldiers, fn($id) => $id !== $soldierId)
+                array_filter($this->selectedSoldiers, fn ($id) => $id !== $soldierId)
             );
         }
 

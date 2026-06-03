@@ -357,8 +357,10 @@ return [
         ],
         'squad_custom' => [
             'title' => 'Escuadra Personalizada',
+            'modal_subtitle' => 'Crea escuadras personalizadas para tu roster y asigna soldados con roles específicos.',
             'no_command_squad' => 'Sin escuadras personalizadas agregadas.',
-            'full_squad' => 'Ya has alcanzado el límite de soldados para esta escuadra. No puedes agregar más soldados a esta escuadra.',
+            'soldiers_or_roles' => 'Soldados y/o roles específicos.',
+            'solidersByName' => 'Soldados y/o roles',
         ],
         'form' => [
             'name' => 'Nombre de la Escuadra',
@@ -396,16 +398,19 @@ return [
         'add' => [
             'requirements' => [
                 'same_clan' => 'El soldado puede o no pertenecer al mismo clan que la escuadra.',
+                'assigned_roster' => 'El soldado debe estar asignado en este roster.',
                 'not_assigned' => 'El soldado no debe estar asignado a otra escuadra en este roster.',
                 'capacity' => 'La escuadra no debe haber alcanzado su capacidad máxima de soldados. (:capacity)',
                 'options' => 'Tienes dos opciones para agregar soldados a esta escuadra:',
                 'by_id' => 'Agregar un soldado existente de tu clan a esta escuadra seleccionándolo por su nombre.',
                 'by_name' => 'Agregar un soldado manualmente escribiendo su nombre. Esta opción es útil para agregar soldados que no existen en el clan o para agregar soldados con nombres personalizados solo para este roster.',
                 'by_name_requirements' => 'Si eliges agregar por nombre, ten en cuenta que los nombres serán guardados en minúsculas y sin acentos. Se omitirán aquellos nombres que excedan los 32 caracteres o que ya existan en el clan.',
+                'add_soldier_assign_roster' => 'Si el soldado que deseas agregar no está asignado a este roster, primero debes agregarlo al roster.',
             ],
             'title' => 'Agregar Soldado a Escuadra',
             'subtitle' => 'Selecciona un soldado de tu clan para agregarlo a esta escuadra.',
             'add_by_id' => 'Agregar un soldado existente de tu clan.',
+            'add_assigned_roster' => 'Agregar un soldado del roster.',
             'add_by_name' => 'Agregar soldado por nombre',
             'select_soldier' => 'Selecciona un soldado',
             'soldier_by_name' => 'Agregar soldado por nombre',

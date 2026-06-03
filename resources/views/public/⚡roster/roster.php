@@ -10,8 +10,5 @@ new #[Layout('layouts.public')] class extends Component
     public Roster $roster;
 
     #[Computed()]
-    public function rosters()
-    {
-
-    }
+    public function rosters() {}
 };

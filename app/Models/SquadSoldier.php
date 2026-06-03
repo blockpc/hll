@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\RoleSquadTypeEnum;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -48,5 +50,15 @@ class SquadSoldier extends Model
     public function soldier(): BelongsTo
     {
         return $this->belongsTo(Soldier::class);
+    }
+
+    #[Scope]
+    protected function search(Builder $query, ?string $search): Builder
+    {
+        if (empty($search)) {
+            return $query;
+        }
+
+        return $query->whereAnyLike(['display_name'], $search);
     }
 }

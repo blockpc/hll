@@ -42,7 +42,7 @@ final class AddSoldiersToSquadService
      *     skippedDuplicates: list<string>,
      *     duplicatesIgnored: list<string>,
      *     skippedEmpty: int,
-     *     skippedSquadFull: list<string>
+     *     skippedSquadFull: list<string>,
      *     skippedRosterFull: list<string>
      * }
      */
@@ -111,7 +111,7 @@ final class AddSoldiersToSquadService
      *     skippedDuplicates: list<string>,
      *     duplicatesIgnored: list<string>,
      *     skippedEmpty: int,
-     *     skippedSquadFull: list<string>
+     *     skippedSquadFull: list<string>,
      *     skippedRosterFull: list<string>
      * }
      */

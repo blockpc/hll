@@ -338,6 +338,8 @@ it('byIds: adds only valid soldiers when one is from another clan', function () 
 });
 
 it('byIds: does not allow adding soldiers when one exceeds squad capacity', function () {
+    $this->roster->update(['max_soldiers' => 999]);
+
     $capacity = $this->squad->capacity;
     $soldiers = [];
 

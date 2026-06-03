@@ -19,7 +19,7 @@
 
     <div class="flex flex-col max-h-max mt-4">
         <div class="flex-1">
-            <div class="col-span-5 border-b-2 border-amber-300 p-1 mb-2">
+            <div class="border-b-2 border-amber-300 p-1 mb-2">
                 <div class="flex items-center justify-between text-amber-500">
                     <div class="text-sm">{{ $roster->name }}</div>
                     <div class="text-sm">{{ __('hll.rosters.map') }}: {{ $roster->map->name }}</div>
@@ -28,8 +28,8 @@
                     <div class="text-sm">{{ $roster->assignedSoldiersCount() }}/{{ $roster->max_soldiers }}</div>
                 </div>
             </div>
-            <div class="grid grid-cols-6 gap-4 max-h-max">
-                <div class="col-span-5 border flex flex-col space-y-4 p-1">
+            <div class="grid grid-cols-6 gap-4 h-full">
+                <div class="col-span-5 border flex flex-col space-y-4 p-1 h-full" id="squads-sections">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                         <div class="flex flex-col space-y-1 p-1" id="commander-section">
                             <div class="flex justify-between items-center">
@@ -80,14 +80,8 @@
                     </div>
                 </div>
 
-                <div class="col-span-1 border flex flex-col space-y-4 p-1">
-                    <div class="flex flex-col space-y-1 p-1">
-                        <div class="text-sm italic border-b">{{ __('hll.clans.rosters.commands') }}</div>
-                        @foreach ($this->typeSquads as $typeSquad)
-                            <flux:button variant="primary" size="xs" color="{{ $typeSquad->color() }}" wire:click="createSquad('{{ $typeSquad->value }}')">{{ $typeSquad->label() }}</flux:button>
-                        @endforeach
-                    </div>
-                    <div class="flex flex-col space-y-1 p-1">
+                <div class="col-span-1 border flex flex-col space-y-4 p-1 h-full" id="soldiers-section">
+                    <div class="flex flex-col space-y-1 p-1 h-full">
                         <div class="flex items-center justify-between">
                             <div class="text-sm italic">{{ __('hll.clans.rosters.soldiers_clan') }}</div>
                             <div class="text-sm italic">({{ count($selectedSoldiers) }}/{{ $clan->soldiers->count() }})</div>
@@ -99,7 +93,7 @@
                                 </x-slot>
                             </flux:input>
                         </div>
-                        <div class="grid gap-1 max-h-64 scrollbar-always overflow-y-auto p-1">
+                        <div class="grid gap-1 scrollbar-always overflow-y-auto p-1 h-150" id="soldiers-list">
                             @foreach ($this->soldiers as $soldierId => $soldierName)
                                 @if (in_array($soldierId, $selectedSoldiers))
                                     <flux:button variant="outline" size="xs" class="btn-success">
@@ -123,4 +117,5 @@
 
     <livewire:system::squads.squad-create :roster="$roster" />
     <livewire:system::squads.add-soldier-to-squad :roster="$roster" />
+    <livewire:system::squads.add-soldier-to-custom-squad :roster="$roster" />
 </div>
