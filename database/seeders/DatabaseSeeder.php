@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\RoleSquadTypeEnum;
 use App\Models\Clan;
+use App\Models\Map;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -30,20 +31,32 @@ class DatabaseSeeder extends Seeder
         $sudo->syncRoles(['sudo']);
 
         if (app()->environment('local')) {
-            $testUser = User::firstOrCreate(
-                ['email' => 'test@mail.com'],
+            $ownerUser = User::firstOrCreate(
+                ['email' => 'owner@mail.com'],
                 [
-                    'name' => 'Test User',
+                    'name' => 'Owner Clan',
                     'password' => 'password',
                 ]
             );
-            if ($testUser->wasRecentlyCreated) {
-                $testUser->markEmailAsVerified();
+            if ($ownerUser->wasRecentlyCreated) {
+                $ownerUser->markEmailAsVerified();
             }
-            $testUser->syncRoles(['clan_owner']);
+            $ownerUser->syncRoles(['clan_owner']);
+
+            $helperUser = User::firstOrCreate(
+                ['email' => 'helper@mail.com'],
+                [
+                    'name' => 'Helper Clan',
+                    'password' => 'password',
+                ]
+            );
+            if ($helperUser->wasRecentlyCreated) {
+                $helperUser->markEmailAsVerified();
+            }
+            $helperUser->syncRoles(['clan_helper']);
 
             if (! Clan::query()->where('slug', 'miopes-y-mancos')->exists()) {
-                $clan = Clan::factory()->withOwner($testUser)->create([
+                $clan = Clan::factory()->withOwner($ownerUser)->withHelper($helperUser)->create([
                     'alias' => 'MYM',
                     'slug' => 'miopes-y-mancos',
                     'name' => 'Miopes y Mancos',
@@ -58,30 +71,36 @@ class DatabaseSeeder extends Seeder
                     ['name' => 'latin', 'role' => RoleSquadTypeEnum::Medic->value],
                     ['name' => 'mendez', 'role' => RoleSquadTypeEnum::Rifleman->value],
                     ['name' => 'manolo', 'role' => RoleSquadTypeEnum::Assault->value],
-                    ['name' => 'carlos', 'role' => RoleSquadTypeEnum::AutomaticRifleman->value],
-                    ['name' => 'pepe', 'role' => RoleSquadTypeEnum::Assault->value],
-                    ['name' => 'juan', 'role' => RoleSquadTypeEnum::Rifleman->value],
-                    ['name' => 'luis', 'role' => RoleSquadTypeEnum::Rifleman->value],
-                    ['name' => 'diego', 'role' => RoleSquadTypeEnum::Medic->value],
-                    ['name' => 'fran', 'role' => RoleSquadTypeEnum::Engineer->value],
-                    ['name' => 'jose', 'role' => RoleSquadTypeEnum::AutomaticRifleman->value],
-                    ['name' => 'mario', 'role' => RoleSquadTypeEnum::Assault->value],
-                    ['name' => 'antonio', 'role' => RoleSquadTypeEnum::Rifleman->value],
-                    ['name' => 'roberto', 'role' => RoleSquadTypeEnum::Rifleman->value],
-                    ['name' => 'sergio', 'role' => RoleSquadTypeEnum::Medic->value],
-                    ['name' => 'alberto', 'role' => RoleSquadTypeEnum::Rifleman->value],
-                    ['name' => 'ricardo', 'role' => RoleSquadTypeEnum::AutomaticRifleman->value],
-                    ['name' => 'fernando', 'role' => RoleSquadTypeEnum::Assault->value],
-                    ['name' => 'javier', 'role' => RoleSquadTypeEnum::Engineer->value],
-                    ['name' => 'carlos2', 'role' => RoleSquadTypeEnum::Rifleman->value],
-                    ['name' => 'miguel', 'role' => RoleSquadTypeEnum::Medic->value],
-                    ['name' => 'pablo', 'role' => RoleSquadTypeEnum::Rifleman->value],
-                    ['name' => 'alvaro', 'role' => RoleSquadTypeEnum::AutomaticRifleman->value],
-                    ['name' => 'jorge', 'role' => RoleSquadTypeEnum::Assault->value],
-                    ['name' => 'santy', 'role' => RoleSquadTypeEnum::Rifleman->value],
+                    ['name' => 'jeff_alfa', 'role' => RoleSquadTypeEnum::Medic->value],
+                    ['name' => 'laykan', 'role' => RoleSquadTypeEnum::Rifleman->value],
+                    ['name' => 'daplis', 'role' => RoleSquadTypeEnum::Rifleman->value],
+                    ['name' => 'mustanvr', 'role' => RoleSquadTypeEnum::AutomaticRifleman->value],
+                    ['name' => 'dgo_echo', 'role' => RoleSquadTypeEnum::Assault->value],
+                    ['name' => 'sebas163', 'role' => RoleSquadTypeEnum::Rifleman->value],
+                    ['name' => 'pato1910', 'role' => RoleSquadTypeEnum::Rifleman->value],
+                    ['name' => 'potxibass', 'role' => RoleSquadTypeEnum::AutomaticRifleman->value],
+                    ['name' => 'donpepito', 'role' => RoleSquadTypeEnum::Assault->value],
+                    ['name' => 'cap_winters', 'role' => RoleSquadTypeEnum::Engineer->value],
+                    ['name' => 'monty_365', 'role' => RoleSquadTypeEnum::Engineer->value],
+                    ['name' => 'grayskull', 'role' => RoleSquadTypeEnum::Engineer->value],
                 ]);
+
+                $map = Map::query()->inRandomOrder()->first();
+                if ($map) {
+                    $centralPoint = $map->centralPoints()->inRandomOrder()->first();
+
+                    if ($centralPoint) {
+                        $clan->rosters()->create([
+                            'name' => 'Roster Principal',
+                            'description' => 'Roster principal para eventos y competiciones.',
+                            'map_id' => $map->id,
+                            'central_point_id' => $centralPoint->id,
+                            'faction' => 'allies',
+                            'max_soldiers' => 50,
+                        ]);
+                    }
+                }
             }
         }
-
     }
 }

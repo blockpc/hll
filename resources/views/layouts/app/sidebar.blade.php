@@ -6,7 +6,9 @@
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
-                <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
+                <flux:link :href="route('dashboard')" wire:navigate>
+                    <x-new-logo />
+                </flux:link>
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
@@ -32,6 +34,25 @@
                 </flux:sidebar.group>
             </flux:sidebar.nav>
             @endcanany
+
+            @if ($ownedClan)
+            <flux:sidebar.nav>
+                <flux:sidebar.group :heading="__('hll.clan.your_clan')" class="grid">
+                    <flux:sidebar.item icon="home" :href="route('clan.show', ['clan' => $ownedClan->slug])" :current="request()->routeIs('clan.show')" wire:navigate>
+                        {{ __('hll.clan.home') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="users" :href="route('clan.helpers', ['clan' => $ownedClan->slug])" :current="request()->routeIs('clan.helpers')" wire:navigate>
+                        {{ __('hll.clan.manage_helpers') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="user-group" :href="route('clan.soldiers', ['clan' => $ownedClan->slug])" :current="request()->routeIs('clan.soldiers')" wire:navigate>
+                        {{ __('hll.clan.manage_soldiers') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="clipboard-document-list" :href="route('clan.rosters', ['clan' => $ownedClan->slug])" :current="request()->routeIs('clan.rosters')" wire:navigate>
+                        {{ __('hll.clan.manage_rosters') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
+            </flux:sidebar.nav>
+            @endif
 
             <flux:spacer />
 

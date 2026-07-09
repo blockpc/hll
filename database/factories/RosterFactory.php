@@ -28,14 +28,15 @@ class RosterFactory extends Factory
         return [
             'clan_id' => $clan->id,
             'name' => $this->faker->text(50),
-            'slug' => $this->faker->slug(),
             'description' => $this->faker->sentence(),
             'faction' => $this->faker->randomElement(FactionTypeEnum::cases()),
+            'max_soldiers' => $this->faker->randomElement([30, 40, 50]),
             'map_id' => $map->id,
             'central_point_id' => $centralPoint->id,
             'image' => null,
             'is_public' => false,
-            'multiclan' => false,
+            'is_multiclan' => false,
+            'is_multifaction' => false,
         ];
     }
 }

@@ -7,7 +7,6 @@ use App\Models\Map;
 use App\Models\Roster;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Livewire\Attributes\Computed;
@@ -24,8 +23,6 @@ new #[Title('Crear Roster')] class extends Component
 
     public string $name = '';
 
-    public string $slug = '';
-
     public ?TemporaryUploadedFile $image = null;
 
     public ?string $description = null;
@@ -38,7 +35,11 @@ new #[Title('Crear Roster')] class extends Component
 
     public bool $is_public = false;
 
-    public bool $multiclan = false;
+    public bool $is_multiclan = false;
+
+    public bool $is_multifaction = false;
+
+    public int $max_soldiers = 30;
 
     public function mount(): void
     {
@@ -78,8 +79,6 @@ new #[Title('Crear Roster')] class extends Component
     {
         $this->checkAuthorization();
 
-        $this->slug = $this->normalizeRosterName($this->slug);
-
         $this->map_id = $this->normalizeNullableInt($this->map_id);
         $this->central_point_id = $this->normalizeNullableInt($this->central_point_id);
         $this->faction = $this->normalizeFaction($this->faction);
@@ -95,14 +94,15 @@ new #[Title('Crear Roster')] class extends Component
             Roster::create([
                 'clan_id' => $this->clan->id,
                 'name' => $this->name,
-                'slug' => $this->slug,
                 'description' => $this->description,
                 'map_id' => $this->map_id,
                 'central_point_id' => $this->central_point_id,
                 'faction' => $this->faction,
+                'max_soldiers' => $this->max_soldiers,
                 'image' => $imagePath,
                 'is_public' => $this->is_public,
-                'multiclan' => $this->multiclan,
+                'is_multiclan' => $this->is_multiclan,
+                'is_multifaction' => $this->is_multifaction,
             ]);
         } catch (\Throwable $exception) {
             if ($imagePath) {
@@ -121,9 +121,6 @@ new #[Title('Crear Roster')] class extends Component
     {
         return [
             'name' => ['required', 'string', 'max:100', 'unique:rosters,name,NULL,id,clan_id,'.$this->clan->id],
-            'slug' => ['required', 'string', 'max:100', Rule::unique('rosters', 'slug')->where(function ($query) {
-                return $query->where('clan_id', $this->clan->id);
-            })],
             'description' => ['nullable', 'string', 'max:255'],
             'map_id' => ['required', 'integer', 'exists:maps,id'],
             'central_point_id' => ['required', Rule::exists('central_points', 'id')->where(function ($query) {
@@ -132,7 +129,9 @@ new #[Title('Crear Roster')] class extends Component
             'faction' => ['required', new Enum(FactionTypeEnum::class)],
             'image' => ['nullable', 'image', 'max:2048'],
             'is_public' => ['required', 'boolean'],
-            'multiclan' => ['required', 'boolean'],
+            'is_multiclan' => ['required', 'boolean'],
+            'is_multifaction' => ['required', 'boolean'],
+            'max_soldiers' => ['required', 'integer', 'min:1', 'max:50'],
         ];
     }
 
@@ -145,11 +144,6 @@ new #[Title('Crear Roster')] class extends Component
     protected function getValidationAttributes(): array
     {
         return __('hll.clans.rosters.form');
-    }
-
-    public function updatedName(string $value): void
-    {
-        $this->slug = Str::slug($value);
     }
 
     private function checkAuthorization(): void
@@ -166,11 +160,6 @@ new #[Title('Crear Roster')] class extends Component
         $user = auth()->user();
 
         return $user?->can('create', [Roster::class, $this->clan]) ?? false;
-    }
-
-    private function normalizeRosterName(string $name): string
-    {
-        return Str::slug(Str::transliterate(Str::lower(trim($name))));
     }
 
     private function normalizeNullableInt(int|string|null $value): ?int
