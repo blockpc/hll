@@ -19,6 +19,10 @@
         <x-tables.table>
             <x-slot name="thead">
                 <tr class="tr">
+                    <th scope="col" class="td">
+                        <flux:icon name="user" class="size-4" aria-hidden="true" />
+                        <span class="sr-only">{{ __('system.users.table.status') }}</span>
+                    </th>
                     <th scope="col" class="td">{{ __('system.users.table.name') }}</th>
                     <th scope="col" class="td">{{ __('system.users.table.email') }}</th>
                     <th scope="col" class="td">{{ __('system.users.table.roles') }}</th>
@@ -28,7 +32,21 @@
             </x-slot>
             <x-slot name="tbody">
                 @forelse ($this->users as $user)
-                    <tr class="tr tr-hover">
+                    @php $isVerified = $user->hasVerifiedEmail(); @endphp
+                    <tr @class([
+                        'tr',
+                        'tr-hover' => $isVerified,
+                        'tr-warning' => !$isVerified,
+                    ])>
+                        <td class="td">
+                            <flux:icon name="user" @class([
+                                'size-4',
+                                'text-green-400' => $isVerified,
+                                'text-red-500' => !$isVerified,
+                            ])
+                            :aria-label="$isVerified ? __('system.users.table.verified') : __('system.users.table.not_verified')"
+                            :title="$isVerified ? __('system.users.table.verified') : __('system.users.table.not_verified')" />
+                        </td>
                         <td class="td">
                             <span class="text-xs italic">{{ $user->name }}</span>
                         </td>
@@ -46,17 +64,21 @@
                             <flux:badge size="sm" class="w-auto!">{{ $user->permissions_count }}</flux:badge>
                         </td>
                         <td class="td text-right space-x-2">
-                            @can('users.edit')
-                            <flux:button variant="primary" color="green" size="sm" href="{{ route('users.edit', $user->id) }}">{{ __('system.users.buttons.edit') }}</flux:button>
-                            @endcan
-                            @can('users.delete')
-                            <flux:button variant="danger" size="sm" wire:click="confirmDelete({{ $user->id }})">{{ __('system.users.buttons.delete') }}</flux:button>
-                            @endcan
+                            @canany(['users.edit', 'users.delete'])
+                                @can('users.edit')
+                                <flux:button variant="primary" color="green" size="sm" href="{{ route('users.edit', $user->id) }}">{{ __('system.users.buttons.edit') }}</flux:button>
+                                @endcan
+                                @can('users.delete')
+                                <flux:button variant="danger" size="sm" wire:click="confirmDelete({{ $user->id }})">{{ __('system.users.buttons.delete') }}</flux:button>
+                                @endcan
+                            @else
+                                <flux:badge size="sm" color="gray">{{ __('system.users.table.no_actions') }}</flux:badge>
+                            @endcanany
                         </td>
                     </tr>
                 @empty
                     <tr class="tr">
-                        <td class="td text-center" colspan="5">
+                        <td class="td text-center" colspan="6">
                             {{ __('system.users.table.no_users') }}
                         </td>
                     </tr>

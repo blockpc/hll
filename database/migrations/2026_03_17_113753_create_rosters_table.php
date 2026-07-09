@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('rosters', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignId('clan_id')->constrained()->cascadeOnDelete();
 
             $table->string('name', 100);
-            $table->string('slug', 100);
             $table->string('description', 255)->nullable();
 
             $table->string('faction', 20);
+
+            $table->unsignedInteger('max_soldiers')->default(0);
 
             $table->foreignId('map_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('central_point_id')->nullable()->constrained()->nullOnDelete();
@@ -27,12 +29,12 @@ return new class extends Migration
             $table->string('image')->nullable();
 
             $table->boolean('is_public')->default(false);
-            $table->boolean('multiclan')->default(false);
+            $table->boolean('is_multiclan')->default(false);
+            $table->boolean('is_multifaction')->default(false);
 
             $table->timestamps();
 
             $table->unique(['clan_id', 'name']);
-            $table->unique(['clan_id', 'slug']);
         });
     }
 

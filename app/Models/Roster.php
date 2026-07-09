@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\FactionTypeEnum;
+use App\Enums\RosterTypeSquadEnum;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Roster extends Model
 {
@@ -19,43 +24,43 @@ class Roster extends Model
     use HasFactory;
 
     protected $fillable = [
+        'uuid',
         'clan_id',
         'name',
-        'slug',
         'description',
         'faction',
+        'max_soldiers',
         'map_id',
         'central_point_id',
         'image',
         'is_public',
-        'multiclan',
+        'is_multiclan',
+        'is_multifaction',
     ];
 
     protected function casts(): array
     {
         return [
             'faction' => FactionTypeEnum::class,
+            'max_soldiers' => 'integer',
             'is_public' => 'boolean',
-            'multiclan' => 'boolean',
+            'is_multiclan' => 'boolean',
+            'is_multifaction' => 'boolean',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $roster): void {
+            if (! $roster->uuid) {
+                $roster->uuid = (string) Str::orderedUuid();
+            }
+        });
     }
 
     public function getRouteKeyName(): string
     {
-        return 'slug';
-    }
-
-    public function resolveRouteBindingQuery($query, $value, $field = null)
-    {
-        $clan = request()->route('clan');
-
-        if (! $clan instanceof Clan || ! isset($clan->id)) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query
-            ->where('slug', $value)
-            ->where('clan_id', $clan->id);
+        return 'uuid';
     }
 
     public function clan(): BelongsTo
@@ -91,5 +96,75 @@ class Roster extends Model
         return Attribute::get(
             fn () => $this->image ? Storage::disk('public')->url($this->image) : null
         );
+    }
+
+    public function squadSoldiers(): HasManyThrough
+    {
+        return $this->hasManyThrough(SquadSoldier::class, Squad::class);
+    }
+
+    /**
+     * Get soldiers assigned to the roster that belong to the same clan, plucked as [soldier_id => display_name].
+     *
+     * @return Collection<int, string>
+     */
+    public function soldiersFromClan(): Collection
+    {
+        return $this->squadSoldiers()->whereHas('soldier', function (Builder $query) {
+            $query->where('clan_id', $this->clan_id);
+        })->get()->pluck('display_name', 'soldier_id');
+    }
+
+    /**
+     * Count soldiers assigned to the roster across all squads.
+     */
+    public function assignedSoldiersCount(): int
+    {
+        return $this->squadSoldiers()->count();
+    }
+
+    /**
+     * Count soldiers assigned to the roster across all squads that belong to the same clan.
+     */
+    public function assignedSoldiersFromClanCount(): int
+    {
+        return $this->squadSoldiers()->whereHas('soldier', function (Builder $query) {
+            $query->where('clan_id', $this->clan_id);
+        })->count();
+    }
+
+    public function squads(): HasMany
+    {
+        return $this->hasMany(Squad::class);
+    }
+
+    public function commandSquads(): HasMany
+    {
+        return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Commander);
+    }
+
+    public function reconSquads(): HasMany
+    {
+        return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Recon);
+    }
+
+    public function infantrySquads(): HasMany
+    {
+        return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Infantry);
+    }
+
+    public function artillerySquads(): HasMany
+    {
+        return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Artillery);
+    }
+
+    public function armorSquads(): HasMany
+    {
+        return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Armor);
+    }
+
+    public function customSquads(): HasMany
+    {
+        return $this->squads()->where('roster_type_squad', RosterTypeSquadEnum::Custom);
     }
 }

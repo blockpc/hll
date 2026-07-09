@@ -4,12 +4,22 @@ use App\Livewire\Notes\ListNotes;
 use App\Livewire\Notifications\Table;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (): View {
+    return view('home');
 })->name('home');
+
+Route::prefix('rosters')
+    ->name('public.')
+    ->group(
+        function () {
+            Route::livewire('/', 'public::rosters')->name('rosters.index');
+            Route::livewire('/{roster}', 'public::roster')->name('rosters.show');
+        }
+    );
 
 Route::get('/email/verify/invitation/{id}/{hash}', function (Request $request, int $id, string $hash) {
     $user = User::query()->findOrFail($id);
@@ -56,7 +66,6 @@ Route::prefix('sistema')
             Route::livewire('/nuevo-clan', 'system::clans.clan-create')->name('clans.create');
             Route::livewire('/editar-clan/{clan}', 'system::clans.clan-edit')->name('clans.edit');
             Route::livewire('/ver-clan/{clan}', 'system::clans.clan-show')->name('clans.show');
-
             Route::livewire('/ver-clan/{clan}/gestionar-ayudantes', 'system::clans.helpers-manager')->name('clans.helpers.manager');
             Route::livewire('/ver-clan/{clan}/gestionar-soldados', 'system::clans.soldiers-manager')->name('clans.soldiers.manager');
         });
@@ -64,6 +73,18 @@ Route::prefix('sistema')
         Route::prefix('rosters')->group(function () {
             Route::livewire('/{clan}/crear', 'system::rosters.roster-create')->name('rosters.create');
             Route::livewire('/{clan}/editar/{roster}', 'system::rosters.roster-edit')->name('rosters.edit');
+            Route::livewire('/{clan}/plantilla/{roster}', 'system::rosters.roster-template')->name('rosters.template');
+            Route::livewire('/{clan}/plantilla/{roster}/administrar', 'system::rosters.roster-template-manage')->name('rosters.template.manage');
+            Route::livewire('/{clan}/plantilla/{roster}/mapa', 'system::rosters.roster-template-map')->name('rosters.template.map');
             Route::livewire('/{clan?}', 'system::rosters.roster-table')->name('rosters.table');
         });
+
+        Route::prefix('tu-clan/{clan}')
+            ->middleware(['clan.owner'])->group(function () {
+                Route::livewire('/', 'system::clans.clan-show')->name('clan.show');
+                Route::livewire('/editar', 'system::clans.clan-edit')->name('clan.edit');
+                Route::livewire('/gestionar-ayudantes', 'system::clans.helpers-manager')->name('clan.helpers');
+                Route::livewire('/gestionar-soldados', 'system::clans.soldiers-manager')->name('clan.soldiers');
+                Route::livewire('/rosters', 'system::rosters.roster-table')->name('clan.rosters');
+            });
     });

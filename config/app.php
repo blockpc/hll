@@ -10,10 +10,15 @@ return [
     | This value is the name of your application, which will be used when the
     | framework needs to place the application's name in a notification or
     | other UI elements where an application name needs to be displayed.
+    | These values define your application's name, subname (full name), and
+    | sigla (acronym). They will be used when the framework needs to display
+    | the application's identity in notifications, UI elements, or other contexts.
     |
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'subname' => env('APP_SUBNAME', 'Laravel Application'),
+    'sigla' => env('APP_SIGLA', 'HLL'),
 
     /*
     |--------------------------------------------------------------------------

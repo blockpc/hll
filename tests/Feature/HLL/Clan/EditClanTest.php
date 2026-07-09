@@ -110,8 +110,8 @@ it('validates the maximum size for logo and image uploads', function () {
     $this->user->assignRole('clan_owner');
     $clan = new_clan($this->user);
 
-    $invalidLogo = UploadedFile::fake()->image('logo.png')->size(2048);
-    $invalidImage = UploadedFile::fake()->image('image.png', 1200, 400)->size(2048);
+    $invalidLogo = UploadedFile::fake()->image('logo.png')->size(3097);
+    $invalidImage = UploadedFile::fake()->image('image.png', 1200, 400)->size(3097);
 
     Livewire::actingAs($this->user)
         ->test('system::clans.clan-edit', ['clan' => $clan])
@@ -132,7 +132,7 @@ it('replaces existing logo and image files when editing a clan', function () {
     Storage::disk('public')->put('clans/origin/old-logo.png', 'old-logo');
     Storage::disk('public')->put('clans/origin/old-image.png', 'old-image');
 
-    $clan = new_clan($this->user, [
+    $clan = new_clan(owner: $this->user, attributes: [
         'alias' => 'origin',
         'logo' => 'clans/origin/old-logo.png',
         'image' => 'clans/origin/old-image.png',
