@@ -20,17 +20,21 @@
     <div class="flex flex-col max-h-max mt-4">
         <div class="flex-1">
             <div class="border-b-2 border-amber-300 p-1 mb-2">
-                <div class="flex items-center justify-between text-amber-500">
-                    <div class="text-sm">{{ $roster->name }}</div>
-                    <div class="text-sm">{{ __('hll.rosters.map') }}: {{ $roster->map->name }}</div>
-                    <div class="text-sm">{{ __('hll.rosters.central_point') }}: {{ $roster->centralPoint->name }}</div>
-                    <div class="text-sm">{{ __('hll.rosters.faction') }}: {{ $roster->faction->label() }}</div>
-                    <div class="text-sm">{{ $roster->assignedSoldiersCount() }}/{{ $roster->max_soldiers }}</div>
+                <div class="grid grid-cols-2 gap-1 text-sm text-amber-500 lg:grid-cols-4">
+                    <div>{{ __('hll.rosters.map') }}: {{ $roster->map->name }}</div>
+
+                    <div>{{ __('hll.rosters.central_point') }}: {{ $roster->centralPoint->name }}</div>
+
+                    <div>{{ __('hll.rosters.faction') }}: {{ $roster->faction->label() }}</div>
+
+                    <div class="lg:text-right font-semibold">
+                        {{ $roster->assignedSoldiersCount() }}/{{ $roster->max_soldiers }}
+                    </div>
                 </div>
             </div>
             <div class="grid grid-cols-6 gap-4 h-full">
                 <div class="col-span-5 border flex flex-col space-y-4 p-1 h-full" id="squads-sections">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
                         <div class="flex flex-col space-y-1 p-1" id="commander-section">
                             <div class="flex justify-between items-center">
                                 <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.commander') }}</div>
@@ -45,7 +49,6 @@
                             </div>
                             <livewire:system::squads.squad-recon :roster="$roster" :key="'recon-'.$roster->uuid" :displayControls="true" />
                         </div>
-
                         <div class="flex flex-col space-y-1 p-1" id="artillery-section">
                             <div class="flex justify-between items-center">
                                 <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.artillery') }}</div>
@@ -80,7 +83,7 @@
                     </div>
                 </div>
 
-                <div class="col-span-1 border flex flex-col space-y-4 p-1 h-full" id="soldiers-section">
+                <div class="hidden col-span-1 border lg:flex flex-col space-y-4 p-1 h-full" id="soldiers-section">
                     <div class="flex flex-col space-y-1 p-1 h-full">
                         <div class="flex items-center justify-between">
                             <div class="text-sm italic">{{ __('hll.clans.rosters.soldiers_clan') }}</div>

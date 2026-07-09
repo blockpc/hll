@@ -59,8 +59,8 @@ class ClanUpdateRequest extends FormRequest
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('clans', 'slug')->ignore($clan->id)],
             'description' => ['nullable', 'string'],
             'discord' => ['nullable', 'string', 'max:255'],
-            'logo' => ['nullable', 'image', 'max:2048'],
-            'image' => ['nullable', 'image', 'max:2048'],
+            'logo' => ['nullable', 'image', 'max:3096'],
+            'image' => ['nullable', 'image', 'max:3096'],
         ];
     }
 
