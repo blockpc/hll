@@ -189,6 +189,7 @@ it('verificar que un correo de bienvenida es enviado', function () {
         ->set('name', 'Test User')
         ->set('email', 'mail@mail.com')
         ->set('auto_password', true)
+        ->set('send_email', true)
         ->call('save')
         ->assertHasNoErrors();
 

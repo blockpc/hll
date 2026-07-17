@@ -178,6 +178,7 @@ return [
             'email' => 'Correo electrónico',
             'password' => 'Contraseña',
             'confirm_password' => 'Confirmar contraseña',
+            'send_email' => 'Enviar correo de notificación al usuario',
             'save' => 'Crear usuario',
             'general' => [
                 'title' => 'Datos del Usuario',

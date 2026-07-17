@@ -26,7 +26,7 @@ new #[Title('Crear nuevo usuario')] class extends Component
 
     public bool $auto_password = false;
 
-    public bool $send_email = true;
+    public bool $send_email = false;
 
     public string $password = '';
 
@@ -43,6 +43,7 @@ new #[Title('Crear nuevo usuario')] class extends Component
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'auto_password' => 'boolean',
+            'send_email' => 'boolean',
             'password' => $this->auto_password
                 ? 'nullable'
                 : 'required|string|min:8|confirmed',
