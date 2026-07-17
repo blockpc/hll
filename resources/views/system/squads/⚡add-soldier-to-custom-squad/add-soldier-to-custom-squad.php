@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RosterTypeSquadEnum;
 use App\Models\Roster;
 use App\Models\Squad;
 use App\Services\AddSoldiersToSquadService;
@@ -21,7 +22,13 @@ new class extends Component
     #[On('open-add-soldier')]
     public function openModal(int $squadId): void
     {
-        $this->squad = Squad::findOrFail($squadId);
+        $squad = Squad::findOrFail($squadId);
+
+        if ($squad->roster_type_squad !== RosterTypeSquadEnum::Custom) {
+            return;
+        }
+
+        $this->squad = $squad;
 
         $this->modal('add-soldier-custom-squad')->show();
     }
@@ -95,6 +102,43 @@ new class extends Component
         $this->resetExcept('roster');
         $this->clearValidation();
         $this->modal('add-soldier-custom-squad')->close();
+    }
+
+    public function cancelDeleteSquad(): void
+    {
+        $this->clearValidation();
+        $this->modal("delete-squad-{$this->squad->id}")->close();
+    }
+
+    public function deleteSquad(int $squadId): void
+    {
+        if (! $this->squad || $this->squad->id !== $squadId) {
+            $this->addError('squad', __('hll.squads.delete.message_error'));
+
+            return;
+        }
+
+        $squad = $this->roster->squads()->findOrFail($squadId);
+
+        if (! $squad) {
+            $this->addError('squad', __('hll.squads.delete.message_error'));
+
+            return;
+        }
+
+        $squadType = $squad->roster_type_squad;
+
+        $squad->delete();
+
+        $message = __('hll.squads.delete.message_success', ['name' => $squad->name]);
+
+        $this->dispatch('show', $message, 'warning', __('hll.squads.delete.title'))->to('alert');
+
+        $this->clearValidation();
+        $this->modal("delete-squad-{$squadId}")->close();
+        $this->cancelModal();
+
+        $this->dispatch('delete-squad', $squadType)->to('system::rosters.roster-template-manage');
     }
 
     private function extraValidationsSoldierByName(): ?string
