@@ -74,7 +74,8 @@
                 @else
                     <p class="text-sm text-gray-500">{{ __('hll.squad_soldiers.add.requirements.by_name') }}</p>
                     <p class="text-sm text-gray-500">{{ __('hll.squad_soldiers.add.requirements.by_name_requirements') }}</p>
-                    <flux:textarea size="sm" label="{{ __('hll.squad_soldiers.add.form.soldier_by_name') }}" wire:model="soldiersByName" />
+                    <flux:textarea size="sm" label="{{ __('hll.squad_soldiers.add.form.soldier_by_name') }}" wire:model="soldiersByName"
+                    placeholder="soldado uno, soldado dos, soldado tres" />
                 @endif
             </div>
             @else

@@ -78,7 +78,7 @@ class Clan extends Model
     public function logoUrl(): Attribute
     {
         return Attribute::get(
-            fn () => $this->logo ? Storage::disk('public')->url($this->logo) : null
+            fn () => $this->logo ? asset('storage/' . $this->logo) : null
         );
     }
 
@@ -88,7 +88,7 @@ class Clan extends Model
     public function imageUrl(): Attribute
     {
         return Attribute::get(
-            fn () => $this->image ? Storage::disk('public')->url($this->image) : null
+            fn () => $this->image ? asset('storage/' . $this->image) : null
         );
     }
 

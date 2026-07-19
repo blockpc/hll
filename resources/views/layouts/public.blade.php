@@ -46,14 +46,14 @@
                             <path fill-rule="evenodd" d="M3 5.75A.75.75 0 0 1 3.75 5h12.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 5.75Zm0 4.25a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 10Zm0 4.25a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <a @class([
+                    {{-- <a @class([
                         "rounded-md border border-white/15 px-4 py-2 text-sm font-semibold text-zinc-200 transition hover:border-white/25 hover:bg-white/5" => !request()->routeIs('public.rosters.index'),
                         "rounded-md border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-200 transition hover:bg-amber-500/20" => request()->routeIs('public.rosters.index'),
                     ])
                         href="{{ route('public.rosters.index') }}"
                     >
                         <span>{{ __('rosters.publics') }}</span>
-                    </a>
+                    </a> --}}
                 </div>
 
                 <nav class="hidden items-center gap-3 md:flex">

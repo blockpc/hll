@@ -34,7 +34,7 @@ enum RosterTypeSquadEnum: string
     {
         return match ($this) {
             self::Commander => 1,
-            self::Infantry => 49,
+            self::Infantry => 6,
             self::Recon => 2,
             self::Armor => 3,
             self::Artillery => 3,

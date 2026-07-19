@@ -25,6 +25,25 @@ return [
         'manage_soldiers' => 'Gestionar Soldados',
         'manage_rosters' => 'Gestionar Rosters',
     ],
+    'maps' => [
+        'menu' => 'Mapas',
+        '403' => 'No tienes permiso para gestionar los mapas.',
+        'index' => [
+            '403' => 'No tienes permiso para ver el listado de mapas.',
+            'submenu' => 'Listado Mapas',
+            'title' => 'Mapas',
+            'subtitle' => 'Listado de mapas disponibles en el sistema.',
+            'create' => 'Crear Mapa',
+            'search_maps' => 'Buscar mapas...',
+            'empty' => 'No hay mapas creados.',
+            'table' => [
+                'image' => 'Imagen',
+                'name' => 'Nombre',
+                'slug' => 'Slug',
+                'actions' => 'Acciones',
+            ],
+        ],
+    ],
     'clans' => [
         'menu' => 'Clanes',
         '403' => 'No tienes permiso para gestionar los clanes.',

@@ -36,6 +36,12 @@
                             <flux:input size="sm" wire:model="password_confirmation" :label="__('system.users.create.form.password_confirmation')" type="password" autocomplete="off" viewable :disabled="$auto_password" />
                         </div>
                     </flux:fieldset>
+
+                    <flux:field variant="inline">
+                        <flux:checkbox wire:model="send_email" />
+                        <flux:label>{{ __('system.users.create.send_email') }}</flux:label>
+                        <flux:error name="send_email" />
+                    </flux:field>
                 </div>
 
                 <div class="space-y-6">

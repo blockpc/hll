@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RosterTypeSquadEnum;
 use App\Models\Roster;
 use App\Models\Soldier;
 use App\Models\Squad;
@@ -55,7 +56,13 @@ new class extends Component
     #[On('open-add-soldier')]
     public function openModal(int $squadId): void
     {
-        $this->squad = Squad::findOrFail($squadId);
+        $squad = Squad::findOrFail($squadId);
+
+        if ($squad->roster_type_squad === RosterTypeSquadEnum::Custom) {
+            return;
+        }
+
+        $this->squad = $squad;
         $this->squadFull = $this->squad->isFull();
         $this->soldiersFromClanIds = $this->roster->clan->soldiers->pluck('id')->toArray();
         $this->soldiersAddedRoster = $this->roster->soldiersFromClan()->keys()->toArray();
