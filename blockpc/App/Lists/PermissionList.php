@@ -23,6 +23,7 @@ final class PermissionList
             ...self::roles(),
             ...self::permissions(),
             ...self::clans(),
+            ...self::maps(),
             // Agregar aquí otros permisos específicos de la aplicación
         ];
     }
@@ -178,6 +179,40 @@ final class PermissionList
                 'key' => 'clans',
                 'display_name' => 'Restaurar Clan',
                 'description' => 'Permite restaurar clanes, accediendo a la acción de restaurar clanes.',
+                'guard_name' => 'web',
+            ],
+        ];
+    }
+
+    private static function maps(): array
+    {
+        return [
+            [
+                'name' => 'maps.index',
+                'key' => 'maps',
+                'display_name' => 'Listar Mapas',
+                'description' => 'Permite listar mapas, accediendo al listado de mapas.',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'maps.create',
+                'key' => 'maps',
+                'display_name' => 'Crear Mapa',
+                'description' => 'Permite crear nuevos mapas, accediendo al formulario de creación de mapas.',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'maps.edit',
+                'key' => 'maps',
+                'display_name' => 'Editar Mapa',
+                'description' => 'Permite editar mapas existentes, accediendo al formulario de edición de mapas.',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'maps.delete',
+                'key' => 'maps',
+                'display_name' => 'Eliminar Mapa',
+                'description' => 'Permite eliminar mapas, accediendo a la acción de eliminación de mapas.',
                 'guard_name' => 'web',
             ],
         ];

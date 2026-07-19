@@ -37,7 +37,7 @@
 
             @if ($ownedClan)
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('hll.clan.your_clan')" class="grid">
+                <flux:sidebar.group :heading="__('hll.clan.home')" class="grid">
                     <flux:sidebar.item icon="home" :href="route('clan.show', ['clan' => $ownedClan->slug])" :current="request()->routeIs('clan.show')" wire:navigate>
                         {{ __('hll.clan.home') }}
                     </flux:sidebar.item>
@@ -53,6 +53,18 @@
                 </flux:sidebar.group>
             </flux:sidebar.nav>
             @endif
+
+            @canany(['maps.index'])
+            <flux:sidebar.nav>
+                <flux:sidebar.group :heading="__('hll.maps.menu')" class="grid">
+                    @can('maps.index')
+                    <flux:sidebar.item icon="map" :href="route('maps.table')" :current="request()->routeIs('maps.*')" wire:navigate>
+                        {{ __('hll.maps.index.submenu') }}
+                    </flux:sidebar.item>
+                    @endcan
+                </flux:sidebar.group>
+            </flux:sidebar.nav>
+            @endcanany
 
             <flux:spacer />
 

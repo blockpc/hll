@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Maps\ListMaps;
 use App\Livewire\Notes\ListNotes;
 use App\Livewire\Notifications\Table;
 use App\Models\User;
@@ -47,6 +48,12 @@ Route::prefix('sistema')
 
         Route::prefix('permisos')->group(function () {
             Route::livewire('/lista-de-permisos', 'system::permission.table')->name('permissions.table');
+        });
+
+        Route::prefix('mapas')->group(function () {
+            Route::get('lista-de-mapas', ListMaps::class)->name('maps.table');
+            // Route::livewire('/nuevo-mapa', 'system::maps.create')->name('maps.create');
+            // Route::livewire('/editar-mapa/{map}', 'system::maps.edit')->name('maps.edit');
         });
 
         Route::prefix('roles')->group(function () {
