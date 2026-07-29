@@ -142,6 +142,8 @@ new #[Title('Editar usuario')] class extends Component
 
     public function selectClan(int $clanId): void
     {
+        abort_unless(auth()->user()?->can('users.edit'), 403, __('system.users.403.users-edit'));
+
         $this->searchClan = null;
         $this->clanId = $clanId;
 

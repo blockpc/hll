@@ -22,13 +22,21 @@ class Soldier extends Model
         'observation',
     ];
 
-    // cuando un soldado es eliminado, se mantiene el registro del soldado en la tabla squad_soldiers con null en soldier_id y se guarda el display_name y slot_number para mantener la integridad de los datos históricos
-    public static function boot(): void
+    /**
+     * When a soldier is deleted, preserve historical squad slot data by nulling `soldier_id`
+     * on the pivot and storing the soldier's last known name in `display_name`.
+     */
+    protected static function booted(): void
     {
-        parent::boot();
+        static::deleting(static function (Soldier $soldier): void {
 
-        static::deleting(function (Soldier $soldier) {
-            $soldier->squads()->updateExistingPivot($soldier->squads->pluck('id')->toArray(), [
+            $squadIds = $soldier->squads()->pluck('squads.id')->all();
+
+            if ($squadIds === []) {
+                return;
+            }
+
+            $soldier->squads()->updateExistingPivot($squadIds, [
                 'soldier_id' => null,
                 'display_name' => $soldier->name,
             ]);

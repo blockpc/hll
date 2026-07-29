@@ -1,6 +1,7 @@
 <?php
 
 use App\Mail\ResendUserEmailVerificationMail;
+use App\Models\Clan;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
@@ -46,6 +47,30 @@ it('un usuario con permiso puede editar un usuario', function () {
         'name' => 'Test User',
         'email' => 'test@mail.com',
     ]);
+});
+
+it('un usuario con permiso puede asignar un clan al usuario editado', function () {
+    $user = User::factory()->create();
+    $clan = Clan::factory()->create();
+    $this->user->givePermissionTo('users.edit');
+
+    Livewire::actingAs($this->user)
+        ->test('system::users.edit', ['user' => $user])
+        ->call('selectClan', $clan->id)
+        ->assertHasNoErrors();
+
+    expect($user->fresh()->clans()->whereKey($clan->id)->exists())->toBeTrue();
+});
+
+it('un usuario sin permiso no puede asignar un clan al usuario editado', function () {
+    $user = User::factory()->create();
+    $clan = Clan::factory()->create();
+
+    Livewire::actingAs($this->user)
+        ->test('system::users.edit', ['user' => $user])
+        ->assertForbidden();
+
+    expect($user->fresh()->clans()->whereKey($clan->id)->exists())->toBeFalse();
 });
 
 it('no puede editar un usuario con un email duplicado', function () {

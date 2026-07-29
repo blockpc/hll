@@ -34,35 +34,41 @@
                     <flux:table.column align="end"></flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
-                    @foreach ($this->soldiers as $soldier)
-                        <flux:table.row wire:key="soldier-{{ $soldier->id }}">
-                            <flux:table.cell>
-                                <flux:avatar :name="$soldier->name" />
-                            </flux:table.cell>
-                            <flux:table.cell>
-                                <span class="text-base">{{ $soldier->name }}</span>
-                                <p class="text-xs">{{ $soldier->observation ?? __('hll.clans.soldiers.no_observation') }}</p>
-                            </flux:table.cell>
-                            <flux:table.cell>{{ $soldier->role?->label() ?? __('hll.clans.soldiers.no_role') }}</flux:table.cell>
-                            <flux:table.cell>{{ $soldier->squads->count() ?? 0 }}</flux:table.cell>
-                            <flux:table.cell align="end">
-                                @can('update', $clan)
-                                    <div class="">
-                                        <flux:button size="xs" variant="primary" color="green" icon="pencil" wire:click="showEditSoldier({{ $soldier->id }})">
-                                            {{ __('hll.commons.edit') }}
-                                        </flux:button>
-                                        <flux:button size="xs" variant="primary" color="red" icon="trash" wire:click="showDeleteSoldier({{ $soldier->id }})">
-                                            {{ __('hll.commons.delete') }}
-                                        </flux:button>
-                                    </div>
-                                @endcan
+                    @if ($this->soldiers->isEmpty())
+                        <flux:table.row>
+                            <flux:table.cell colspan="5" class="text-center py-4">
+                                {{ __('hll.clans.soldiers.no_soldiers') }}
                             </flux:table.cell>
                         </flux:table.row>
-                    @endforeach
+                    @else
+                        @foreach ($this->soldiers as $soldier)
+                            <flux:table.row wire:key="soldier-{{ $soldier->id }}">
+                                <flux:table.cell>
+                                    <flux:avatar :name="$soldier->name" />
+                                </flux:table.cell>
+                                <flux:table.cell>
+                                    <span class="text-base">{{ $soldier->name }}</span>
+                                    <p class="text-xs">{{ $soldier->observation ?? __('hll.clans.soldiers.no_observation') }}</p>
+                                </flux:table.cell>
+                                <flux:table.cell>{{ $soldier->role?->label() ?? __('hll.clans.soldiers.no_role') }}</flux:table.cell>
+                                <flux:table.cell>{{ $soldier->squads->count() ?? 0 }}</flux:table.cell>
+                                <flux:table.cell align="end">
+                                    @can('update', $clan)
+                                        <div class="">
+                                            <flux:button size="xs" variant="primary" color="green" icon="pencil" wire:click="showEditSoldier({{ $soldier->id }})">
+                                                {{ __('hll.commons.edit') }}
+                                            </flux:button>
+                                            <flux:button size="xs" variant="primary" color="red" icon="trash" wire:click="showDeleteSoldier({{ $soldier->id }})">
+                                                {{ __('hll.commons.delete') }}
+                                            </flux:button>
+                                        </div>
+                                    @endcan
+                                </flux:table.cell>
+                            </flux:table.row>
+                        @endforeach
+                    @endif
                 </flux:table.rows>
             </flux:table>
-
-            {{-- <flux:pagination :paginator="$this->soldiers" /> --}}
         </flux:card>
     </div>
 
