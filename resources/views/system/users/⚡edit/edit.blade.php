@@ -69,6 +69,41 @@
                             </flux:button>
                         @endif
                     </flux:fieldset>
+
+                    <flux:fieldset>
+                        <flux:legend>{{ __('system.users.edit.clans.title') }}</flux:legend>
+                        <flux:description>{{ __('system.users.edit.clans.description') }}</flux:description>
+                        @if (session()->has('success-assign-clan'))
+                            <flux:callout variant="success" class="mb-2">
+                                {{ session('success-assign-clan') }}
+                            </flux:callout>
+                        @endif
+                        @if (session()->has('error-assign-clan'))
+                            <flux:callout variant="danger" class="mb-2">
+                                {{ session('error-assign-clan') }}
+                            </flux:callout>
+                        @endif
+                        @if ($user->clans->count() > 0)
+                            <flux:badge color="green" class="w-full">{{ __('system.users.edit.clans.clans_list') }}</flux:badge>
+                            <ul class="mt-2 list-disc pl-5 space-y-1">
+                                @foreach ($user->clans as $clan)
+                                    <li class="text-sm">{{ $clan->name }}</li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <flux:badge color="yellow" class="w-full">{{ __('system.users.edit.clans.no_clans') }}</flux:badge>
+                            <div class="mt-2">
+                                <x-select2-single
+                                    name="assign_clan"
+                                    title="system.users.edit.clans.assign_clan"
+                                    :options="$this->clans"
+                                    :selected_id="$clanId"
+                                    search="searchClan"
+                                    click="selectClan"
+                                />
+                            </div>
+                        @endif
+                    </flux:fieldset>
                 </div>
 
                 <div class="space-y-6">

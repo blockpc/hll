@@ -2,6 +2,7 @@
 
 use App\Enums\ClanMembershipRoleEnum;
 use App\Enums\RoleSquadTypeEnum;
+use App\Enums\RosterTypeSquadEnum;
 use App\Models\Soldier;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Livewire\Livewire;
@@ -239,6 +240,35 @@ it('can edit a soldier', function () {
     expect($soldier->name)->toBe('Bravo');
     expect($soldier->role)->toBe(RoleSquadTypeEnum::Medic);
     expect($soldier->observation)->toBe('Updated observation');
+});
+
+it('preserves historical squad pivot rows when a soldier is deleted', function () {
+    $owner = new_user(role: 'clan_owner');
+    $clan = new_clan($owner);
+    $roster = new_roster($clan, ['max_soldiers' => 20]);
+    $firstSquad = new_squad($roster, RosterTypeSquadEnum::Custom);
+    $secondSquad = new_squad($roster, RosterTypeSquadEnum::Custom);
+    $secondSquad = new_squad($roster, RosterTypeSquadEnum::Custom);
+    $soldier = new_soldier($clan, $firstSquad, ['name' => 'Alpha']);
+    $soldier->load('squads');
+
+    add_soldier_to_squad($secondSquad, $soldier);
+
+    $soldier->delete();
+
+    $this->assertDatabaseHas('squad_soldiers', [
+        'squad_id' => $firstSquad->id,
+        'soldier_id' => null,
+        'display_name' => 'Alpha',
+        'slot_number' => 1,
+    ]);
+
+    $this->assertDatabaseHas('squad_soldiers', [
+        'squad_id' => $secondSquad->id,
+        'soldier_id' => null,
+        'display_name' => 'Alpha',
+        'slot_number' => 1,
+    ]);
 });
 
 it('can delete a soldier', function () {

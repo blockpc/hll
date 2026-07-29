@@ -23,6 +23,27 @@ class Soldier extends Model
     ];
 
     /**
+     * When a soldier is deleted, preserve historical squad slot data by nulling `soldier_id`
+     * on the pivot and storing the soldier's last known name in `display_name`.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(static function (Soldier $soldier): void {
+
+            $squadIds = $soldier->squads()->pluck('squads.id')->all();
+
+            if ($squadIds === []) {
+                return;
+            }
+
+            $soldier->squads()->updateExistingPivot($squadIds, [
+                'soldier_id' => null,
+                'display_name' => $soldier->name,
+            ]);
+        });
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

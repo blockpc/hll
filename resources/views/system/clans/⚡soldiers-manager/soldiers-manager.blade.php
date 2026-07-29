@@ -25,36 +25,50 @@
                 </div>
             </div>
 
-            @if ($this->soldiers->isEmpty())
-                <flux:text class="text-center text-gray-500">{{ __('hll.clans.soldiers.no_soldiers') }}</flux:text>
-            @else
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                    @foreach ($this->soldiers as $soldier)
-                        <flux:card wire:key="soldier-{{ $soldier->id }}" class="p-2.5 space-y-4">
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center space-x-3">
+            <flux:table :paginate="$this->soldiers">
+                <flux:table.columns>
+                    <flux:table.column>Avatar</flux:table.column>
+                    <flux:table.column>Name</flux:table.column>
+                    <flux:table.column>Role</flux:table.column>
+                    <flux:table.column># Rosters</flux:table.column>
+                    <flux:table.column align="end"></flux:table.column>
+                </flux:table.columns>
+                <flux:table.rows>
+                    @if ($this->soldiers->isEmpty())
+                        <flux:table.row>
+                            <flux:table.cell colspan="5" class="text-center py-4">
+                                {{ __('hll.clans.soldiers.no_soldiers') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                    @else
+                        @foreach ($this->soldiers as $soldier)
+                            <flux:table.row wire:key="soldier-{{ $soldier->id }}">
+                                <flux:table.cell>
                                     <flux:avatar :name="$soldier->name" />
-                                    <flux:heading size="base">{{ $soldier->name }}</flux:heading>
-                                </div>
-                                <flux:text class="text-xs italic">{{ $soldier->role?->label() ?? __('hll.clans.soldiers.no_role') }}</flux:text>
-                            </div>
-                            <flux:text class="text-xs italic">{{ $soldier->observation ?? __('hll.clans.soldiers.no_observation') }}</flux:text>
-                            @can('update', $clan)
-                            <div>
-                                <flux:button size="xs" variant="primary" color="green" icon="pencil" wire:click="showEditSoldier({{ $soldier->id }})">
-                                    {{ __('hll.commons.edit') }}
-                                </flux:button>
-                                <flux:button size="xs" variant="primary" color="red" icon="trash" wire:click="showDeleteSoldier({{ $soldier->id }})">
-                                    {{ __('hll.commons.delete') }}
-                                </flux:button>
-                            </div>
-                            @endcan
-                        </flux:card>
-                    @endforeach
-                </div>
-            @endif
-
-            <flux:pagination :paginator="$this->soldiers" />
+                                </flux:table.cell>
+                                <flux:table.cell>
+                                    <span class="text-base">{{ $soldier->name }}</span>
+                                    <p class="text-xs">{{ $soldier->observation ?? __('hll.clans.soldiers.no_observation') }}</p>
+                                </flux:table.cell>
+                                <flux:table.cell>{{ $soldier->role?->label() ?? __('hll.clans.soldiers.no_role') }}</flux:table.cell>
+                                <flux:table.cell>{{ $soldier->squads->count() ?? 0 }}</flux:table.cell>
+                                <flux:table.cell align="end">
+                                    @can('update', $clan)
+                                        <div class="">
+                                            <flux:button size="xs" variant="primary" color="green" icon="pencil" wire:click="showEditSoldier({{ $soldier->id }})">
+                                                {{ __('hll.commons.edit') }}
+                                            </flux:button>
+                                            <flux:button size="xs" variant="primary" color="red" icon="trash" wire:click="showDeleteSoldier({{ $soldier->id }})">
+                                                {{ __('hll.commons.delete') }}
+                                            </flux:button>
+                                        </div>
+                                    @endcan
+                                </flux:table.cell>
+                            </flux:table.row>
+                        @endforeach
+                    @endif
+                </flux:table.rows>
+            </flux:table>
         </flux:card>
     </div>
 

@@ -1,11 +1,13 @@
 <?php
 
 use App\Mail\ResendUserEmailVerificationMail;
+use App\Models\Clan;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\Select2PermissionsTrait;
 use App\Traits\Select2RolesTrait;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -28,6 +30,10 @@ new #[Title('Editar usuario')] class extends Component
     public string $password_confirmation = '';
 
     public bool $user_has_verified_email = false;
+
+    public ?string $searchClan = null;
+
+    public ?int $clanId = null;
 
     public function mount(): void
     {
@@ -122,6 +128,36 @@ new #[Title('Editar usuario')] class extends Component
                 ]);
                 session()->flash('error-email-change-resend', __('system.users.edit.user_email_verification.error_email_change_resend'));
             }
+        }
+    }
+
+    #[\Livewire\Attributes\Computed]
+    public function clans(): Collection {
+        return \App\Models\Clan::query()
+            ->when($this->searchClan, fn($query) => $query->where('name', 'like', '%' . $this->searchClan . '%'))
+            ->limit(20)
+            ->get()
+            ->pluck('name', 'id');
+    }
+
+    public function selectClan(int $clanId): void
+    {
+        abort_unless(auth()->user()?->can('users.edit'), 403, __('system.users.403.users-edit'));
+
+        $this->searchClan = null;
+        $this->clanId = $clanId;
+
+        try {
+            $clan = Clan::findOrFail($clanId);
+            $this->user->clans()->attach([$clanId], ['membership_role' => 'helper']);
+            session()->flash('success-assign-clan', __('system.users.edit.clans.success_assign_clan', ['name' => $clan->name]));
+        } catch (\Exception $e) {
+            logger()->error('Failed to assign clan to user', [
+                'user_id' => $this->user->id,
+                'clan_id' => $clanId,
+                'error' => $e->getMessage(),
+            ]);
+            session()->flash('error-assign-clan', __('system.users.edit.clans.error_assign_clan'));
         }
     }
 };
