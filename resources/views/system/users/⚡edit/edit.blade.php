@@ -91,17 +91,21 @@
                                 @endforeach
                             </ul>
                         @else
-                            <flux:badge color="yellow" class="w-full">{{ __('system.users.edit.clans.no_clans') }}</flux:badge>
-                            <div class="mt-2">
-                                <x-select2-single
-                                    name="assign_clan"
-                                    title="system.users.edit.clans.assign_clan"
-                                    :options="$this->clans"
-                                    :selected_id="$clanId"
-                                    search="searchClan"
-                                    click="selectClan"
-                                />
-                            </div>
+                            <flux:badge color="yellow" class="w-full">
+                                <p>{{ __('system.users.edit.clans.no_clans') }}</p>
+                            </flux:badge>
+                            @if ($user->hasRole('clan_helper'))
+                                <div class="mt-2">
+                                    <x-select2-single
+                                        name="assign_clan"
+                                        title="system.users.edit.clans.assign_clan"
+                                        :options="$this->clans"
+                                        :selected_id="$clanId"
+                                        search="searchClan"
+                                        click="selectClan"
+                                    />
+                                </div>
+                            @endif
                         @endif
                     </flux:fieldset>
                 </div>

@@ -248,7 +248,6 @@ it('preserves historical squad pivot rows when a soldier is deleted', function (
     $roster = new_roster($clan, ['max_soldiers' => 20]);
     $firstSquad = new_squad($roster, RosterTypeSquadEnum::Custom);
     $secondSquad = new_squad($roster, RosterTypeSquadEnum::Custom);
-    $secondSquad = new_squad($roster, RosterTypeSquadEnum::Custom);
     $soldier = new_soldier($clan, $firstSquad, ['name' => 'Alpha']);
     $soldier->load('squads');
 

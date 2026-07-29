@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ClanMembershipRoleEnum;
 use App\Mail\ResendUserEmailVerificationMail;
 use App\Models\Clan;
 use App\Models\Permission;
@@ -149,7 +150,9 @@ new #[Title('Editar usuario')] class extends Component
 
         try {
             $clan = Clan::findOrFail($clanId);
-            $this->user->clans()->attach([$clanId], ['membership_role' => 'helper']);
+            $this->user->clans()->attach([$clanId], [
+                'membership_role' => ClanMembershipRoleEnum::Helper->value
+            ]);
             session()->flash('success-assign-clan', __('system.users.edit.clans.success_assign_clan', ['name' => $clan->name]));
         } catch (\Exception $e) {
             logger()->error('Failed to assign clan to user', [
