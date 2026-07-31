@@ -87,8 +87,9 @@
             <div class="flex justify-between items-center space-x-2">
                 <div class="flex justify-start items-center space-x-2">
                     @if ($squad)
-                    <flux:modal.trigger name="delete-squad-{{ $squad?->id }}">
-                        <flux:button variant="danger" size="sm">{{ __('hll.squads.delete.title') }}</flux:button>
+
+                    <flux:modal.trigger name="edit-squad-{{ $squad?->id }}">
+                        <flux:button variant="primary" color="green" size="sm">{{ __('hll.squads.edit.title') }}</flux:button>
                     </flux:modal.trigger>
                     @endif
                 </div>
@@ -107,6 +108,33 @@
     </flux:modal>
 
     @if ($squad)
+    <flux:modal name="edit-squad-{{ $squad->id }}" @close="$wire.cancelEditSquad()" @cancel="$wire.cancelEditSquad()" :dismissible="false">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">{{ __('hll.squads.edit.title') }}</flux:heading>
+                <flux:text class="mt-2">{{ __('hll.squads.edit.subtitle') }}</flux:text>
+            </div>
+
+            <flux:input size="sm" label="{{ __('hll.squads.form.name') }}" wire:model="squad_name" />
+
+            <flux:input size="sm" label="{{ __('hll.squads.form.alias') }}" wire:model="squad_alias" />
+
+            <div class="flex justify-between items-center">
+                <flux:modal.trigger name="delete-squad-{{ $squad->id }}">
+                    <flux:button variant="danger" size="sm">{{ __('hll.squads.delete.title') }}</flux:button>
+                </flux:modal.trigger>
+
+                <div class="flex justify-end items-center space-x-2">
+                    <flux:button variant="ghost" size="sm" wire:click="cancelEditSquad">
+                        {{ __('hll.commons.cancel') }}
+                    </flux:button>
+                    <flux:button variant="primary" color="green" size="sm" wire:click="editSquad({{ $squad->id }})">
+                        {{ __('hll.squads.edit.button') }}
+                    </flux:button>
+                </div>
+            </div>
+        </div>
+    </flux:modal>
     <flux:modal name="delete-squad-{{ $squad->id }}" @close="$wire.cancelDeleteSquad()" @cancel="$wire.cancelDeleteSquad()" :dismissible="false">
         <div class="space-y-6">
             <div>

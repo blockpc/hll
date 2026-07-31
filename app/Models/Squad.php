@@ -57,6 +57,16 @@ class Squad extends Model
     }
 
     /**
+     * Get the name limit associated with the squad type for UI purposes.
+     */
+    protected function limit(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): int => $this->roster_type_squad->nameLimit()
+        );
+    }
+
+    /**
      * Check if the squad has reached its maximum capacity.
      */
     public function isFull(): bool

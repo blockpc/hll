@@ -14,16 +14,16 @@
                 {{ $squad->alias }}
             </flux:button>
             @else
-            <flux:button variant="outline" size="xs" class="rounded border text-amber-300 border-amber-500/30! bg-amber-500/30! uppercase text-[10px] font-bold">
-                {{ $squad->alias }}
-            </flux:button>
+            <flux:badge size="sm" color="orange">
+                <span class="text-white uppercase">{{ $squad->alias }}</span>
+            </flux:badge>
             @endif
         </div>
     </div>
     <ul class="flex flex-col">
         @forelse ($squad->soldiers as $soldier)
             <li class="flex justify-between items-center p-1 hover:bg-amber-500/10 h-8 transition group {{ $loop->first ? 'border border-white/10 bg-amber-400/20' : 'bg-black/20' }}">
-                <div class="text-xs" title="{{ $soldier->display_name }}">{{ Str::limit($soldier->display_name, 15, '...') }}</div>
+                <div class="text-xs" title="{{ $soldier->display_name }}">{{ Str::limit($soldier->display_name, $squad->limit, '...') }}</div>
                 @if ($buttons)
                 <div class="group-hover:block hidden">
                     <flux:button type="button" variant="outline" size="xs" wire:click="removeSoldier({{ $soldier->id }})" aria-label="{{ __('hll.squads.remove_soldier') }}" class="rounded border border-red-500/30! bg-red-500/30! text-[10px] p-1!">

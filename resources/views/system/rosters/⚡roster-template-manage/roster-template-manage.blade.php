@@ -28,7 +28,7 @@
                     <div>{{ __('hll.rosters.faction') }}: {{ $roster->faction->label() }}</div>
 
                     <div class="lg:text-right font-semibold">
-                        {{ $roster->assignedSoldiersCount() }}/{{ $roster->max_soldiers }}
+                        {{ $roster->assignedSoldiersCountExcludingCustom() }}/{{ $roster->max_soldiers }}
                     </div>
                 </div>
             </div>

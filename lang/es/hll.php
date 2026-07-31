@@ -399,11 +399,17 @@ return [
             'message_limit_reached' => 'Ya has alcanzado el límite (:max) de escuadras de tipo :name para este roster. No puedes agregar más escuadras de este tipo.',
         ],
         'delete' => [
-            'title' => 'Eliminar Escuadra',
+            'title' => 'Eliminar',
             'confirmation_message' => '¿Estás seguro de que quieres eliminar esta escuadra? Esta acción no se puede deshacer.',
-            'button' => 'Eliminar Escuadra',
+            'button' => 'Eliminar',
             'message_success' => 'Escuadra eliminada correctamente. :name',
             'message_error' => 'Error al eliminar la escuadra. Por favor intenta de nuevo o contacta al soporte.',
+        ],
+        'edit' => [
+            'title' => 'Editar Escuadra',
+            'subtitle' => 'Actualiza la información de tu escuadra.',
+            'button' => 'Actualizar',
+            'message_success' => 'Escuadra actualizada correctamente. :name',
         ],
     ],
     'squad_soldiers' => [

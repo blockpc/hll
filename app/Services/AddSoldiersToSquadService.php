@@ -77,7 +77,7 @@ final class AddSoldiersToSquadService
         }
 
         $squadAvailable = $this->squad->capacity - $this->squad->soldiers()->count();
-        $rosterAvailable = $this->roster->max_soldiers - $this->roster->assignedSoldiersCount();
+        $rosterAvailable = $this->roster->max_soldiers - $this->roster->assignedSoldiersCountExcludingCustom();
 
         if ($rosterAvailable <= 0) {
             $result['skippedRosterFull'][] = $name;
@@ -158,7 +158,7 @@ final class AddSoldiersToSquadService
         $skippedRosterFull = [];
 
         $squadAvailable = $this->squad->capacity - $this->squad->soldiers()->count();
-        $rosterAvailable = $this->roster->max_soldiers - $this->roster->assignedSoldiersCount();
+        $rosterAvailable = $this->roster->max_soldiers - $this->roster->assignedSoldiersCountExcludingCustom();
 
         foreach ($validNames as $name) {
             if ($rosterAvailable <= 0) {
