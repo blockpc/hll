@@ -176,9 +176,17 @@
                                         @endforelse
                                     </div>
                                 </div>
-                                <div class="col-span-4 border flex flex-col space-y-4 p-1">
-                                    <div>
+                                <div class="col-span-4 flex flex-col space-y-4 p-1">
+                                    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+                                    @if ($roster->imageUrl)
                                         <img src="{{ $roster->imageUrl ?? asset('images/mapa-hll.png') }}" class="w-full h-auto rounded" alt="{{ __('hll.rosters.map_alt') }}">
+                                    @else
+                                        <div class="h-full rounded-xl border border-neutral-200 dark:border-neutral-700">
+                                            <div class="flex h-full w-full items-center justify-center">
+                                                <span class="text-lg font-semibold text-gray-400 italic">Sin mapa seleccionado</span>
+                                            </div>
+                                        </div>
+                                    @endif
                                     </div>
                                 </div>
                             </div>

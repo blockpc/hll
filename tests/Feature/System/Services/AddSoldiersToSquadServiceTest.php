@@ -204,6 +204,23 @@ it('does not count soldiers from custom squads toward roster capacity', function
         ->and($squad->soldiers()->pluck('display_name')->all())->toBe(['existing one', 'alpha']);
 });
 
+it('allows adding soldiers to a custom squad even when roster max_soldiers is already reached by non-custom squads', function () {
+    $roster = new_roster($this->clan, ['max_soldiers' => 2]);
+    $squad = new_squad($roster, RosterTypeSquadEnum::Infantry);
+    add_soldier_to_squad($squad, onlyName: 'existing one');
+    add_soldier_to_squad($squad, onlyName: 'existing two');
+
+    $customSquad = new_squad($roster, RosterTypeSquadEnum::Custom);
+
+    $service = new AddSoldiersToSquadService;
+    $service->for($customSquad)->names('alpha');
+    $result = $service->saveBulk();
+
+    expect($result['created'])->toBe(1)
+        ->and($result['skippedRosterFull'])->toBeEmpty()
+        ->and($customSquad->soldiers()->pluck('display_name')->all())->toBe(['alpha']);
+});
+
 it('skips soldiers when roster max_soldiers is reached', function () {
     $roster = new_roster($this->clan, ['max_soldiers' => 2]);
     $squad = new_squad($roster, RosterTypeSquadEnum::Infantry);

@@ -125,6 +125,7 @@ new class extends Component
     private function translationKeyPrefix(): string
     {
         return match ($this->type) {
+            RosterTypeSquadEnum::Commander => 'hll.squads.squad_command',
             RosterTypeSquadEnum::Infantry => 'hll.squads.squad_infantry',
             RosterTypeSquadEnum::Recon => 'hll.squads.squad_recon',
             RosterTypeSquadEnum::Armor => 'hll.squads.squad_armor',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\RosterTypeSquadEnum;
 use App\Models\Roster;
 use App\Models\Soldier;
 use App\Models\Squad;
@@ -49,7 +50,7 @@ final class AddSoldiersToSquadService
     public function saveSingle(string $name): array
     {
         if ($this->squad === null || $this->roster === null) {
-            throw new \LogicException('Call for() before saveBulk()');
+            throw new \LogicException('Call for() before saveSingle()');
         }
 
         $name = $this->normalizeName($name);
@@ -77,12 +78,15 @@ final class AddSoldiersToSquadService
         }
 
         $squadAvailable = $this->squad->capacity - $this->squad->soldiers()->count();
-        $rosterAvailable = $this->roster->max_soldiers - $this->roster->assignedSoldiersCountExcludingCustom();
 
-        if ($rosterAvailable <= 0) {
-            $result['skippedRosterFull'][] = $name;
+        if ($this->squad->roster_type_squad !== RosterTypeSquadEnum::Custom) {
+            $rosterAvailable = $this->roster->max_soldiers - $this->roster->assignedSoldiersCountExcludingCustom();
 
-            return $result;
+            if ($rosterAvailable <= 0) {
+                $result['skippedRosterFull'][] = $name;
+
+                return $result;
+            }
         }
 
         if ($squadAvailable <= 0) {
@@ -118,7 +122,7 @@ final class AddSoldiersToSquadService
     public function saveBulk(): array
     {
         if ($this->squad === null || $this->roster === null) {
-            throw new \LogicException('Call for() before saveSingle()');
+            throw new \LogicException('Call for() before saveBulk()');
         }
 
         $skippedEmpty = 0;
@@ -158,10 +162,14 @@ final class AddSoldiersToSquadService
         $skippedRosterFull = [];
 
         $squadAvailable = $this->squad->capacity - $this->squad->soldiers()->count();
-        $rosterAvailable = $this->roster->max_soldiers - $this->roster->assignedSoldiersCountExcludingCustom();
+        $rosterAvailable = null;
+
+        if ($this->squad->roster_type_squad !== RosterTypeSquadEnum::Custom) {
+            $rosterAvailable = $this->roster->max_soldiers - $this->roster->assignedSoldiersCountExcludingCustom();
+        }
 
         foreach ($validNames as $name) {
-            if ($rosterAvailable <= 0) {
+            if ($rosterAvailable !== null && $rosterAvailable <= 0) {
                 $skippedRosterFull[] = $name;
 
                 continue;
@@ -178,7 +186,10 @@ final class AddSoldiersToSquadService
             if ($soldier->wasRecentlyCreated) {
                 $created++;
                 $squadAvailable--;
-                $rosterAvailable--;
+
+                if ($rosterAvailable !== null) {
+                    $rosterAvailable--;
+                }
             } else {
                 $duplicatesIgnored[] = $name;
             }

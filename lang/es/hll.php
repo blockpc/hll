@@ -326,6 +326,7 @@ return [
         ],
         'squad_command' => [
             'title' => 'Crear Comandante',
+            'modal_subtitle' => 'Asigna un comandante a este roster para liderar tus escuadras.',
             'subtitle' => 'Asigna un comandante a este roster para liderar tus escuadras.',
             'requirements' => 'Solo se permite la elección de un soldado de clan como comandante. Este soldado no podrá ser asignado a otras escuadras mientras sea comandante.',
             'button' => 'Agregar Comandante',
