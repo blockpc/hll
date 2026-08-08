@@ -181,6 +181,7 @@ return [
             'no_role' => 'Sin rol asignado',
             'no_observation' => 'Sin observación',
             'back' => 'Volver al clan',
+            'download-template' => 'Descargar Plantilla de Importación',
             'create' => [
                 '403' => 'No tienes permiso para crear soldados de clan.',
                 'message_about_names' => 'Los nombres de los soldados serán guardados en minúsculas y sin acentos. Se omitirán aquellos nombres que excedan los 32 caracteres o que ya existan en el clan.',
@@ -220,6 +221,29 @@ return [
                 'name' => 'Nombre del Soldado',
                 'role' => 'Rol en la escuadra (opcional)',
                 'observation' => 'Observación (opcional)',
+            ],
+            'import' => [
+                '403' => 'No tienes permiso para importar soldados de clan.',
+                'title' => 'Importar',
+                'subtitle' => 'Importa soldados a tu clan desde un archivo CSV o TXT.',
+                'select_file' => 'Selecciona un archivo para importar',
+                'start_import' => 'Iniciar Importación',
+                'cancel_import' => 'Cancelar Importación',
+                'message_success' => 'Soldados importados correctamente. Total de soldados importados: :count',
+                'error_transaction' => 'Error al importar los soldados. Por favor intenta de nuevo o contacta al soporte.',
+                'validation' => [
+                    'file' => 'Archivo de importación',
+                    'required' => 'Debes seleccionar un archivo para importar.',
+                    'mimes' => 'El archivo debe ser de tipo CSV o TXT.',
+                    'max' => 'El archivo no debe superar los 10MB.',
+                ],
+            ],
+            'export' => [
+                '403' => 'No tienes permiso para exportar soldados de clan.',
+                'title' => 'Exportar',
+                'subtitle' => 'Exporta los soldados de tu clan a un archivo CSV.',
+                'message_success' => 'Soldados exportados correctamente.',
+                'error_transaction' => 'Error al exportar los soldados. Por favor intenta de nuevo o contacta al soporte.',
             ],
         ],
         'rosters' => [

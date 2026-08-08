@@ -5,6 +5,7 @@ use App\Enums\RoleSquadTypeEnum;
 use App\Enums\RosterTypeSquadEnum;
 use App\Models\Soldier;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Http\UploadedFile;
 use Livewire\Livewire;
 
 uses()->group('hll');
@@ -329,4 +330,163 @@ it('skips whitespace-only segments in bulk input', function () {
         ->assertHasNoErrors();
 
     expect($clan->soldiers()->count())->toBe(2);
+});
+
+it('exports soldiers with clan-specific csv content', function () {
+    $ownerOne = new_user(role: 'clan_owner');
+    $ownerTwo = new_user(role: 'clan_owner');
+
+    $clanOne = new_clan($ownerOne);
+    $clanTwo = new_clan($ownerTwo);
+
+    $clanOneSoldierOne = Soldier::factory()->forClan($clanOne)->create([
+        'name' => 'Alpha',
+        'role' => RoleSquadTypeEnum::Rifleman,
+        'observation' => 'First clan note',
+    ]);
+    $clanOneSoldierTwo = Soldier::factory()->forClan($clanOne)->create([
+        'name' => 'Bravo',
+        'role' => null,
+        'observation' => null,
+    ]);
+
+    $clanTwoSoldier = Soldier::factory()->forClan($clanTwo)->create([
+        'name' => 'Zulu',
+        'role' => RoleSquadTypeEnum::Medic,
+        'observation' => 'Second clan note',
+    ]);
+
+    $buildCsv = static function (array $rows): string {
+        $handle = fopen('php://temp', 'r+');
+
+        foreach ($rows as $row) {
+            fputcsv($handle, $row);
+        }
+
+        rewind($handle);
+        $csv = stream_get_contents($handle) ?: '';
+        fclose($handle);
+
+        return $csv;
+    };
+
+    $expectedClanOneCsv = $buildCsv([
+        ['name', 'role', 'observation'],
+        ['Alpha', 'rifleman', 'First clan note'],
+        ['Bravo', '', ''],
+    ]);
+
+    $expectedClanTwoCsv = $buildCsv([
+        ['name', 'role', 'observation'],
+        ['Zulu', 'medic', 'Second clan note'],
+    ]);
+
+    Livewire::actingAs($ownerOne)
+        ->test('system::clans.soldiers-manager', ['clan' => $clanOne])
+        ->call('exportSoldiers')
+        ->assertFileDownloaded($clanOne->slug.'-soldiers.csv', $expectedClanOneCsv);
+
+    Livewire::actingAs($ownerTwo)
+        ->test('system::clans.soldiers-manager', ['clan' => $clanTwo])
+        ->call('exportSoldiers')
+        ->assertFileDownloaded($clanTwo->slug.'-soldiers.csv', $expectedClanTwoCsv);
+
+    expect($expectedClanOneCsv)->not->toBe($expectedClanTwoCsv);
+});
+
+it('escapes formula-like values in exported soldier name and observation', function () {
+    $owner = new_user(role: 'clan_owner');
+    $clan = new_clan($owner);
+
+    Soldier::factory()->forClan($clan)->create([
+        'name' => '=Alpha',
+        'role' => RoleSquadTypeEnum::Rifleman,
+        'observation' => '+Dangerous',
+    ]);
+
+    Soldier::factory()->forClan($clan)->create([
+        'name' => 'Bravo',
+        'role' => RoleSquadTypeEnum::Medic,
+        'observation' => 'Safe text',
+    ]);
+
+    $buildCsv = static function (array $rows): string {
+        $handle = fopen('php://temp', 'r+');
+
+        foreach ($rows as $row) {
+            fputcsv($handle, $row);
+        }
+
+        rewind($handle);
+        $csv = stream_get_contents($handle) ?: '';
+        fclose($handle);
+
+        return $csv;
+    };
+
+    $expectedCsv = $buildCsv([
+        ['name', 'role', 'observation'],
+        ["'=Alpha", 'rifleman', "'+Dangerous"],
+        ['Bravo', 'medic', 'Safe text'],
+    ]);
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.soldiers-manager', ['clan' => $clan])
+        ->call('exportSoldiers')
+        ->assertFileDownloaded($clan->slug.'-soldiers.csv', $expectedCsv);
+});
+
+it('rejects import when csv header is not exact', function () {
+    $owner = new_user(role: 'clan_owner');
+    $clan = new_clan($owner);
+
+    $csv = "name,observation,role\nAlpha,Note,rifleman\n";
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.soldiers-manager', ['clan' => $clan])
+        ->set('importFile', UploadedFile::fake()->createWithContent('soldiers.csv', $csv))
+        ->call('import')
+        ->assertHasErrors(['importFile']);
+
+    expect($clan->soldiers()->count())->toBe(0);
+});
+
+it('rolls back import when any row column count differs from header', function () {
+    $owner = new_user(role: 'clan_owner');
+    $clan = new_clan($owner);
+
+    $csv = "name,role,observation\nAlpha,rifleman,First\nBravo,medic\n";
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.soldiers-manager', ['clan' => $clan])
+        ->set('importFile', UploadedFile::fake()->createWithContent('soldiers.csv', $csv))
+        ->call('import')
+        ->assertHasErrors(['importFile']);
+
+    expect($clan->soldiers()->count())->toBe(0);
+});
+
+it('rolls back import when any row has missing name or invalid enum role', function () {
+    $owner = new_user(role: 'clan_owner');
+    $clan = new_clan($owner);
+
+    $csvMissingName = "name,role,observation\nAlpha,rifleman,First\n,medic,Second\n";
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.soldiers-manager', ['clan' => $clan])
+        ->set('importFile', UploadedFile::fake()->createWithContent('soldiers-missing-name.csv', $csvMissingName))
+        ->call('import')
+        ->assertHasErrors(['importFile']);
+
+    expect($clan->soldiers()->count())->toBe(0);
+
+    $csvInvalidRole = "name,role,observation\nAlpha,rifleman,First\nBravo,invalid_role,Second\n";
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.soldiers-manager', ['clan' => $clan])
+        ->set('importFile', UploadedFile::fake()->createWithContent('soldiers-invalid-role.csv', $csvInvalidRole))
+        ->call('import')
+        ->assertHasErrors(['importFile']);
+
+    expect($clan->soldiers()->count())->toBe(0);
 });

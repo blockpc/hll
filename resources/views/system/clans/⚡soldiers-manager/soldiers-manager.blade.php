@@ -2,16 +2,52 @@
     <div class="relative mb-6 w-full">
         <div class="flex items-start justify-between space-x-6">
             <x-header-clan :clan="$clan" :title="__('hll.clans.soldiers.list')" />
-            <div class="flex items-center space-x-2">
-                @can('update', $clan)
-                    <flux:button variant="ghost" size="sm" href="{{ route('clans.show', $clan->slug) }}">
-                        {{ __('hll.clans.soldiers.back') }}
-                    </flux:button>
+            <div class="flex flex-col h-24">
+                <div class="flex items-center space-x-2">
+                    @can('update', $clan)
+                        <flux:button variant="ghost" size="sm" href="{{ route('clans.show', $clan->slug) }}">
+                            {{ __('hll.clans.soldiers.back') }}
+                        </flux:button>
 
-                    <flux:modal.trigger name="create-soldier-manager">
-                        <flux:button variant="primary" color="blue" size="sm" class="w-full">{{ __('hll.clans.soldiers.create.title') }}</flux:button>
-                    </flux:modal.trigger>
-                @endcan
+                        <div>
+                            <flux:modal.trigger name="create-soldier-manager">
+                                <flux:button variant="primary" color="blue" size="sm" class="w-full">{{ __('hll.clans.soldiers.create.title') }}</flux:button>
+                            </flux:modal.trigger>
+                        </div>
+                    @endcan
+                </div>
+
+                <div class="flex items-center justify-end space-x-2 mt-auto pb-1">
+                    <!-- Export Button -->
+                    @if (!$importFile && $this->soldiers->isNotEmpty())
+                    <flux:button variant="primary" size="sm" class="w-full p-2" icon="arrow-down-tray" wire:click="exportSoldiers" tooltip="{{ __('hll.clans.soldiers.export.subtitle') }}" />
+                    @endif
+
+                    <!-- Import Button -->
+                    <div x-data="{ uploading: false, progress: 0 }"
+                        x-on:livewire-upload-start="uploading = true"
+                        x-on:livewire-upload-finish="uploading = false"
+                        x-on:livewire-upload-error="uploading = false"
+                        x-on:livewire-upload-cancel="uploading = false"
+                        x-on:livewire-upload-progress="progress = $event.detail.progress"
+                        class="flex items-center space-x-2">
+
+                        <input type="file" wire:model="importFile" id="import-file" x-ref="importFile" class="hidden" />
+
+                        @if (!$importFile)
+                        <flux:button x-on:click="$refs.importFile.click()" icon="arrow-up-tray" size="sm" tooltip="{{ __('hll.clans.soldiers.import.select_file') }}" />
+
+                        <flux:button wire:click="downloadImportTemplate" variant="primary" color="yellow" icon="arrow-down-tray" size="sm" tooltip="{{ __('hll.clans.soldiers.download-template') }}" />
+                        @endif
+
+                        @if ($importFile)
+                        <flux:button wire:click="import" variant="primary" icon="arrow-up-tray" x-bind:disabled="uploading" tooltip="{{ __('hll.clans.soldiers.import.start_import') }}" size="sm" />
+
+                        <flux:button wire:click="resetImportFile" variant="primary" color="red" icon="x-mark" tooltip="{{ __('hll.clans.soldiers.import.cancel_import') }}" size="sm" />
+                        @endif
+                    </div>
+                </div>
+                <flux:error name="importFile" />
             </div>
         </div>
 

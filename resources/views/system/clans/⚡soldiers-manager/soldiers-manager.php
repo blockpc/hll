@@ -3,6 +3,7 @@
 use App\Enums\RoleSquadTypeEnum;
 use App\Models\Clan;
 use App\Services\AddSoldiersToClanService;
+use App\Traits\ExportImportSoldiersClanTrait;
 use Blockpc\App\Rules\AreEqualsRule;
 use Blockpc\Traits\AlertBrowserEvent;
 use Blockpc\Traits\PaginationTrait;
@@ -13,11 +14,14 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component
 {
     use AlertBrowserEvent;
     use PaginationTrait;
+    use WithFileUploads;
+    use ExportImportSoldiersClanTrait;
 
     public Clan $clan;
 
@@ -215,5 +219,10 @@ new class extends Component
         $this->resetExcept('clan');
         $this->clearValidation();
         $this->modal($modalName)->close();
+    }
+
+    public function updatedImportFile($file): void
+    {
+        $this->resetValidation('importFile');
     }
 };
