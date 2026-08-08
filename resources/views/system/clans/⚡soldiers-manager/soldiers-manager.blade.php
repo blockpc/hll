@@ -56,23 +56,23 @@
         <flux:card class="p-2.5 space-y-6 mt-4">
             <div class="flex justify-between items-start">
                 <div>
-                    <flux:heading size="lg">{{ __('hll.clans.soldiers.list') }}</flux:heading>
-                    <flux:text class="mt-2">{{ trans_choice('hll.clans.soldiers.list_count', $this->soldiers->total()) }}</flux:text>
+                    <flux:input size="sm" icon="magnifying-glass" :loading="false" :clearable="true" placeholder="{{ __('hll.clans.soldiers.table.search_soldiers') }}" wire:model.live.debounce.500ms="search" class="max-w-64" autocomplete="off" />
                 </div>
             </div>
 
             <flux:table :paginate="$this->soldiers">
                 <flux:table.columns>
-                    <flux:table.column>Avatar</flux:table.column>
-                    <flux:table.column>Name</flux:table.column>
-                    <flux:table.column>Role</flux:table.column>
-                    <flux:table.column># Rosters</flux:table.column>
+                    <flux:table.column>{{ __('hll.clans.soldiers.table.avatar') }}</flux:table.column>
+                    <flux:table.column>{{ __('hll.clans.soldiers.table.name') }}</flux:table.column>
+                    <flux:table.column>{{ __('hll.clans.soldiers.table.role') }}</flux:table.column>
+                    <flux:table.column>{{ __('hll.clans.soldiers.table.level') }}</flux:table.column>
+                    <flux:table.column>{{ __('hll.clans.soldiers.table.rosters_count') }}</flux:table.column>
                     <flux:table.column align="end"></flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
                     @if ($this->soldiers->isEmpty())
                         <flux:table.row>
-                            <flux:table.cell colspan="5" class="text-center py-4">
+                            <flux:table.cell colspan="6" class="text-center py-4">
                                 {{ __('hll.clans.soldiers.no_soldiers') }}
                             </flux:table.cell>
                         </flux:table.row>
@@ -80,13 +80,14 @@
                         @foreach ($this->soldiers as $soldier)
                             <flux:table.row wire:key="soldier-{{ $soldier->id }}">
                                 <flux:table.cell>
-                                    <flux:avatar :name="$soldier->name" />
+                                    <flux:avatar size="sm" :name="$soldier->name" />
                                 </flux:table.cell>
                                 <flux:table.cell>
                                     <span class="text-base">{{ $soldier->name }}</span>
-                                    <p class="text-xs">{{ $soldier->observation ?? __('hll.clans.soldiers.no_observation') }}</p>
+                                    <p class="text-xs">{{ $soldier->observation ?: __('hll.clans.soldiers.no_observation') }}</p>
                                 </flux:table.cell>
                                 <flux:table.cell>{{ $soldier->role?->label() ?? __('hll.clans.soldiers.no_role') }}</flux:table.cell>
+                                <flux:table.cell>{{ $soldier->level }}</flux:table.cell>
                                 <flux:table.cell>{{ $soldier->squads->count() ?? 0 }}</flux:table.cell>
                                 <flux:table.cell align="end">
                                     @can('update', $clan)
@@ -166,8 +167,13 @@
             </div>
 
             <div>
-                <flux:input size="sm" label="{{ __('hll.clans.soldiers.form.name') }}" wire:model="soldier_name" />
+                <flux:label>{{ __('hll.clans.soldiers.form.name') }}</flux:label>
+                <flux:input.group>
+                    <flux:input.group.prefix>{{ $this->clan->alias }}_</flux:input.group.prefix>
+                    <flux:input size="sm" wire:model="soldier_name" />
+                </flux:input.group>
             </div>
+
             <div>
                 <flux:select size="sm" label="{{ __('hll.clans.soldiers.form.role') }}" wire:model="soldier_role">
                     <option value="">{{ __('hll.clans.soldiers.no_role') }}</option>
@@ -176,6 +182,15 @@
                     @endforeach
                 </flux:select>
             </div>
+
+            <div>
+                <flux:input size="sm" label="{{ __('hll.clans.soldiers.form.rcon') }}" wire:model="soldier_rcon" />
+            </div>
+
+            <div>
+                <flux:input size="sm" label="{{ __('hll.clans.soldiers.form.level') }}" wire:model="soldier_level" />
+            </div>
+
             <div>
                 <flux:input size="sm" label="{{ __('hll.clans.soldiers.form.observation') }}" wire:model="soldier_observation" />
             </div>

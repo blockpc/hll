@@ -44,6 +44,10 @@ new class extends Component
 
     public ?string $soldier_observation = null;
 
+    public ?string $soldier_rcon = null;
+
+    public int $soldier_level = 1;
+
     #[Locked]
     public ?int $deletingSoldierId = null;
 
@@ -59,7 +63,7 @@ new class extends Component
     #[Computed()]
     public function soldiers(): LengthAwarePaginator
     {
-        return $this->clan->soldiers()->orderBy('name')->paginate(12);
+        return $this->clan->soldiers()->search($this->search)->orderBy('name')->paginate(12);
     }
 
     #[Computed]
@@ -143,6 +147,8 @@ new class extends Component
         $this->soldier_name = $soldier->name;
         $this->soldier_role = $soldier->role;
         $this->soldier_observation = $soldier->observation;
+        $this->soldier_rcon = $soldier->rcon;
+        $this->soldier_level = $soldier->level;
 
         $this->modal('edit-soldier-manager')->show();
     }
@@ -158,12 +164,26 @@ new class extends Component
             'soldier_name' => ['required', 'string', 'max:32', Rule::unique('soldiers', 'name')->where('clan_id', $this->clan->id)->ignore($this->editingSoldierId)],
             'soldier_role' => ['nullable', Rule::enum(RoleSquadTypeEnum::class)],
             'soldier_observation' => ['nullable', 'string', 'max:255'],
+            'soldier_rcon' => ['nullable', 'string', 'max:255'],
+            'soldier_level' => ['nullable', 'integer', 'min:1', 'max:500'],
+        ], [
+            'soldier_name.required' => __('hll.clans.soldiers.form.validations.name_required'),
+            'soldier_name.unique' => __('hll.clans.soldiers.form.validations.name_unique'),
+            'soldier_name.max' => __('hll.clans.soldiers.form.validations.name_max'),
+            'soldier_role.enum' => __('hll.clans.soldiers.form.validations.role_enum'),
+            'soldier_observation.max' => __('hll.clans.soldiers.form.validations.observation_max'),
+            'soldier_rcon.max' => __('hll.clans.soldiers.form.validations.rcon_max'),
+            'soldier_level.integer' => __('hll.clans.soldiers.form.validations.level_integer'),
+            'soldier_level.min' => __('hll.clans.soldiers.form.validations.level_min'),
+            'soldier_level.max' => __('hll.clans.soldiers.form.validations.level_max'),
         ]);
 
         $soldier = $this->clan->soldiers()->findOrFail($this->editingSoldierId);
         $soldier->update([
             'name' => $this->soldier_name,
             'role' => $this->soldier_role,
+            'rcon' => $this->soldier_rcon,
+            'level' => $this->soldier_level,
             'observation' => $this->soldier_observation,
         ]);
 
