@@ -50,7 +50,7 @@ it('un usuario con permiso puede editar un usuario', function () {
 });
 
 it('un usuario con permiso puede asignar un clan al usuario editado', function () {
-    $user = User::factory()->create();
+    $user = new_user('clan_helper');
     $clan = Clan::factory()->create();
     $this->user->givePermissionTo('users.edit');
 
@@ -62,8 +62,21 @@ it('un usuario con permiso puede asignar un clan al usuario editado', function (
     expect($user->fresh()->clans()->whereKey($clan->id)->exists())->toBeTrue();
 });
 
+it('un usuario con permiso no puede asignar un clan a un usuario sin rol ayudante', function () {
+    $user = new_user();
+    $clan = Clan::factory()->create();
+    $this->user->givePermissionTo('users.edit');
+
+    Livewire::actingAs($this->user)
+        ->test('system::users.edit', ['user' => $user])
+        ->call('selectClan', $clan->id)
+        ->assertForbidden();
+
+    expect($user->fresh()->clans()->whereKey($clan->id)->exists())->toBeFalse();
+});
+
 it('un usuario sin permiso no puede asignar un clan al usuario editado', function () {
-    $user = User::factory()->create();
+    $user = new_user('clan_helper');
     $clan = Clan::factory()->create();
 
     Livewire::actingAs($this->user)

@@ -528,7 +528,7 @@ it('ignores duplicate normalized names within the same import file', function ()
     $owner = new_user(role: 'clan_owner');
     $clan = new_clan($owner);
 
-    $csv = "name,role,observation\nÁlphá,rifleman,Primero\nAlpha,medic,Segundo\n";
+    $csv = "name,role,observation\nÁlphá,rifleman,Primero\nAlpha,medic,Segundo\nALPHA,medic,Tercero\n";
 
     Livewire::actingAs($owner)
         ->test('system::clans.soldiers-manager', ['clan' => $clan])

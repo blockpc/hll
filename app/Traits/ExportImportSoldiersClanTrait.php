@@ -129,6 +129,7 @@ trait ExportImportSoldiersClanTrait
                     }
 
                     $normalizedName = Str::transliterate($name);
+                    $deduplicationKey = mb_strtolower($normalizedName);
 
                     if (mb_strlen($normalizedName) > 32) {
                         throw ValidationException::withMessages([
@@ -136,11 +137,11 @@ trait ExportImportSoldiersClanTrait
                         ]);
                     }
 
-                    if (in_array($normalizedName, $seenNormalizedNames, true)) {
+                    if (isset($seenNormalizedNames[$deduplicationKey])) {
                         continue;
                     }
 
-                    $seenNormalizedNames[] = $normalizedName;
+                    $seenNormalizedNames[$deduplicationKey] = true;
 
                     $roleValue = trim((string) ($data['role'] ?? ''));
                     $role = null;

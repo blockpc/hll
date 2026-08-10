@@ -139,6 +139,7 @@ return [
             'users-edit' => 'No tienes permiso para editar usuarios.',
             'users-delete' => 'No tienes permiso para eliminar usuarios.',
             'invalid-verification-link' => 'El enlace de verificación no es válido.',
+            'user-not-helper' => 'El usuario no es ayudante de clan.',
         ],
         'buttons' => [
             'create' => 'Crear nuevo usuario',
