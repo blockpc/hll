@@ -34,7 +34,7 @@ enum RosterTypeSquadEnum: string
     {
         return match ($this) {
             self::Commander => 1,
-            self::Infantry => 6,
+            self::Infantry => 18,
             self::Recon => 2,
             self::Armor => 3,
             self::Artillery => 3,
@@ -69,6 +69,17 @@ enum RosterTypeSquadEnum: string
             self::Armor => 'ARM',
             self::Artillery => 'ART',
             self::Custom => 'CST',
+        };
+    }
+
+    /**
+     * Get the limit of name of soldiers for the squad type
+     */
+    public function nameLimit(): int
+    {
+        return match ($this) {
+            self::Custom => 30,
+            default => 15,
         };
     }
 }

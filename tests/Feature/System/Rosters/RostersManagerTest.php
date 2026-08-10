@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\ClanMembershipRoleEnum;
+use App\Enums\RosterTypeSquadEnum;
 use App\Models\Roster;
 use Database\Seeders\MapSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -191,6 +192,28 @@ it('allows creating a public roster', function () {
         'id' => $roster->id,
         'is_public' => true,
     ]);
+});
+
+it('renders public roster view with assigned soldiers count excluding custom and localized no-map state', function () {
+    $owner = new_user();
+    $clan = new_clan($owner);
+    $roster = new_roster($clan, [
+        'is_public' => true,
+        'max_soldiers' => 5,
+        'image' => null,
+    ]);
+
+    $customSquad = new_squad($roster, RosterTypeSquadEnum::Custom);
+    $infantrySquad = new_squad($roster, RosterTypeSquadEnum::Infantry);
+
+    new_soldier($clan, $customSquad, ['name' => 'Custom Soldier']);
+    new_soldier($clan, $infantrySquad, ['name' => 'Infantry Soldier']);
+
+    $response = $this->get(route('public.rosters.show', ['roster' => $roster]));
+
+    $response->assertOk();
+    $response->assertSeeText('1/5');
+    $response->assertSeeText(__('hll.commons.no_map_selected'));
 });
 
 it('redirects guest to login for public roster table URL', function () {

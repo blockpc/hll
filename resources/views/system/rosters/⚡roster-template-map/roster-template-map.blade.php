@@ -24,7 +24,7 @@
                     <div class="text-sm">{{ __('hll.rosters.map') }}: {{ $roster->map->name }}</div>
                     <div class="text-sm">{{ __('hll.rosters.central_point') }}: {{ $roster->centralPoint->name }}</div>
                     <div class="text-sm">{{ __('hll.rosters.faction') }}: {{ $roster->faction->label() }}</div>
-                    <div class="text-sm">{{ $roster->assignedSoldiersCount() }}/{{ $roster->max_soldiers }}</div>
+                    <div class="text-sm">{{ $roster->assignedSoldiersCountExcludingCustom() }}/{{ $roster->max_soldiers }}</div>
                 </div>
             </div>
             <div class="grid grid-cols-6 gap-4 max-h-max">

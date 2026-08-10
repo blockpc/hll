@@ -133,6 +133,16 @@ class Roster extends Model
         })->count();
     }
 
+    /**
+     * Count soldiers assigned to the roster across non-custom squads only.
+     */
+    public function assignedSoldiersCountExcludingCustom(): int
+    {
+        return $this->squadSoldiers()->whereHas('squad', function (Builder $query) {
+            $query->where('roster_type_squad', '!=', RosterTypeSquadEnum::Custom->value);
+        })->count();
+    }
+
     public function squads(): HasMany
     {
         return $this->hasMany(Squad::class);

@@ -363,3 +363,22 @@ it('byIds: does not allow adding soldiers when one exceeds squad capacity', func
 
     expect($this->squad->soldiers()->count())->toBe(1);
 });
+
+it('does not update a squad when edit payload exceeds the configured name and alias limits', function () {
+    $originalName = $this->squad->name;
+    $originalAlias = $this->squad->alias;
+
+    Livewire::actingAs($this->owner)
+        ->test('system::squads.add-soldier-to-squad', ['roster' => $this->roster])
+        ->call('openModal', $this->squad->id)
+        ->set('squad_name', str_repeat('n', 256))
+        ->set('squad_alias', str_repeat('a', 51))
+        ->call('editSquad', $this->squad->id)
+        ->assertHasErrors(['squad_name' => 'max'])
+        ->assertHasErrors(['squad_alias' => 'max']);
+
+    $this->squad->refresh();
+
+    expect($this->squad->name)->toBe($originalName)
+        ->and($this->squad->alias)->toBe($originalAlias);
+});

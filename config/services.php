@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'hll' => [
+        'url' => env('HLL_API_URL'),
+        'token' => env('HLL_API_TOKEN'),
+    ],
+
 ];

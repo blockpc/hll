@@ -2,6 +2,8 @@
     'squad',
 ])
 
-<flux:button variant="outline" size="xs" class="rounded border text-amber-300 border-amber-500/30! bg-amber-500/30! uppercase text-[10px] font-bold">
-    {{ $squad->alias }}
-</flux:button>
+<flux:badge rounded size="sm" color="orange" class="flex-col">
+    <div class="flex items-center">
+        <span class="text-white uppercase">{{ $squad->alias }}</span>
+    </div>
+</flux:badge>

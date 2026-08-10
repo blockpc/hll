@@ -28,7 +28,7 @@
                     <div>{{ __('hll.rosters.faction') }}: {{ $roster->faction->label() }}</div>
 
                     <div class="lg:text-right font-semibold">
-                        {{ $roster->assignedSoldiersCount() }}/{{ $roster->max_soldiers }}
+                        {{ $roster->assignedSoldiersCountExcludingCustom() }}/{{ $roster->max_soldiers }}
                     </div>
                 </div>
             </div>
@@ -38,7 +38,8 @@
                         <div class="flex flex-col space-y-1 p-1" id="commander-section">
                             <div class="flex justify-between items-center">
                                 <div class="flex-1 text-sm italic border-b border-gray-500">{{ __('hll.squads.sections.commander') }}</div>
-                                <livewire:system::squads.squad-create-commander :roster="$roster" :soldiers="$this->soldiers" />
+                                {{-- <livewire:system::squads.squad-create-commander :roster="$roster" :soldiers="$this->soldiers" /> --}}
+                                <livewire:system::squads.squad-create-typed :roster="$roster" :type="RosterTypeSquadEnum::Commander" />
                             </div>
                             <livewire:system::squads.squad-commander :roster="$roster" :key="'commander-'.$roster->uuid" />
                         </div>

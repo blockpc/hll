@@ -38,6 +38,10 @@ new class extends Component
     /** @var int[] */
     public array $soldiersAddedRoster = [];
 
+    public ?string $squad_name = null;
+
+    public ?string $squad_alias = null;
+
     public function mount(): void
     {
         $this->roster->loadMissing('clan.soldiers');
@@ -67,11 +71,14 @@ new class extends Component
         $this->soldiersFromClanIds = $this->roster->clan->soldiers->pluck('id')->toArray();
         $this->soldiersAddedRoster = $this->roster->soldiersFromClan()->keys()->toArray();
 
-        if ($checkCapacitiesError = $this->chekCapatities()) {
-            $this->dispatch('show', $checkCapacitiesError, 'warning', __('hll.squad_soldiers.add.title'))->to('alert');
+        // if ($checkCapacitiesError = $this->chekCapatities()) {
+        //     $this->dispatch('show', $checkCapacitiesError, 'warning', __('hll.squad_soldiers.add.title'))->to('alert');
 
-            return;
-        }
+        //     return;
+        // }
+
+        $this->squad_name = $this->squad->name;
+        $this->squad_alias = $this->squad->alias;
 
         $this->modal('add-soldier')->show();
     }
@@ -339,10 +346,56 @@ new class extends Component
             return __('hll.squad_soldiers.squad_full');
         }
 
-        if ($this->roster->assignedSoldiersCount() >= $this->roster->max_soldiers) {
+        if ($this->roster->assignedSoldiersCountExcludingCustom() >= $this->roster->max_soldiers) {
             return __('hll.squad_soldiers.roster_full');
         }
 
         return null;
+    }
+
+    public function editSquad(int $squadId): void
+    {
+        if (! $this->squad || $this->squad->id !== $squadId) {
+            $this->addError('squad', __('hll.squads.edit.message_error'));
+
+            return;
+        }
+
+        $squad = $this->roster->squads()->findOrFail($squadId);
+
+        if (! $squad) {
+            $this->addError('squad', __('hll.squads.edit.message_error'));
+
+            return;
+        }
+
+        $data = $this->validate([
+            'squad_name' => ['nullable', 'string', 'max:255'],
+            'squad_alias' => ['nullable', 'string', 'max:50'],
+        ], [], [
+            'squad_name' => __('hll.squads.form.name'),
+            'squad_alias' => __('hll.squads.form.alias'),
+        ]);
+
+        $squad->update([
+            'name' => $data['squad_name'] ?? null,
+            'alias' => $data['squad_alias'] ?? null,
+        ]);
+
+        $message = __('hll.squads.edit.message_success', ['name' => $squad->name]);
+
+        $this->dispatch('show', $message, 'success', __('hll.squads.edit.title'))->to('alert');
+
+        $this->clearValidation();
+        $this->modal("edit-squad-{$squadId}")->close();
+        $this->cancelModal();
+
+        $this->dispatch('edit-squad', $squadId)->to('system::rosters.roster-template-manage');
+    }
+
+    public function cancelEditSquad(): void
+    {
+        $this->clearValidation();
+        $this->modal("edit-squad-{$this->squad->id}")->close();
     }
 };

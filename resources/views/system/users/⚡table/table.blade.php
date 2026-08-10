@@ -10,7 +10,7 @@
         @include('partials.flash')
 
         <div class="flex items-center justify-between">
-            <flux:input icon="magnifying-glass" :loading="false" :clearable="true" placeholder="{{ __('system.users.search_users') }}" wire:model.live.debounce.500ms="search" class="max-w-64" autocomplete="off" />
+            <flux:input size="sm" icon="magnifying-glass" :loading="false" :clearable="true" placeholder="{{ __('system.users.search_users') }}" wire:model.live.debounce.500ms="search" class="max-w-64" autocomplete="off" />
             @can('users.create')
             <flux:button variant="primary" color="blue" size="sm" href="{{ route('users.create') }}">{{ __('system.users.buttons.create') }}</flux:button>
             @endcan
