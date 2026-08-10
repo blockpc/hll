@@ -490,3 +490,57 @@ it('rolls back import when any row has missing name or invalid enum role', funct
 
     expect($clan->soldiers()->count())->toBe(0);
 });
+
+it('imports soldiers successfully with normalized names and updates existing records', function (): void {
+    $owner = new_user(role: 'clan_owner');
+    $clan = new_clan($owner);
+
+    Soldier::factory()->forClan($clan)->create([
+        'name' => 'Alpha',
+        'role' => RoleSquadTypeEnum::Rifleman,
+        'observation' => 'Antiguo',
+    ]);
+
+    $csv = "name,role,observation\nÁlphá,medic,Actualizado\nBravó,rifleman,Nuevo\n";
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.soldiers-manager', ['clan' => $clan])
+        ->set('importFile', UploadedFile::fake()->createWithContent('soldiers-normalized-name.csv', $csv))
+        ->call('import')
+        ->assertHasNoErrors()
+        ->assertSet('importFile', null)
+        ->assertDispatched('show');
+
+    expect($clan->soldiers()->count())->toBe(2);
+
+    $alpha = $clan->soldiers()->where('name', 'Alpha')->first();
+    $bravo = $clan->soldiers()->where('name', 'Bravo')->first();
+
+    expect($alpha)->not->toBeNull()
+        ->and($alpha?->role)->toBe(RoleSquadTypeEnum::Medic)
+        ->and($alpha?->observation)->toBe('Actualizado')
+        ->and($bravo)->not->toBeNull()
+        ->and($bravo?->role)->toBe(RoleSquadTypeEnum::Rifleman)
+        ->and($bravo?->observation)->toBe('Nuevo');
+});
+
+it('ignores duplicate normalized names within the same import file', function (): void {
+    $owner = new_user(role: 'clan_owner');
+    $clan = new_clan($owner);
+
+    $csv = "name,role,observation\nÁlphá,rifleman,Primero\nAlpha,medic,Segundo\n";
+
+    Livewire::actingAs($owner)
+        ->test('system::clans.soldiers-manager', ['clan' => $clan])
+        ->set('importFile', UploadedFile::fake()->createWithContent('soldiers-duplicate-normalized-name.csv', $csv))
+        ->call('import')
+        ->assertHasNoErrors();
+
+    expect($clan->soldiers()->count())->toBe(1);
+
+    $alpha = $clan->soldiers()->where('name', 'Alpha')->first();
+
+    expect($alpha)->not->toBeNull()
+        ->and($alpha?->role)->toBe(RoleSquadTypeEnum::Rifleman)
+        ->and($alpha?->observation)->toBe('Primero');
+});

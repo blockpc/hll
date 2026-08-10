@@ -88,7 +88,7 @@
                                 </flux:table.cell>
                                 <flux:table.cell>{{ $soldier->role?->label() ?? __('hll.clans.soldiers.no_role') }}</flux:table.cell>
                                 <flux:table.cell>{{ $soldier->level }}</flux:table.cell>
-                                <flux:table.cell>{{ $soldier->squads->count() ?? 0 }}</flux:table.cell>
+                                <flux:table.cell>{{ $soldier->squads_count }}</flux:table.cell>
                                 <flux:table.cell align="end">
                                     @can('update', $clan)
                                         <div class="">

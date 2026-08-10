@@ -2,6 +2,7 @@
 
 use App\Services\HellLetLooseApi;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Livewire\Livewire;
 
@@ -112,3 +113,25 @@ it('shows alert and keeps state when profile API connection fails', function ():
         ->assertDispatched('show')
         ->assertNotDispatched('refresh-soldiers-manager');
 });
+
+it('throws request exception when profile API returns scalar JSON', function (): void {
+    config()->set('services.hll.url', 'https://hll.miopesymancos.com/api');
+    config()->set('services.hll.token', 'test-token');
+
+    Http::fake([
+        '*' => Http::response('123', 200, ['Content-Type' => 'application/json']),
+    ]);
+
+    app(HellLetLooseApi::class)->getPlayerProfile('playerid01');
+})->throws(RequestException::class);
+
+it('throws request exception when profile API returns invalid JSON', function (): void {
+    config()->set('services.hll.url', 'https://hll.miopesymancos.com/api');
+    config()->set('services.hll.token', 'test-token');
+
+    Http::fake([
+        '*' => Http::response('{"result":', 200, ['Content-Type' => 'application/json']),
+    ]);
+
+    app(HellLetLooseApi::class)->getPlayerProfile('playerid01');
+})->throws(RequestException::class);

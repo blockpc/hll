@@ -71,6 +71,7 @@ new class extends Component
         return $this->clan->soldiers()
             ->search($this->search)
             ->tap(fn ($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
+            ->withCount('squads')
             ->paginate(12);
     }
 
@@ -173,7 +174,7 @@ new class extends Component
             'soldier_role' => ['nullable', Rule::enum(RoleSquadTypeEnum::class)],
             'soldier_observation' => ['nullable', 'string', 'max:255'],
             'soldier_rcon' => ['nullable', 'string', 'max:255'],
-            'soldier_level' => ['nullable', 'integer', 'min:1', 'max:500'],
+            'soldier_level' => ['required', 'integer', 'min:1', 'max:500'],
         ], [
             'soldier_name.required' => __('hll.clans.soldiers.form.validations.name_required'),
             'soldier_name.unique' => __('hll.clans.soldiers.form.validations.name_unique'),
@@ -247,11 +248,6 @@ new class extends Component
         $this->resetExcept('clan');
         $this->clearValidation();
         $this->modal($modalName)->close();
-    }
-
-    public function updatedImportFile($file): void
-    {
-        $this->resetValidation('importFile');
     }
 
     public function sort(string $column = 'name'): void {

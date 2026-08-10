@@ -10,6 +10,8 @@ return [
         'confirm' => 'Confirmar',
         'success' => 'Éxito',
         'back' => 'Volver',
+        'developed_by' => 'Desarrollado por',
+        'no_map_selected' => 'No hay mapa seleccionado',
     ],
     'rosters' => [
         'map' => 'Mapa',

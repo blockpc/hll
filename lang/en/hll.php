@@ -5,6 +5,7 @@ declare(strict_types=1);
 return [
     'commons' => [
         'select' => 'Select an option',
+        'developed_by' => 'Developed by',
     ],
     'clan_membership_role' => [
         'owner' => 'Owner',

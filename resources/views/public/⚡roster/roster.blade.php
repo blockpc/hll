@@ -183,7 +183,7 @@
                                     @else
                                         <div class="h-full rounded-xl border border-neutral-200 dark:border-neutral-700">
                                             <div class="flex h-full w-full items-center justify-center">
-                                                <span class="text-lg font-semibold text-gray-400 italic">Sin mapa seleccionado</span>
+                                                <span class="text-lg font-semibold text-gray-400 italic">{{ __('hll.commons.no_map_selected') }}</span>
                                             </div>
                                         </div>
                                     @endif

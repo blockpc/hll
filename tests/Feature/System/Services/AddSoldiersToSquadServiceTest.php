@@ -20,7 +20,6 @@ beforeEach(function () {
 
     $this->owner = new_user(role: 'clan_owner');
     $this->clan = new_clan($this->owner);
-    // Infantry capacity = 6, roster with plenty of room by default
     $this->roster = new_roster($this->clan, ['max_soldiers' => 20]);
     $this->squad = new_squad($this->roster, RosterTypeSquadEnum::Infantry);
 });
@@ -289,4 +288,53 @@ it('saveSingle skips when squad is full', function () {
     expect($result['created'])->toBe(0)
         ->and($result['skippedSquadFull'])->toBe(['alpha'])
         ->and($reconSquad->soldiers()->count())->toBe(2);
+});
+
+it('saveSingle does not count soldiers from custom squads toward roster capacity', function (): void {
+    $roster = new_roster($this->clan, ['max_soldiers' => 2]);
+    $customSquad = new_squad($roster, RosterTypeSquadEnum::Custom);
+    add_soldier_to_squad($customSquad, onlyName: 'custom one');
+
+    $squad = new_squad($roster, RosterTypeSquadEnum::Infantry);
+    add_soldier_to_squad($squad, onlyName: 'existing one');
+
+    $service = new AddSoldiersToSquadService;
+    $result = $service->for($squad)->saveSingle('alpha');
+
+    expect($result['created'])->toBe(1)
+        ->and($result['skippedRosterFull'])->toBeEmpty()
+        ->and($squad->soldiers()->pluck('display_name')->all())->toBe(['existing one', 'alpha']);
+});
+
+it('saveSingle allows adding soldiers to a custom squad when roster max_soldiers is reached by non-custom squads', function (): void {
+    $roster = new_roster($this->clan, ['max_soldiers' => 2]);
+    $squad = new_squad($roster, RosterTypeSquadEnum::Infantry);
+    add_soldier_to_squad($squad, onlyName: 'existing one');
+    add_soldier_to_squad($squad, onlyName: 'existing two');
+
+    $customSquad = new_squad($roster, RosterTypeSquadEnum::Custom);
+
+    $service = new AddSoldiersToSquadService;
+    $result = $service->for($customSquad)->saveSingle('alpha');
+
+    expect($result['created'])->toBe(1)
+        ->and($result['skippedRosterFull'])->toBeEmpty()
+        ->and($customSquad->soldiers()->pluck('display_name')->all())->toBe(['alpha']);
+});
+
+it('saveSingle accepts 18 infantry soldiers and rejects the 19th', function (): void {
+    $service = new AddSoldiersToSquadService;
+
+    for ($index = 1; $index <= 18; $index++) {
+        $result = $service->for($this->squad)->saveSingle('soldier '.$index);
+
+        expect($result['created'])->toBe(1)
+            ->and($result['skippedSquadFull'])->toBeEmpty();
+    }
+
+    $overflowResult = $service->for($this->squad)->saveSingle('soldier 19');
+
+    expect($overflowResult['created'])->toBe(0)
+        ->and($overflowResult['skippedSquadFull'])->toBe(['soldier 19'])
+        ->and($this->squad->soldiers()->count())->toBe(18);
 });

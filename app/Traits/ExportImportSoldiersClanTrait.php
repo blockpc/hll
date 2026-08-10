@@ -7,6 +7,7 @@ namespace App\Traits;
 use App\Enums\RoleSquadTypeEnum;
 use App\Models\Soldier;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -48,6 +49,14 @@ trait ExportImportSoldiersClanTrait
         }, $filename);
     }
 
+    /**
+     * Import soldiers from a CSV file.
+     * Ignore comments (lines starting with #) and empty lines.
+     * The CSV file must have the following header: name,role,observation
+     * The role column is optional and can be empty.
+     * The observation column is optional and can be empty.
+     * The name column is required and must be unique.
+     */
     public function import(): void
     {
         $this->validate([
@@ -93,13 +102,13 @@ trait ExportImportSoldiersClanTrait
                 }
 
                 $soldiersCreatedsCount = 0;
+                $seenNormalizedNames = [];
 
                 while (($row = fgetcsv($handle)) !== false) {
                     if (count(array_filter($row, static fn (?string $value): bool => trim((string) $value) !== '')) === 0) {
                         continue;
                     }
 
-                    // Ignore comments
                     if (str_starts_with(trim($row[0] ?? ''), '#')) {
                         continue;
                     }
@@ -119,6 +128,20 @@ trait ExportImportSoldiersClanTrait
                         ]);
                     }
 
+                    $normalizedName = Str::transliterate($name);
+
+                    if (mb_strlen($normalizedName) > 32) {
+                        throw ValidationException::withMessages([
+                            'importFile' => __('hll.clans.soldiers.form.validations.name_max'),
+                        ]);
+                    }
+
+                    if (in_array($normalizedName, $seenNormalizedNames, true)) {
+                        continue;
+                    }
+
+                    $seenNormalizedNames[] = $normalizedName;
+
                     $roleValue = trim((string) ($data['role'] ?? ''));
                     $role = null;
 
@@ -133,7 +156,7 @@ trait ExportImportSoldiersClanTrait
                     }
 
                     $this->clan->soldiers()->updateOrCreate([
-                        'name' => $name,
+                        'name' => $normalizedName,
                     ], [
                         'role' => $role,
                         'observation' => $data['observation'] ?? null,
@@ -171,7 +194,6 @@ trait ExportImportSoldiersClanTrait
 
             fputcsv($handle, ['name', 'role', 'observation']);
 
-            // Instructions
             fputcsv($handle, ['# The first line is the header and must be present in the file.']);
             fputcsv($handle, ['# The file can be .cvs or .txt file.']);
             fputcsv($handle, ['# Instructions']);
@@ -210,10 +232,15 @@ trait ExportImportSoldiersClanTrait
 
     private function escapeCsvFormula(string $value): string
     {
-        if (preg_match('/^[=+\-@]/', $value) === 1) {
+        if (preg_match('/^[=+\-@\x09\x0D\x0A＝＋－＠]/u', $value) === 1) {
             return "'{$value}";
         }
 
         return $value;
+    }
+
+    public function updatedImportFile(): void
+    {
+        $this->resetValidation('importFile');
     }
 }

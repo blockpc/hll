@@ -112,7 +112,7 @@
         {{ $slot }}
 
         <flux:footer>
-            <div class="text-xs text-right">Desarrollado por <a href="https://blockpc.cl" rel="noopener noreferrer" target="_blank">BlockPC</a> {{ '@'.now()->year }}</div>
+            <div class="text-xs text-right">{{ __('hll.commons.developed_by') }} <a href="https://blockpc.cl" rel="noopener noreferrer" target="_blank">BlockPC</a> {{ '@'.now()->year }}</div>
         </flux:footer>
 
         @fluxScripts
