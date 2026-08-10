@@ -9,10 +9,13 @@ use App\Models\Soldier;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 trait ExportImportSoldiersClanTrait
 {
+    use WithFileUploads;
+
     /** @var TemporaryUploadedFile|null */
     public $importFile;
 

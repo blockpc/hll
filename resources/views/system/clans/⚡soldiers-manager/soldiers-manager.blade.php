@@ -63,9 +63,9 @@
             <flux:table :paginate="$this->soldiers">
                 <flux:table.columns>
                     <flux:table.column>{{ __('hll.clans.soldiers.table.avatar') }}</flux:table.column>
-                    <flux:table.column>{{ __('hll.clans.soldiers.table.name') }}</flux:table.column>
+                    <flux:table.column sortable :sorted="$sortBy === 'name'" wire:click="sort('name')">{{ __('hll.clans.soldiers.table.name') }}</flux:table.column>
                     <flux:table.column>{{ __('hll.clans.soldiers.table.role') }}</flux:table.column>
-                    <flux:table.column>{{ __('hll.clans.soldiers.table.level') }}</flux:table.column>
+                    <flux:table.column sortable :sorted="$sortBy === 'level'" wire:click="sort('level')">{{ __('hll.clans.soldiers.table.level') }}</flux:table.column>
                     <flux:table.column>{{ __('hll.clans.soldiers.table.rosters_count') }}</flux:table.column>
                     <flux:table.column align="end"></flux:table.column>
                 </flux:table.columns>
@@ -92,6 +92,9 @@
                                 <flux:table.cell align="end">
                                     @can('update', $clan)
                                         <div class="">
+                                            @if ($soldier->rcon)
+                                            <flux:button size="xs" variant="primary" color="blue" icon="pencil" wire:click="getPlayerProfile({{ $soldier->id }})" icon="arrow-path" tooltip="{{ __('hll.clans.soldiers.api.get_player_level') }}" />
+                                            @endif
                                             <flux:button size="xs" variant="primary" color="green" icon="pencil" wire:click="showEditSoldier({{ $soldier->id }})">
                                                 {{ __('hll.commons.edit') }}
                                             </flux:button>

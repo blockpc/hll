@@ -268,6 +268,16 @@ return [
                 'message_success' => 'Soldados exportados correctamente.',
                 'error_transaction' => 'Error al exportar los soldados. Por favor intenta de nuevo o contacta al soporte.',
             ],
+            'api' => [
+                '403' => 'No tienes permiso para consultar la información de los soldados de este clan.',
+                'get_player_level' => 'Obtener nivel del jugador',
+                'soldier_not_found' => 'No se encontró el soldado.',
+                'soldier_not_found_title' => 'Soldado no encontrado',
+                'player_not_found' => 'No se encontró información del jugador en la API.',
+                'player_not_found_title' => 'Jugador no encontrado',
+                'player_no_rcon' => 'El soldado no tiene un RCON asignado.',
+                'player_no_rcon_title' => 'Soldado sin RCON',
+            ],
         ],
         'rosters' => [
             '403' => 'No tienes permiso para gestionar los rosters de este clan.',

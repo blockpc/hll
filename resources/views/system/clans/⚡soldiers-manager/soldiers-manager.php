@@ -2,28 +2,33 @@
 
 use App\Enums\RoleSquadTypeEnum;
 use App\Models\Clan;
+use App\Models\Soldier;
 use App\Services\AddSoldiersToClanService;
+use App\Services\HellLetLooseApi;
 use App\Traits\ExportImportSoldiersClanTrait;
 use Blockpc\App\Rules\AreEqualsRule;
 use Blockpc\Traits\AlertBrowserEvent;
 use Blockpc\Traits\PaginationTrait;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 new class extends Component
 {
     use AlertBrowserEvent;
     use PaginationTrait;
-    use WithFileUploads;
     use ExportImportSoldiersClanTrait;
 
     public Clan $clan;
+    public string $sortBy = 'name';
+    public string $sortDirection = 'asc';
 
     public string $name = '';
 
@@ -63,7 +68,10 @@ new class extends Component
     #[Computed()]
     public function soldiers(): LengthAwarePaginator
     {
-        return $this->clan->soldiers()->search($this->search)->orderBy('name')->paginate(12);
+        return $this->clan->soldiers()
+            ->search($this->search)
+            ->tap(fn ($query) => $this->sortBy ? $query->orderBy($this->sortBy, $this->sortDirection) : $query)
+            ->paginate(12);
     }
 
     #[Computed]
@@ -245,4 +253,60 @@ new class extends Component
     {
         $this->resetValidation('importFile');
     }
+
+    public function sort(string $column = 'name'): void {
+        if (! in_array($column, ['name', 'level'], true)) {
+            return;
+        }
+
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
+    }
+
+    public array $playerProfile = [];
+
+    public function getPlayerProfile(HellLetLooseApi $api, int $id): void
+    {
+        $soldier = $this->clan->soldiers()->find($id);
+
+        if (! $soldier) {
+            $this->alert(__('hll.clans.soldiers.api.player_not_found'), title: __('hll.clans.soldiers.api.soldier_not_found_title'));
+            return;
+        }
+
+        if (! $soldier->rcon) {
+            $this->alert(__('hll.clans.soldiers.api.player_no_rcon'), title: __('hll.clans.soldiers.api.player_no_rcon_title'));
+            return;
+        }
+
+        try {
+            $playerProfile = $api->getPlayerProfile($soldier->rcon);
+        } catch (RequestException|ConnectionException $exception) {
+            $this->alert(__('hll.clans.soldiers.api.player_not_found'), title: __('hll.clans.soldiers.api.player_not_found_title'));
+            return;
+        }
+
+        $this->playerProfile = $playerProfile;
+
+        if (! isset($this->playerProfile['result']['soldier'])) {
+            $this->alert(__('hll.clans.soldiers.api.player_not_found'), title: __('hll.clans.soldiers.api.player_not_found_title'));
+            return;
+        }
+
+        $soldierData = $this->playerProfile['result']['soldier'];
+        $soldier_level = $soldierData['level'] ?? 1;
+
+        $soldier->update([
+            'level' => $soldier_level,
+        ]);
+
+        $this->dispatch('refresh-soldiers-manager');
+    }
+
+    #[On('refresh-soldiers-manager')]
+    public function rerender(): void {}
 };
